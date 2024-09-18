@@ -1,0 +1,88 @@
+name: Destroy dev Environment
+
+on:
+  workflow_dispatch:  # Allows manual trigger from the GitHub Actions UI
+
+permissions:
+  id-token: write  # Required for OIDC authentication
+  contents: read   # Default permission for accessing the repo
+
+jobs:
+  destroy:
+    name: Destroy Terraform Resources
+    runs-on: ubuntu-latest
+    environment: dev # Must match the federated credential "based on selection" and GitHub Action Secrets name
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login to Azure using OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}             # App Registration client ID
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}             # Tenant ID
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} # Subscription ID
+          allow-no-subscriptions: false
+          enable-AzPSSession: false
+
+      - name: Set Terraform Environment Variables
+        run: |
+          echo "TF_VAR_az_client_id=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_az_tenant_id=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_az_subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_az_container_name=apbotbackend" >> $GITHUB_ENV  # Replace with actual container name if different
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        working-directory: ./dev
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true  # Instruct Terraform to use OIDC-based auth
+        run: |
+          terraform init -var-file="dev.tfvars"
+
+      - name: Terraform Destroy
+        working-directory: ./dev
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true  # Instruct Terraform to use OIDC-based auth
+          TF_LOG: DEBUG  # Enable detailed Terraform logging
+          TF_LOG_PATH: terraform_destroy.log  # Path to save the log file within the working directory
+        run: |
+          terraform destroy -var-file="dev.tfvars" -auto-approve
+
+      - name: Upload Terraform Destroy Log
+        if: always()  # This forces the step to run regardless of the outcome of previous steps
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-destroy-log
+          path: ./dev/terraform_destroy.log  # Path to the log file
+
+      # Additional step to destroy the backend resources created manually in dev.yaml
+      - name: Cleanup Backend Resources
+        run: |
+          # Define variables for the backend resources
+          az_backend_rg_name="apbotbackend"
+          az_backend_sa_name="apbotbackend"
+          az_backend_container_name="apbotbackend"
+
+          # Delete the storage container
+          az storage container delete \
+            --name $az_backend_container_name \
+            --account-name $az_backend_sa_name
+
+          # Delete the storage account
+          az storage account delete \
+            --name $az_backend_sa_name \
+            --resource-group $az_backend_rg_name \
+            --yes
+
+          # Delete the resource group
+          az group delete --name $az_backend_rg_name --yes --no-wait
