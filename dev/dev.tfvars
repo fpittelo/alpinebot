@@ -12,6 +12,10 @@ terraform_key = "terraform.tfstate"
 
 az_location = "SwitzerlandNorth"
 
+apbotinsights_name = "apbotinsights"
+
+wap_sp_name = "alpinbot-sp"
+
 wap_website_name = "alpinebot"
 
 wap_status = "main"

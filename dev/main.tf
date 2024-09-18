@@ -15,6 +15,23 @@ resource "azurerm_resource_group" "rg" {
   }
 }
 
+### Deploy App Insights #########
+
+resource "azurerm_application_insights" "apbotinsights" {
+  name                = var.apbotinsights_name
+  location            = var.az_location
+  resource_group_name = var.az_rg_name
+  application_type    = "web"
+}
+
+output "instrumentation_key" {
+  value = azurerm_application_insights.apbotinsights.instrumentation_key
+}
+
+output "app_id" {
+  value = azurerm_application_insights.apbotinsights.app_id
+}
+
 #### Deploy AlpineBot OpenAI Account ######
 
 resource "azurerm_cognitive_account" "alpinebotaiact" {

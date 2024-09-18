@@ -46,9 +46,12 @@ variable "az_location" {
   type = string
 }
 
+variable "apbotinsights_name" {
+  type = string
+}
+
 variable "wap_sp_name" {
   type = string
-  default = "alpinebot-sp"
 }
 
 variable "wap_website_name" {
