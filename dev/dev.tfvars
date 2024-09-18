@@ -34,6 +34,4 @@ alpinebotaiact = "alpinebotaiact"
 
 alpinebotaidepl = "alpinebotaidepl"
 
-azure_openai_key = "1234"
-
 environment = "dev"

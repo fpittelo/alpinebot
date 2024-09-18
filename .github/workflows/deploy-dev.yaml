@@ -103,6 +103,7 @@ jobs:
           echo "TF_VAR_az_tenant_id=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_az_subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_az_container_name=apbotbackend" >> $GITHUB_ENV  # Replace with actual container name if different
+          echo "TF_VAR_azure_openai_key=${{ secrets.AZURE_OPENAI_KEY }}" >> $GITHUB_ENV
       
       - name: Set Up Terraform
         uses: hashicorp/setup-terraform@v2
@@ -134,11 +135,16 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           ARM_USE_OIDC: true  # Instruct Terraform to use OIDC-based auth
+          TF_VAR_azure_openai_key: ${{ secrets.AZURE_OPENAI_KEY }}" >> $GITHUB_ENV
           TF_LOG: DEBUG  # Enable detailed Terraform logging
           TF_LOG_PATH: terraform.log  # Path to save the log file within the working directory
         run: |
           terraform apply -var-file="dev.tfvars" -auto-approve
-        
+      
+      - name: Output OpenAI Key
+        run: |
+          terraform output openai_api_key
+
       - name: Upload Terraform Log
         if: always()  # This forces the step to run regardless of the outcome of previous steps
         uses: actions/upload-artifact@v4

@@ -48,6 +48,14 @@ resource "azurerm_cognitive_account" "alpinebotaiact" {
     status            = var.wap_status
     environment       = var.environment
   }
+  
+}
+
+# Output the OpenAI key (on the fly) after deployment
+
+output "azure_openai_key" {
+  value = azurerm_cognitive_account.alpinebotaiact.primary_access_key
+  sensitive = true
 }
 
 ### Creation of Azure Service Plan #########
@@ -76,7 +84,7 @@ resource "azurerm_linux_web_app" "wap_app" {
   resource_group_name = azurerm_resource_group.rg.name
   service_plan_id = azurerm_service_plan.wap_sp_website.id
   
-  depends_on = [azurerm_service_plan.wap_sp_website]  # Explicit dependency
+  depends_on = [azurerm_cognitive_account.alpinebotaiact, azurerm_service_plan.wap_sp_website]
 
   tags = {
     project     = var.project
@@ -90,10 +98,8 @@ resource "azurerm_linux_web_app" "wap_app" {
   }
 
   app_settings = {
-    "WEBSITE_RUN_FROM_PACKAGE" = "1"
-    "AZURE_OPENAI_KEY"         = var.azure_openai_key
-    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.apbotinsights.instrumentation_key
+    "WEBSITE_RUN_FROM_PACKAGE"        = "1"
+    "AZURE_OPENAI_KEY"                = azurerm_cognitive_account.alpinebotaiact.primary_access_key
+    "APPINSIGHTS_INSTRUMENTATIONKEY"  = azurerm_application_insights.apbotinsights.instrumentation_key
   }
-
-  
 }
