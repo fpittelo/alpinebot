@@ -92,7 +92,7 @@ resource "azurerm_app_service" "wap_app" {
   app_settings = {
     "WEBSITE_RUN_FROM_PACKAGE" = "1"
     "AZURE_OPENAI_KEY"         = var.azure_openai_key
-    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.appinsights.instrumentation_key
+    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.apbotinsights.instrumentation_key
   }
 
   
