@@ -17,7 +17,7 @@ Clone the repository:
 
 bash
 Copy code
-git clone https://github.com/yourusername/AlpineBot.git
+git clone https://github.com/fpittelo/alpinebot/AlpineBot.git
 cd AlpineBot
 Set up your environment: Make sure you have the following dependencies installed:
 
@@ -65,6 +65,6 @@ Fun Fact 🧐
 Did you know that the Matterhorn was first climbed in 1865? 🏔️ While AlpineBot may not help you scale mountains, it will definitely help you scale the peaks of Swiss public data! ⛰️
 
 Contact Us 📧
-If you run into any trouble, feel free to open an issue or contact the project maintainer at your-email@example.com.
+If you run into any trouble, feel free to open an issue.
 
 Now go ahead and chat with AlpineBot! The Alps are waiting… 🏔️💬
