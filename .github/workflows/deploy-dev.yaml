@@ -1,11 +1,9 @@
 name: Deploy to dev
 
 on:
-  pull_request:
+  push:
     branches:
       - dev
-    types:
-      - closed
 
 permissions:
   id-token: write  # Required for OIDC authentication
@@ -15,7 +13,6 @@ jobs:
   # Step 1: Bootstrap Backend Resources (if not already done)
   backend:
     name: Deploy Backend
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment: dev # must match the federated credential "based on selection" \
     # and match Github Action Secrets name
@@ -77,3 +74,74 @@ jobs:
             --name $az_backend_container_name \
             --account-name $az_backend_sa_name \
             --account-key $STORAGE_KEY
+
+  # Step 2: Main Terraform Deployment
+  deploy:
+    name: Deploy Infra
+    runs-on: ubuntu-latest
+    environment: dev #must match the federated credential "based on selection" \
+    # and match Github Action Secrets name
+    needs: backend # Ensures this runs after the bootstrap job
+  
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login To Azure Using OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}             # App Registration client ID
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}             # Tenant ID
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} # Subscription ID
+          allow-no-subscriptions: false
+          enable-AzPSSession: false
+
+      - name: Set Terraform Environment Variables
+        run: |
+          echo "TF_VAR_az_client_id=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_az_tenant_id=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_az_subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_az_container_name=apbotbackend" >> $GITHUB_ENV  # Replace with actual container name if different
+      
+      - name: Set Up Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        working-directory: ./dev
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true  # Instruct Terraform to use OIDC-based auth
+        run: |
+          terraform init -var-file="dev.tfvars"
+
+      - name: Terraform Init
+        working-directory: ./dev
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true  # Instruct Terraform to use OIDC-based auth
+        run: |
+          terraform init -var-file="dev.tfvars"
+  
+      - name: Terraform Apply
+        working-directory: ./dev
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true  # Instruct Terraform to use OIDC-based auth
+          TF_LOG: DEBUG  # Enable detailed Terraform logging
+          TF_LOG_PATH: terraform.log  # Path to save the log file within the working directory
+        run: |
+          terraform apply -var-file="dev.tfvars" -auto-approve
+        
+      - name: Upload Terraform Log
+        if: always()  # This forces the step to run regardless of the outcome of previous steps
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-log
+          path: ./dev/terraform.log  # Path to the log file
