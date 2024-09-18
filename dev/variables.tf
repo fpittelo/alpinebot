@@ -66,6 +66,21 @@ variable "wap_sp_sku_os_linux" {
   type = string
 }
 
+variable "alpinebotaiact" {
+  description = "value of os type"
+  type = string
+}
+
+variable "alpinebotaidepl" {
+  description = "value of os type"
+  type = string
+}
+
+variable "azure_openai_key" {
+  description = "value of os type"
+  type = string
+}
+
 variable "project" {
   description = "value of project"
   type = string

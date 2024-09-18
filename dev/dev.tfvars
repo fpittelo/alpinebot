@@ -26,4 +26,10 @@ wap_sp_sku_os_linux = "Linux"
 
 wap_sp_sku = "S1"
 
+alpinebotaiact = "alpinebotaiact"
+
+alpinebotaidepl = "alpinebotaidepl"
+
+azure_openai_key = "1234"
+
 environment = "dev"

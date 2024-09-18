@@ -15,6 +15,30 @@ resource "azurerm_resource_group" "rg" {
   }
 }
 
+#### Deploy AlpineBot OpenAI Service ######
+
+resource "azurerm_cognitive_account" "alpinebotaiact" {
+  name                = var.alpinebotaiact
+  location            = var.az_location
+  resource_group_name = var.az_rg_name
+  kind                = "OpenAI"
+  sku_name            = "S0"
+}
+
+resource "azurerm_cognitive_deployment" "alpinebotaidepl" {
+  name                 = var.alpinebotaidepl
+  cognitive_account_id = azurerm_cognitive_account.alpinebotaiact.id
+  model {
+    format  = "OpenAI"
+    name    = "text-curie-001"
+    version = "1"
+  }
+
+  sku {
+    name = "Standard"
+  }
+}
+
 ### Creation of Azure Service Plan #########
 resource "azurerm_service_plan" "wap_sp_website" {
   name                = var.wap_sp_name
@@ -31,4 +55,34 @@ resource "azurerm_service_plan" "wap_sp_website" {
     dept        = var.department
     status      = var.wap_status
   }
+}
+
+##### Deploy AlpineBot Azure App Service ######
+
+resource "azurerm_app_service" "wap_app" {
+  name                = var.wap_website_name
+  location            = var.az_location
+  resource_group_name = azurerm_resource_group.rg.name
+  app_service_plan_id = azurerm_service_plan.wap_sp_website.id
+  
+  depends_on = [azurerm_service_plan.wap_sp_website]  # Explicit dependency
+
+  tags = {
+    project     = var.project
+    owner       = var.owner
+    dept        = var.department
+    status      = var.wap_status
+  }
+
+  site_config {
+    linux_fx_version = "DOTNETCORE|6.0"  # Define your runtime stack (can be Python, Node, etc.)
+  }
+
+  app_settings = {
+    "WEBSITE_RUN_FROM_PACKAGE" = "1"
+    "AZURE_OPENAI_KEY"         = var.azure_openai_key
+    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.appinsights.instrumentation_key
+  }
+
+  
 }
