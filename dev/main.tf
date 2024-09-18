@@ -26,6 +26,7 @@ resource "azurerm_application_insights" "apbotinsights" {
 
 output "instrumentation_key" {
   value = azurerm_application_insights.apbotinsights.instrumentation_key
+  sensitive = true  # Mark as sensitive
 }
 
 output "app_id" {
@@ -82,7 +83,7 @@ resource "azurerm_linux_web_app" "wap_app" {
   name                = var.wap_website_name
   location            = var.az_location
   resource_group_name = azurerm_resource_group.rg.name
-  service_plan_id = azurerm_service_plan.wap_sp_website.id
+  service_plan_id     = azurerm_service_plan.wap_sp_website.id
   
   depends_on = [azurerm_cognitive_account.alpinebotaiact, azurerm_service_plan.wap_sp_website]
 
