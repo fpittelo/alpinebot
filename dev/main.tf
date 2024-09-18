@@ -70,11 +70,11 @@ resource "azurerm_service_plan" "wap_sp_website" {
 
 ##### Deploy AlpineBot Azure App Service ######
 
-resource "azurerm_app_service" "wap_app" {
+resource "azurerm_linux_web_app" "wap_app" {
   name                = var.wap_website_name
   location            = var.az_location
   resource_group_name = azurerm_resource_group.rg.name
-  app_service_plan_id = azurerm_service_plan.wap_sp_website.id
+  service_plan_id = azurerm_service_plan.wap_sp_website.id
   
   depends_on = [azurerm_service_plan.wap_sp_website]  # Explicit dependency
 

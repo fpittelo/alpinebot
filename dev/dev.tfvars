@@ -14,7 +14,7 @@ az_location = "SwitzerlandNorth"
 
 apbotinsights_name = "apbotinsights"
 
-wap_sp_name = "alpinbot-sp"
+wap_sp_name = "alpinebot-sp"
 
 wap_website_name = "alpinebot"
 
