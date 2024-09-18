@@ -15,7 +15,7 @@ resource "azurerm_resource_group" "rg" {
   }
 }
 
-#### Deploy AlpineBot OpenAI Service ######
+#### Deploy AlpineBot OpenAI Account ######
 
 resource "azurerm_cognitive_account" "alpinebotaiact" {
   name                = var.alpinebotaiact
@@ -23,19 +23,13 @@ resource "azurerm_cognitive_account" "alpinebotaiact" {
   resource_group_name = var.az_rg_name
   kind                = "OpenAI"
   sku_name            = "S0"
-}
-
-resource "azurerm_cognitive_deployment" "alpinebotaidepl" {
-  name                 = var.alpinebotaidepl
-  cognitive_account_id = azurerm_cognitive_account.alpinebotaiact.id
-  model {
-    format  = "OpenAI"
-    name    = "text-curie-001"
-    version = "1"
-  }
-
-  sku {
-    name = "Standard"
+  
+  tags = {
+    project           = var.project
+    owner             = var.owner
+    department        = var.department
+    status            = var.wap_status
+    environment       = var.environment
   }
 }
 
