@@ -17,7 +17,7 @@ Clone the repository:
 
 bash
 Copy code
-git clone https://github.com/fpittelo/alpinebot/AlpineBot.git
+git clone https://github.com/fpittelo/alpinebot/
 cd AlpineBot
 Set up your environment: Make sure you have the following dependencies installed:
 
