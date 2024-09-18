@@ -86,7 +86,7 @@ resource "azurerm_linux_web_app" "wap_app" {
   }
 
   site_config {
-    linux_fx_version = "DOTNETCORE|6.0"  # Define your runtime stack (can be Python, Node, etc.)
+     # No need for linux_fx_version here in recent versions
   }
 
   app_settings = {
