@@ -1,11 +1,9 @@
 name: Deploy to dev
 
 on:
-  pull_request:
+  push:
     branches:
       - dev
-    types:
-      - closed
 
 permissions:
   id-token: write  # Required for OIDC authentication
@@ -15,7 +13,6 @@ jobs:
   # Step 1: Bootstrap Backend Resources (if not already done)
   backend:
     name: Deploy Backend
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment: dev # must match the federated credential "based on selection" \
     # and match Github Action Secrets name
