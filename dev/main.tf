@@ -23,25 +23,19 @@ resource "azurerm_key_vault" "alpinebot_kv" {
   resource_group_name         = azurerm_resource_group.rg.name
   tenant_id                   = var.az_tenant_id
   sku_name                    = "standard"
-
+  enable_rbac_authorization   = true  # Enable Azure RBAC authorization
   tags = {
     environment = var.environment
     project     = var.project
     owner       = var.owner
   }
+}
 
-  access_policy {
-    tenant_id = var.az_tenant_id
-    object_id = data.azurerm_client_config.current.object_id
-
-    secret_permissions = [
-      "Get",
-      "List",
-      "Set",
-      "Delete",
-      "Purge",
-    ]
-  }
+# Assign Key Vault Secrets User role to the Service Principal
+resource "azurerm_role_assignment" "pipeline_sp_kv_access" {
+  scope                = azurerm_key_vault.alpinebot_kv.id
+  role_definition_name = "Key Vault Secrets User"
+  principal_id         = var.sp_object_id  # We'll obtain this in the next step
 }
 
 # Store OpenAI API Key in Key Vault

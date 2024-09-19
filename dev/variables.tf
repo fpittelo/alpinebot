@@ -68,7 +68,7 @@ variable "wap_website_name" {
   type        = string
 }
 
-variable "service_principal_object_id" {
+variable "sp_object_id" {
   description = "The Object ID of the App Service's Service Principal"
   type        = string
 }
