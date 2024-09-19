@@ -109,6 +109,10 @@ jobs:
       - name: Set Up Terraform
         uses: hashicorp/setup-terraform@v2
 
+      - name: Force Unlock Terraform state
+        run: terraform force-unlock 468fed10-78df-9404-e408-430db7b96801
+        continue-on-error: true
+
       - name: Terraform Init
         working-directory: ./dev
         env:
