@@ -44,9 +44,10 @@ resource "azurerm_key_vault" "alpinebot_kv" {
 }
 
 # Store OpenAI API Key in Key Vault
-resource "azurerm_key_vault_secret" "openai_api_key" {
-  name         = var.az_kv_name
-  value        = var.azure_openai_key   # Retrieved securely in the workflow
+resource "azurerm_key_vault_secret" "openai_key_name" {
+  name         = var.az_openai_key_name
+  value        = var.az_openai_key_value
+   # Retrieved securely in the workflow
   key_vault_id = azurerm_key_vault.alpinebot_kv.id
   
   tags = {
@@ -158,7 +159,7 @@ resource "azurerm_linux_web_app" "wap_app" {
   "WEBSITE_RUN_FROM_PACKAGE"        = "1"
   
   # Use Key Vault Reference for the OpenAI Key
-  "AZURE_OPENAI_KEY" = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.alpinebot_kv.vault_uri}secrets/openai-api-key)"
+  "AZURE_OPENAI_KEY" = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.openai_key_name.id})"
   
   "APPINSIGHTS_INSTRUMENTATIONKEY"  = azurerm_application_insights.apbotinsights.instrumentation_key
   }

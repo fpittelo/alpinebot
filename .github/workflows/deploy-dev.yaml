@@ -103,8 +103,8 @@ jobs:
           echo "TF_VAR_az_tenant_id=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_az_subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_az_container_name=dev-bkd-alpinebot-co" >> $GITHUB_ENV  # Replace with actual container name if different
-          echo "TF_VAR_azure_openai_key=${{ secrets.AZURE_OPENAI_KEY }}" >> $GITHUB_ENV
           echo "TF_VAR_service_principal_object_id=${{ secrets.AZURE_SP_OBJECT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_az_openai_key_value=${{ secrets.AZURE_OPENAI_KEY }}" >> $GITHUB_ENV  # Add this line
       
       - name: Set Up Terraform
         uses: hashicorp/setup-terraform@v2
@@ -132,10 +132,32 @@ jobs:
         run: |
           terraform apply -var-file="dev.tfvars" -auto-approve
       
-      - name: Output OpenAI Key
+      - name: Retrieve OpenAI Key from Key Vault
         run: |
-          terraform output openai_api_key
-
+          # Log in to Azure CLI using OIDC
+          az login --identity
+      
+          # Retrieve the secret value from Key Vault
+          SECRET_VALUE=$(az keyvault secret show --name "dev-alpinebot-kv" --vault-name "dev-alpinebot-kv" --query "value" -o tsv)
+      
+          # Export the secret as an environment variable (avoid printing it)
+          echo "SECRET_VALUE=${SECRET_VALUE}" >> $GITHUB_ENV
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        
+      - name: Set OpenAI API Key in App Service
+        run: |
+          az webapp config appsettings set --name "dev-alpinebot-as" \
+          --resource-group "dev-alpinebot" \
+          --settings AZURE_OPENAI_KEY="$SECRET_VALUE"
+        env:
+          SECRET_VALUE: ${{ env.SECRET_VALUE }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        
       - name: Upload Terraform Log
         if: always()  # This forces the step to run regardless of the outcome of previous steps
         uses: actions/upload-artifact@v4
