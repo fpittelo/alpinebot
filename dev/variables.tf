@@ -70,17 +70,17 @@ variable "wap_sp_sku_os_linux" {
 }
 
 variable "alpinebotaiact" {
-  description = "value of os type"
+  description = "value of OpenAI Account"
   type = string
 }
 
 variable "alpinebotaidepl" {
-  description = "value of os type"
+  description = "value of OpenAI Deployment"
   type = string
 }
 
 variable "azure_openai_key" {
-  description = "value of os type"
+  description = "value of OpenAI Key"
   type = string
 }
 

@@ -30,8 +30,8 @@ wap_sp_sku_os_linux = "Linux"
 
 wap_sp_sku = "S1"
 
-alpinebotaiact = "alpinebotaiact"
+alpinebotaiact = "alpinebot"
 
-alpinebotaidepl = "alpinebotaidepl"
+alpinebotaidepl = "alpinebotdpl"
 
 environment = "dev"
