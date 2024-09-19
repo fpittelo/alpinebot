@@ -115,7 +115,7 @@ jobs:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_USE_OIDC: true  # Instruct Terraform to use OIDC-based auth
+          ARM_USE_OIDC: true
         run: |
           terraform init -var-file="dev.tfvars"
   
@@ -134,12 +134,9 @@ jobs:
       
       - name: Retrieve OpenAI Key from Key Vault
         working-directory: ./dev
-        run: |
-          # Log in to Azure CLI using OIDC
-          az login --identity
-      
+        run: |      
           # Retrieve the secret value from Key Vault
-          SECRET_VALUE=$(az keyvault secret show --name "dev-alpinebot-kv" --vault-name "dev-alpinebot-kv" --query "value" -o tsv)
+          SECRET_VALUE=$(az keyvault secret show --name "dev-alpinebot-openai-key" --vault-name "dev-alpinebot-kv" --query "value" -o tsv)
       
           # Export the secret as an environment variable (avoid printing it)
           echo "SECRET_VALUE=${SECRET_VALUE}" >> $GITHUB_ENV
@@ -147,18 +144,14 @@ jobs:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        
-      - name: Set OpenAI API Key in App Service
-        run: |
-          az webapp config appsettings set --name "dev-alpinebot-as" \
-          --resource-group "dev-alpinebot" \
-          --settings AZURE_OPENAI_KEY="$SECRET_VALUE"
-        env:
-          SECRET_VALUE: ${{ env.SECRET_VALUE }}
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        
+      
+#     - name: Deploy Web Application
+#       run: |
+#         # Commands to build and deploy your web application
+#         # Use $SECRET_VALUE as needed
+#       env:
+#         SECRET_VALUE: ${{ env.SECRET_VALUE }} 
+
       - name: Upload Terraform Log
         if: always()  # This forces the step to run regardless of the outcome of previous steps
         uses: actions/upload-artifact@v4

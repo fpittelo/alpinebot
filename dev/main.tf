@@ -38,6 +38,17 @@ resource "azurerm_role_assignment" "pipeline_sp_kv_access" {
   principal_id         = var.sp_object_id  # We'll obtain this in the next step
 }
 
+# Grant the App Service's Managed Identity Access to the Key Vault
+resource "azurerm_role_assignment" "app_service_kv_access" {
+  scope                = azurerm_key_vault.alpinebot_kv.id
+  role_definition_name = "Key Vault Secrets User"
+  principal_id         = azurerm_linux_web_app.wap_app.identity.principal_id
+
+  depends_on = [
+    azurerm_linux_web_app.wap_app
+  ]
+}
+
 # Store OpenAI API Key in Key Vault
 resource "azurerm_key_vault_secret" "openai_key_name" {
   name         = var.az_openai_key_name
@@ -150,12 +161,14 @@ resource "azurerm_linux_web_app" "wap_app" {
      # No need for linux_fx_version here in recent versions
   }
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   app_settings = {
-  "WEBSITE_RUN_FROM_PACKAGE"        = "1"
+    "WEBSITE_RUN_FROM_PACKAGE"        = "1"
+    "AZURE_OPENAI_KEY" = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.openai_key_name.id})"
+    "APPINSIGHTS_INSTRUMENTATIONKEY"  = azurerm_application_insights.apbotinsights.instrumentation_key
   
-  # Use Key Vault Reference for the OpenAI Key
-  "AZURE_OPENAI_KEY" = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.openai_key_name.id})"
-  
-  "APPINSIGHTS_INSTRUMENTATIONKEY"  = azurerm_application_insights.apbotinsights.instrumentation_key
   }
 }
