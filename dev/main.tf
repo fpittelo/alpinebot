@@ -15,6 +15,58 @@ resource "azurerm_resource_group" "rg" {
   }
 }
 
+# Create the Azure Key Vault
+resource "azurerm_key_vault" "alpinebot_kv" {
+  name                        = var.az_kv_name
+  location                    = var.az_location
+  resource_group_name          = azurerm_resource_group.rg.name
+  tenant_id                   = var.az_tenant_id
+  sku_name                    = "standard"
+
+  tags = {
+    environment = var.environment
+    project     = var.project
+    owner       = var.owner
+  }
+}
+
+# Key Vault Access Policy - Grants access to App Service Identity
+resource "azurerm_key_vault_access_policy" "apbot_policy" {
+  key_vault_id = azurerm_key_vault.alpinebot_kv.id
+  tenant_id    = var.az_tenant_id
+  object_id    = var.service_principal_object_id  # Use the variable
+
+
+  secret_permissions = [
+    "get",
+    "list"
+  ]
+}
+
+# Store OpenAI API Key in Key Vault
+resource "azurerm_key_vault_secret" "openai_api_key" {
+  name         = var.az_kv_name
+  value        = var.azure_openai_key   # Retrieved securely in the workflow
+  key_vault_id = var.az_kv_name.id
+  
+  tags = {
+    project     = var.project
+    owner       = var.owner
+    department  = var.department
+    status      = var.wap_status
+    environment = var.environment
+  }
+}
+
+# Output Key Vault name and URL for later use
+output "key_vault_name" {
+  value = azurerm_key_vault.alpinebot_kv.name
+}
+
+output "key_vault_uri" {
+  value = azurerm_key_vault.alpinebot_kv.vault_uri
+}
+
 ### Deploy App Insights #########
 
 resource "azurerm_application_insights" "apbotinsights" {
@@ -99,8 +151,11 @@ resource "azurerm_linux_web_app" "wap_app" {
   }
 
   app_settings = {
-    "WEBSITE_RUN_FROM_PACKAGE"        = "1"
-    "AZURE_OPENAI_KEY"                = azurerm_cognitive_account.alpinebotaiact.primary_access_key
-    "APPINSIGHTS_INSTRUMENTATIONKEY"  = azurerm_application_insights.apbotinsights.instrumentation_key
+  "WEBSITE_RUN_FROM_PACKAGE"        = "1"
+  
+  # Use Key Vault Reference for the OpenAI Key
+  "AZURE_OPENAI_KEY" = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.alpinebot_kv.vault_uri}secrets/openai-api-key)"
+  
+  "APPINSIGHTS_INSTRUMENTATIONKEY"  = azurerm_application_insights.apbotinsights.instrumentation_key
   }
 }

@@ -1,37 +1,20 @@
 #### Variables values ####
-
-az_backend_rg_name = "apbotbackend"
-
-az_backend_sa_name = "apbotbackend"
-
-az_backend_container_name = "apbotbackend"
-
-az_rg_name = "alpinebot"
-
-terraform_key = "terraform.tfstate"
-
+az_backend_rg_name = "dev-bkd-alpinebot"
+az_backend_sa_name = "dev-bkd-alpinebot-sa"
+az_backend_container_name = "dev-bkd-alpinebot-co"
+az_rg_name = "dev-alpinebot"
+az_kv_name = "dev-alpinebot-kv"
+terraform_key = "dev-terraform-state"
 az_location = "SwitzerlandNorth"
-
-apbotinsights_name = "apbotinsights"
-
-wap_sp_name = "alpinebot-sp"
-
-wap_website_name = "alpinebot"
-
-wap_status = "main"
-
-department = "IT"
-
-project = "AlpineBot"
-
-owner = "Fred"
-
-wap_sp_sku_os_linux = "Linux"
-
+apbotinsights_name = "dev-apbotinsights"
+wap_sp_name = "dev-alpinebot-sp"
+wap_website_name = "dev-alpinebot-as"
 wap_sp_sku = "S1"
-
-alpinebotaiact = "alpinebot"
-
-alpinebotaidepl = "alpinebotdpl"
-
+wap_sp_sku_os_linux = "Linux"
+alpinebotaiact = "dev-alpinebot-act"
+alpinebotaidepl = "dev-alpinebot-dpl"
+project = "AlpineBot"
+owner = "Fred"
+department = "IT Department"
+wap_status = "development"
 environment = "dev"

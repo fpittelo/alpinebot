@@ -31,7 +31,12 @@ variable "az_backend_container_name" {
 }
 
 variable "az_rg_name" {
-  description = "value of container name"
+  description = "value of resource group name"
+  type = string
+}
+
+variable "az_kv_name" {
+  description = "value of Key Vault name"
   type = string
 }
 
@@ -56,6 +61,11 @@ variable "wap_sp_name" {
 
 variable "wap_website_name" {
   description = "The name of the App Service"
+  type        = string
+}
+
+variable "service_principal_object_id" {
+  description = "The Object ID of the App Service's Service Principal"
   type        = string
 }
 
