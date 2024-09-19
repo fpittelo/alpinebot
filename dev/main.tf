@@ -74,6 +74,8 @@ resource "azurerm_application_insights" "apbotinsights" {
   location            = var.az_location
   resource_group_name = var.az_rg_name
   application_type    = "web"
+
+  depends_on = [azurerm_resource_group.rg]  # Ensures this resource is created after the resource group
 }
 
 output "instrumentation_key" {
@@ -94,6 +96,8 @@ resource "azurerm_cognitive_account" "alpinebotaiact" {
   kind                = "OpenAI"
   sku_name            = "S0"
   
+  depends_on = [azurerm_resource_group.rg]  # Ensures this resource is created after the resource group
+
   tags = {
     project           = var.project
     owner             = var.owner

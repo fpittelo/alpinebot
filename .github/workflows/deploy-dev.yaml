@@ -126,7 +126,7 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           ARM_USE_OIDC: true  # Instruct Terraform to use OIDC-based auth
-          TF_VAR_azure_openai_key: ${{ secrets.AZURE_OPENAI_KEY }}" >> $GITHUB_ENV
+          TF_VAR_azure_openai_key: ${{ secrets.AZURE_OPENAI_KEY }}
           TF_LOG: DEBUG  # Enable detailed Terraform logging
           TF_LOG_PATH: terraform.log  # Path to save the log file within the working directory
         run: |
