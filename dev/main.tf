@@ -16,10 +16,11 @@ resource "azurerm_resource_group" "rg" {
 }
 
 # Create the Azure Key Vault
+
 resource "azurerm_key_vault" "alpinebot_kv" {
   name                        = var.az_kv_name
   location                    = var.az_location
-  resource_group_name          = azurerm_resource_group.rg.name
+  resource_group_name         = azurerm_resource_group.rg.name
   tenant_id                   = var.az_tenant_id
   sku_name                    = "standard"
 
@@ -28,20 +29,18 @@ resource "azurerm_key_vault" "alpinebot_kv" {
     project     = var.project
     owner       = var.owner
   }
-}
 
-# Key Vault Access Policy - Grants access to App Service Identity
-resource "azurerm_key_vault_access_policy" "apbot_policy" {
-  key_vault_id = azurerm_key_vault.alpinebot_kv.id
-  tenant_id    = var.az_tenant_id
-  object_id    = var.service_principal_object_id  # Use the variable
+  access_policy {
+    tenant_id = var.az_tenant_id
+    object_id = data.azurerm_client_config.current.object_id
 
-
-  secret_permissions = [
-    "Get",
-    "List",
-    "Set",
-  ]
+    secret_permissions = [
+      "Get",
+      "List",
+      "Set",
+      "Delete",
+    ]
+  }
 }
 
 # Store OpenAI API Key in Key Vault
