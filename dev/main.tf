@@ -39,7 +39,8 @@ resource "azurerm_key_vault_access_policy" "apbot_policy" {
 
   secret_permissions = [
     "Get",
-    "List"
+    "List",
+    "Set",
   ]
 }
 
