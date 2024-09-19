@@ -35,14 +35,15 @@ resource "azurerm_key_vault" "alpinebot_kv" {
 resource "azurerm_role_assignment" "pipeline_sp_kv_access" {
   scope                = azurerm_key_vault.alpinebot_kv.id
   role_definition_name = "Key Vault Secrets User"
-  principal_id         = var.sp_object_id  # We'll obtain this in the next step
+  principal_id = var.sp_object_id
+  
 }
 
 # Grant the App Service's Managed Identity Access to the Key Vault
 resource "azurerm_role_assignment" "app_service_kv_access" {
   scope                = azurerm_key_vault.alpinebot_kv.id
   role_definition_name = "Key Vault Secrets User"
-  principal_id         = azurerm_linux_web_app.wap_app.identity.principal_id
+  principal_id = azurerm_linux_web_app.wap_app.identity[0].principal_id
 
   depends_on = [
     azurerm_linux_web_app.wap_app
