@@ -133,6 +133,7 @@ jobs:
           terraform apply -var-file="dev.tfvars" -auto-approve
       
       - name: Retrieve OpenAI Key from Key Vault
+        working-directory: ./dev
         run: |
           # Log in to Azure CLI using OIDC
           az login --identity
