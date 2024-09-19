@@ -39,6 +39,7 @@ resource "azurerm_key_vault" "alpinebot_kv" {
       "List",
       "Set",
       "Delete",
+      "Purge",
     ]
   }
 }
