@@ -1,6 +1,6 @@
 #### Variables values ####
 az_backend_rg_name = "dev-bkd-alpinebot"
-az_backend_sa_name = "dev-bkd-alpinebot-sa"
+az_backend_sa_name = "devbkdalpinebotsa"
 az_backend_container_name = "dev-bkd-alpinebot-co"
 az_rg_name = "dev-alpinebot"
 az_kv_name = "dev-alpinebot-kv"
