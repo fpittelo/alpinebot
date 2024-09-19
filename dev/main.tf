@@ -38,8 +38,8 @@ resource "azurerm_key_vault_access_policy" "apbot_policy" {
 
 
   secret_permissions = [
-    "get",
-    "list"
+    "Get",
+    "List"
   ]
 }
 
@@ -47,7 +47,7 @@ resource "azurerm_key_vault_access_policy" "apbot_policy" {
 resource "azurerm_key_vault_secret" "openai_api_key" {
   name         = var.az_kv_name
   value        = var.azure_openai_key   # Retrieved securely in the workflow
-  key_vault_id = var.az_kv_name.id
+  key_vault_id = azurerm_key_vault.alpinebot_kv.id
   
   tags = {
     project     = var.project
