@@ -13,6 +13,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~> 4.1.0"  # Use the appropriate version
     }
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "~> 2.5.0"
+    }
   }
 }
 
@@ -23,4 +27,9 @@ provider "azurerm" {
       recover_soft_deleted_key_vaults = true
     }
  }
+}
+
+provider "azuread" {
+  # tenant_id will be passed from main.tf or variables.tf
+  tenant_id = var.az_tenant_id
 }
