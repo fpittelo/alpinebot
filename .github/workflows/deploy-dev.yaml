@@ -123,17 +123,16 @@ jobs:
         uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Init
-        working-directory: ./dev
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           ARM_USE_OIDC: true
         run: |
-          terraform init -var-file="dev.tfvars"
+          terraform init -var-file="${{ env.ENVIRONMENT }}.tfvars"
+        working-directory: ./${{ env.ENVIRONMENT }}
   
       - name: Terraform Apply
-        working-directory: ./dev
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -143,7 +142,8 @@ jobs:
           TF_LOG: DEBUG  # Enable detailed Terraform logging
           TF_LOG_PATH: terraform.log  # Path to save the log file within the working directory
         run: |
-          terraform apply -var-file="dev.tfvars" -auto-approve
+          terraform apply -var-file="${{ env.ENVIRONMENT }}.tfvars" -auto-approve
+        working-directory: ./${{ env.ENVIRONMENT }}
       
       - name: Retrieve OpenAI Key from Key Vault
         working-directory: ./dev
