@@ -16,7 +16,7 @@ jobs:
   backend:
     name: Deploy Backend
     runs-on: ubuntu-latest
-    environment: dev # must match the federated credential "based on selection" \
+    environment: ${{ github.ref_name }} # must match the federated credential "based on selection" \
     # and match Github Action Secrets name
     steps:
       - name: Checkout code
@@ -55,9 +55,9 @@ jobs:
       - name: Create backend resources
         run: |
           # Define variables for the backend resources
-          az_backend_rg_name="dev-bkd-alpinebot"
-          az_backend_sa_name="devbkdalpinebotsa"
-          az_backend_container_name="dev-bkd-alpinebot-co"
+          az_backend_rg_name="${{ env.ENVIRONMENT }}-bkd-alpinebot"
+          az_backend_sa_name="${{ env.ENVIRONMENT }}bkdalpinebotsa"
+          az_backend_container_name="${{ env.ENVIRONMENT }}-bkd-alpinebot-co"
           az_location="SwitzerlandNorth"
 
           # Re-set subscription context before resource group creation as additional safeguard
@@ -92,7 +92,7 @@ jobs:
   deploy:
     name: Deploy Infra
     runs-on: ubuntu-latest
-    environment: dev #must match the federated credential "based on selection" \
+    environment: ${{ github.ref_name }} #must match the federated credential "based on selection" \
     # and match Github Action Secrets name
     needs: backend # Ensures this runs after the bootstrap job
   
@@ -115,7 +115,7 @@ jobs:
           echo "TF_VAR_az_client_id=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_az_tenant_id=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_az_subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
-          echo "TF_VAR_az_container_name=dev-bkd-alpinebot-co" >> $GITHUB_ENV  # Replace with actual container name if different
+          echo "TF_VAR_az_container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" >> $GITHUB_ENV  # Replace with actual container name if different
           echo "TF_VAR_sp_object_id=${{ secrets.AZURE_SP_OBJECT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_az_openai_key_value=${{ secrets.AZURE_OPENAI_KEY }}" >> $GITHUB_ENV  # Add this line
       
@@ -146,10 +146,10 @@ jobs:
         working-directory: ./${{ env.ENVIRONMENT }}
       
       - name: Retrieve OpenAI Key from Key Vault
-        working-directory: ./dev
+        working-directory: ./${{ env.ENVIRONMENT }}
         run: |      
           # Retrieve the secret value from Key Vault
-          SECRET_VALUE=$(az keyvault secret show --name "dev-alpinebot-openai-key" --vault-name "dev-alpinebot-kv" --query "value" -o tsv)
+          SECRET_VALUE=$(az keyvault secret show --name "${{ env.ENVIRONMENT }}-alpinebot-openai-key" --vault-name "${{ env.ENVIRONMENT }}-alpinebot-kv" --query "value" -o tsv)
       
           # Export the secret as an environment variable (avoid printing it)
           echo "SECRET_VALUE=${SECRET_VALUE}" >> $GITHUB_ENV
@@ -170,4 +170,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: terraform-log
-          path: ./dev/terraform.log  # Path to the log file
+          path: ./${{ env.ENVIRONMENT }}/terraform.log  # Path to the log file
+          overwrite: true
