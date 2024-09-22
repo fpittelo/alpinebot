@@ -142,6 +142,7 @@ jobs:
           TF_LOG: DEBUG  # Enable detailed Terraform logging
           TF_LOG_PATH: terraform.log  # Path to save the log file within the working directory
         run: |
+          echo "Using environment: ${{ env.ENVIRONMENT }}"
           terraform apply -var-file="${{ env.ENVIRONMENT }}.tfvars" -auto-approve
         working-directory: ./${{ env.ENVIRONMENT }}
       
