@@ -18,6 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name }} # must match the federated credential "based on selection" \
     # and match Github Action Secrets name
+    outputs:
+      environment: ${{ steps.setenv.outputs.environment }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
