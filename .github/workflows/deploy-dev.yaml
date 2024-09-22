@@ -25,11 +25,12 @@ jobs:
       - name: Set environment based on branch
         id: setenv
         run: |
-          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+          BRANCH_NAME=$(echo "${{ github.ref }}" | cut -d'/' -f3)
+          if [[ "$BRANCH_NAME" == "dev" ]]; then
             echo "ENVIRONMENT=dev" >> $GITHUB_ENV
-          elif [[ "${{ github.ref }}" == "refs/heads/qa" ]]; then
+          elif [[ "$BRANCH_NAME" == "qa" ]]; then
             echo "ENVIRONMENT=qa" >> $GITHUB_ENV
-          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+          elif [[ "$BRANCH_NAME" == "main" ]]; then
             echo "ENVIRONMENT=main" >> $GITHUB_ENV
           fi
 
