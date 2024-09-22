@@ -4,29 +4,31 @@
 
 resource "azurerm_resource_group" "rg" {
   name            = var.az_rg_name
-  location        = var.location
+  location        = var.az_location
 
   tags = {
     project       = var.project
     owner         = var.owner
     department    = var.department
-    status        = var.status
+    status        = var.wap_status
     environment   = var.environment
   }
 }
 
 # Create the Azure Key Vault
 
-module "key_vault" {
-  source = "./modules/key_vault"
-  var1 = var.az_kv_name
-  var2 = var.az_location
-  var3 = var.resource_group_name
-  var4 = var.tenant_id
-  var6 = var.openai_key_name
-  var7 = var.openai_key_value
-
-  tags = var.tags
+resource "azurerm_key_vault" "alpinebot_kv" {
+  name                        = var.az_kv_name
+  location                    = var.az_location
+  resource_group_name         = azurerm_resource_group.rg.name
+  tenant_id                   = var.az_tenant_id
+  sku_name                    = "standard"
+  enable_rbac_authorization   = true  # Enable Azure RBAC authorization
+  tags = {
+    environment = var.environment
+    project     = var.project
+    owner       = var.owner
+  }
 }
 
 # Data block to retrieve the Dev_Admins Azure AD Group
@@ -61,31 +63,31 @@ resource "azurerm_key_vault_secret" "openai_key_name" {
   name         = var.az_openai_key_name
   value        = var.az_openai_key_value
    # Retrieved securely in the workflow
-  key_vault_id = data.azurerm_key_vault.dev_kv
+  key_vault_id = azurerm_key_vault.alpinebot_kv.id
   
   tags = {
     project     = var.project
     owner       = var.owner
     department  = var.department
-    status      = var.status
+    status      = var.wap_status
     environment = var.environment
   }
 }
 
 # Output Key Vault name and URL for later use
 output "key_vault_name" {
-  value = data.azurerm_key_vault.dev_kv.name
+  value = azurerm_key_vault.alpinebot_kv.name
 }
 
 output "key_vault_uri" {
-  value = data.azurerm_key_vault.dev_kv.vault_uri
+  value = azurerm_key_vault.alpinebot_kv.vault_uri
 }
 
 ### Deploy App Insights #########
 
 resource "azurerm_application_insights" "apbotinsights" {
   name                = var.apbotinsights_name
-  location            = var.location
+  location            = var.az_location
   resource_group_name = var.az_rg_name
   application_type    = "web"
 
@@ -103,20 +105,9 @@ output "app_id" {
 
 #### Deploy AlpineBot OpenAI Account ######
 
-module "cognitive_account" {
-  source = "./modules/cognitive_account/"
-  var1 = var.alpinebot_openai_name
-  var2 = var.location
-  var3 = var.az_rg_name
-  
-  tags = var.tags
-}
-
-#### Deploy AlpineBot OpenAI Account ######
-
 resource "azurerm_cognitive_account" "alpinebotaiact" {
   name                = var.alpinebotaiact
-  location            = var.location
+  location            = var.az_location
   resource_group_name = var.az_rg_name
   kind                = "OpenAI"
   sku_name            = "S0"
@@ -127,7 +118,7 @@ resource "azurerm_cognitive_account" "alpinebotaiact" {
     project           = var.project
     owner             = var.owner
     department        = var.department
-    status            = var.status
+    status            = var.wap_status
     environment       = var.environment
   }
   
@@ -143,7 +134,7 @@ output "azure_openai_key" {
 ### Creation of Azure Service Plan #########
 resource "azurerm_service_plan" "wap_sp_website" {
   name                = var.wap_sp_name
-  location            = var.location
+  location            = var.az_location
   resource_group_name = var.az_rg_name
   sku_name            = var.wap_sp_sku
   os_type             = var.wap_sp_sku_os_linux
@@ -154,7 +145,7 @@ resource "azurerm_service_plan" "wap_sp_website" {
     project     = var.project
     owner       = var.owner
     dept        = var.department
-    status      = var.status
+    status      = var.wap_status
   }
 }
 
@@ -162,7 +153,7 @@ resource "azurerm_service_plan" "wap_sp_website" {
 
 resource "azurerm_linux_web_app" "wap_app" {
   name                = var.wap_website_name
-  location            = var.location
+  location            = var.az_location
   resource_group_name = azurerm_resource_group.rg.name
   service_plan_id     = azurerm_service_plan.wap_sp_website.id
   
@@ -172,7 +163,7 @@ resource "azurerm_linux_web_app" "wap_app" {
     project     = var.project
     owner       = var.owner
     dept        = var.department
-    status      = var.status
+    status      = var.wap_status
   }
 
   site_config {

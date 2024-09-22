@@ -45,17 +45,12 @@ variable "az_openai_key_name" {
   type = string
 }
 
-variable "az_openai_key_value" {
-  description = "value of OpenAI Key"
-  type = string
-}
-
 variable "terraform_key" {
   description = "value of terraform state file name"
   type = string
 }
 
-variable "location" {
+variable "az_location" {
   description = "value of resource group location"
   type = string
 }
@@ -98,6 +93,11 @@ variable "alpinebotaidepl" {
   type = string
 }
 
+variable "az_openai_key_value" {
+  description = "value of OpenAI Key"
+  type = string
+}
+
 variable "project" {
   description = "value of project"
   type = string
@@ -113,7 +113,7 @@ variable "department" {
   type = string
 }
 
-variable "status" {
+variable "wap_status" {
   description = "Project Status"
   type = string
 }
