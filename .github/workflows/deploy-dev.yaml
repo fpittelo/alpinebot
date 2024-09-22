@@ -27,10 +27,13 @@ jobs:
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
             echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+            echo "environment=dev" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref }}" == "refs/heads/qa" ]]; then
             echo "ENVIRONMENT=qa" >> $GITHUB_ENV
+            echo "environment=qa" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "ENVIRONMENT=main" >> $GITHUB_ENV
+            echo "environment=main" >> $GITHUB_OUTPUT
           fi
 
       - name: Login to Azure using OIDC
@@ -95,7 +98,8 @@ jobs:
     environment: ${{ github.ref_name }} #must match the federated credential "based on selection" \
     # and match Github Action Secrets name
     needs: backend # Ensures this runs after the bootstrap job
-  
+    env:
+      ENVIRONMENT: ${{ needs.backend.outputs.environment }}
     steps:
 
       - name: Checkout code
@@ -141,6 +145,7 @@ jobs:
           TF_VAR_azure_openai_key: ${{ secrets.AZURE_OPENAI_KEY }}
           TF_LOG: DEBUG  # Enable detailed Terraform logging
           TF_LOG_PATH: terraform.log  # Path to save the log file within the working directory
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}  # Ensure ENVIRONMENT is set
         run: |
           echo "Using environment: ${{ env.ENVIRONMENT }}"
           terraform apply -var-file="${{ env.ENVIRONMENT }}.tfvars" -auto-approve
