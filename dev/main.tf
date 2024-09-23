@@ -32,19 +32,6 @@ data "azuread_group" "dev_admins" {
   display_name = "Dev_Admins"
 }
 
-# Assign the "Key Vault Secrets Officer" role to the Dev_Admins group using RBAC
-resource "azurerm_role_assignment" "dev_admins_kv_secrets_officer" {
-  scope                = data.azurerm_key_vault.dev_kv.id
-  role_definition_name = "Key Vault Secrets Officer"  # Predefined role in Azure
-  principal_id         = data.azuread_group.dev_admins.object_id
-}
-
-# Assign the "Key Vault Administrator" role to the Dev_Admins group using RBAC
-resource "azurerm_role_assignment" "dev_admins_kv_administrator" {
-  scope                = data.azurerm_key_vault.dev_kv.id
-  role_definition_name = "Key Vault Administrator"  # Full admin control over the Key Vault
-  principal_id         = data.azuread_group.dev_admins.object_id
-}
 ### Deploy App Insights #########
 
 resource "azurerm_application_insights" "apbotinsights" {
