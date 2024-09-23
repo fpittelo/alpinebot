@@ -32,14 +32,6 @@ data "azuread_group" "dev_admins" {
   display_name = "Dev_Admins"
 }
 
-# Data block to retrieve the Key Vault details
-data "azurerm_key_vault" "dev_kv" {
-  name                = var.az_kv_name
-  resource_group_name = var.az_rg_name
-
-# depends_on = [ azurerm_key_vault.alpinebot_kv ]
-}
-
 # Assign the "Key Vault Secrets Officer" role to the Dev_Admins group using RBAC
 resource "azurerm_role_assignment" "dev_admins_kv_secrets_officer" {
   scope                = data.azurerm_key_vault.dev_kv.id
