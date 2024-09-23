@@ -13,7 +13,7 @@ az_backend_sa_name                  = "devbkdalpinebotsa"
 az_backend_container_name           = "dev-bkd-alpinebot-co"
 terraform_key                       = "dev-terraform-state"
 
-az_rg_name                          = "dev-alpinebot-rg"
+az_rg_name                          = "dev-alpinebot"
 az_kv_name                          = "dev-alpinebot-kv"
 
 wap_sp_name                         = "dev-alpinebot-sp"
