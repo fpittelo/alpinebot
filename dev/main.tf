@@ -59,32 +59,6 @@ resource "azurerm_role_assignment" "dev_admins_kv_administrator" {
   role_definition_name = "Key Vault Administrator"  # Full admin control over the Key Vault
   principal_id         = data.azuread_group.dev_admins.object_id
 }
-
-# Store OpenAI API Key in Key Vault
-#resource "azurerm_key_vault_secret" "openai_key_name" {
-# name         = var.az_openai_key_name
-# value        = var.az_openai_key_value
-#  # Retrieved securely in the workflow
-# key_vault_id = data.azurerm_key_vault.dev_kv
-# 
-# tags = {
-#   project     = var.project
-#   owner       = var.owner
-#   department  = var.department
-#   status      = var.status
-#   environment = var.environment
-# }
-#}
-
-# Output Key Vault name and URL for later use
-#output "key_vault_name" {
-# value = data.azurerm_key_vault.dev_kv.name
-#}
-
-#output "key_vault_uri" {
-# value = data.azurerm_key_vault.dev_kv.vault_uri
-#}
-
 ### Deploy App Insights #########
 
 resource "azurerm_application_insights" "apbotinsights" {

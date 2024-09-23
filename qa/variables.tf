@@ -40,16 +40,6 @@ variable "az_kv_name" {
   type = string
 }
 
-variable "az_openai_key_name" {
-  description = "value of OpenAI Key"
-  type = string
-}
-
-variable "terraform_key" {
-  description = "value of terraform state file name"
-  type = string
-}
-
 variable "az_location" {
   description = "value of resource group location"
   type = string
