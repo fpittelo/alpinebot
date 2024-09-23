@@ -93,31 +93,6 @@ variable "sku_name_cog_acct" {
   type = string
 }
 
-variable "project" {
-  description = "value of project"
-  type = string
-}
-
-variable "owner" {
-  description = "value of the owner"
-  type = string
-}
-
-variable "department" {
-  description = "value of department"
-  type = string
-}
-
-variable "status" {
-  description = "Project Status"
-  type = string
-}
-
-variable "environment" {
-  description = "The environment for deployment"
-  type        = string
-}
-
 variable "rbac_enabled" {
   description = "value of RBAC enabled"
   type = string

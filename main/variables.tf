@@ -88,31 +88,6 @@ variable "az_openai_key_value" {
   type = string
 }
 
-variable "project" {
-  description = "value of project"
-  type = string
-}
-
-variable "owner" {
-  description = "value of the owner"
-  type = string
-}
-
-variable "department" {
-  description = "value of department"
-  type = string
-}
-
-variable "wap_status" {
-  description = "Project Status"
-  type = string
-}
-
-variable "environment" {
-  description = "The environment for deployment"
-  type        = string
-}
-
 variable "tags" {
   description = "Tags to apply to Key Vault resources"
   type        = map(string)

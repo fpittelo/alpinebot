@@ -140,7 +140,7 @@ jobs:
             -backend-config="resource_group_name=${{ env.ENVIRONMENT }}-bkd-alpinebot" \
             -backend-config="storage_account_name=${{ env.ENVIRONMENT }}bkdalpinebotsa" \
             -backend-config="container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" \
-            -backend-config="key=${{ env.ENVIRONMENT }}.tfstate" \
+            -backend-config="key=${{ env.ENVIRONMENT }}-bkd-alpinebot.tfstate" \
             -var-file="${{ env.ENVIRONMENT }}.tfvars"
         working-directory: ./${{ env.ENVIRONMENT }}
   
