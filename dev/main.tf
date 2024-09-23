@@ -18,7 +18,7 @@ resource "azurerm_resource_group" "rg" {
 # Create the Azure Key Vault
 
 module "key_vault" {
-  source              = "../modules/key_vault"
+  source              = "./modules/key_vault"
 
   az_rg_name          = var.az_rg_name          # From root module variables
   az_kv_name          = var.az_kv_name          # From root module variables
@@ -108,7 +108,8 @@ output "app_id" {
 #### Deploy AlpineBot OpenAI Account ######
 
 module "cognitive_account" {
-  source = "${find_in_parent_folders("modules")}/cognitive_account"
+  source = "./modules/cognitive_account"
+  
   var1 = var.alpinebot_openai_name
   var2 = var.location
   var3 = var.az_rg_name
