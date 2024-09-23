@@ -10,7 +10,7 @@ variable "az_client_id" {
   type = string
 }
 
-variable "tenant_id" {
+variable "az_tenant_id" {
   description = "value of subscription id"
   type = string
 }

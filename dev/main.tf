@@ -17,7 +17,7 @@ module "key_vault" {
   az_rg_name          = var.az_rg_name          # From root module variables
   az_kv_name          = var.az_kv_name          # From root module variables
   location            = var.location            # From root module variables
-  tenant_id           = var.tenant_id           # From root module variables
+  tenant_id           = var.az_tenant_id        # From root module variables
   
   enabled_for_disk_encryption = true            # Set to true or false as needed
   purge_protection_enabled    = true            # Set to true or false as needed
