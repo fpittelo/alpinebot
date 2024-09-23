@@ -6,13 +6,7 @@ resource "azurerm_resource_group" "rg" {
   name            = var.az_rg_name
   location        = var.location
 
-  tags = {
-    project       = var.project
-    owner         = var.owner
-    department    = var.department
-    status        = var.status
-    environment   = var.environment
-  }
+  tags            = var.tags
 }
 
 # Create the Azure Key Vault
@@ -102,13 +96,7 @@ resource "azurerm_cognitive_account" "alpinebotaiact" {
   
   depends_on = [azurerm_resource_group.rg]  # Ensures this resource is created after the resource group
 
-  tags = {
-    project           = var.project
-    owner             = var.owner
-    department        = var.department
-    status            = var.status
-    environment       = var.environment
-  }
+  tags = var.tags
   
 }
 
@@ -129,12 +117,7 @@ resource "azurerm_service_plan" "wap_sp_website" {
   
   depends_on = [azurerm_resource_group.rg]  # Explicit dependency
 
-  tags = {
-    project     = var.project
-    owner       = var.owner
-    dept        = var.department
-    status      = var.status
-  }
+  tags = var.tags
 }
 
 ##### Deploy AlpineBot Azure App Service ######
@@ -147,12 +130,7 @@ resource "azurerm_linux_web_app" "wap_app" {
   
   depends_on = [azurerm_cognitive_account.alpinebotaiact, azurerm_service_plan.wap_sp_website]
 
-  tags = {
-    project     = var.project
-    owner       = var.owner
-    dept        = var.department
-    status      = var.status
-  }
+  tags = var.tags
 
   site_config {
      # No need for linux_fx_version here in recent versions

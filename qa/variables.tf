@@ -112,3 +112,9 @@ variable "environment" {
   description = "The environment for deployment"
   type        = string
 }
+
+variable "tags" {
+  description = "Tags to apply to Key Vault resources"
+  type        = map(string)
+  default     = {}  # Set default to empty map if appropriate
+}
