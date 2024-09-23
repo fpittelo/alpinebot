@@ -14,11 +14,6 @@ variable "az_rg_name" {
   type = string
 }
 
-variable "tags" {
-  description = "Tags to apply to Cognitive Account"
-  type        = map(string)
-}
-
 variable "kind" {
   description = "value of kind"
   type = string
