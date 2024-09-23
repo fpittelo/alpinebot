@@ -1,9 +1,12 @@
 #### Variables values ####
 
-environment                         = "dev"
-project                             = "AlpineBot"
-owner                               = "Fred"
-department                          = "IT Department"
+tags  = {
+  environment                         = "dev"
+  project                             = "AlpineBot"
+  owner                               = "Fred"
+  department                          = "IT Department"
+}
+
 location                            = "SwitzerlandNorth"
 
 az_backend_sa_name                  = "devbkdalpinebotsa"
@@ -18,10 +21,13 @@ wap_website_name                    = "dev-alpinebot-as"
 wap_sp_sku                          = "S1"
 wap_sp_sku_os_linux                 = "Linux"
 
-alpinebotaiact                      = "dev-alpinebot-act"
+alpinebotaiact_name                 = "dev-alpinebot-act"
 alpinebotaidepl                     = "dev-alpinebot-dpl"
 
 apbotinsights_name                  = "dev-apbotinsights"
 appinsights_instrumentation_key     = "your-dev-appinsights-key"
 
-rbac_enabled                         = true
+rbac_enabled                        = true
+
+kind                                = "OpenAI"
+sku_name_cog_acct                   = "S0"

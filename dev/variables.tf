@@ -83,18 +83,28 @@ variable "wap_sp_sku" {
   type = string
 }
 
+variable "kind" {
+  description = "value of kind"
+  type = string
+}
+
 variable "wap_sp_sku_os_linux" {
   description = "value of os type"
   type = string
 }
 
-variable "alpinebotaiact" {
+variable "alpinebotaiact_name" {
   description = "value of OpenAI Account"
   type = string
 }
 
 variable "alpinebotaidepl" {
   description = "value of OpenAI Deployment"
+  type = string
+}
+
+variable "sku_name_cog_acct" {
+  description = "value of sku name"
   type = string
 }
 
