@@ -1,5 +1,11 @@
 #### Variables values ####
 
+environment                         = "dev"
+project                             = "AlpineBot"
+owner                               = "Fred"
+department                          = "IT Department"
+location                            = "SwitzerlandNorth"
+
 az_backend_sa_name                  = "devbkdalpinebotsa"
 az_backend_container_name           = "dev-bkd-alpinebot-co"
 terraform_key                       = "dev-terraform-state"
@@ -17,3 +23,5 @@ alpinebotaidepl                     = "dev-alpinebot-dpl"
 
 apbotinsights_name                  = "dev-apbotinsights"
 appinsights_instrumentation_key     = "your-dev-appinsights-key"
+
+rbac_enabled                         = true

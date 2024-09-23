@@ -1,0 +1,26 @@
+#### Variables ######
+
+variable "environment" {
+  description = "The environment for deployment"
+  type        = string
+}
+
+variable "project" {
+  description = "value of project"
+  type = string
+}
+
+variable "owner" {
+  description = "value of the owner"
+  type = string
+}
+
+variable "department" {
+  description = "value of department"
+  type = string
+}
+
+variable "location" {
+  description = "value of resource group location"
+  type = string
+}

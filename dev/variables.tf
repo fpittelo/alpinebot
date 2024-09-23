@@ -10,7 +10,7 @@ variable "az_client_id" {
   type = string
 }
 
-variable "az_tenant_id" {
+variable "tenant_id" {
   description = "value of subscription id"
   type = string
 }
@@ -121,4 +121,15 @@ variable "status" {
 variable "environment" {
   description = "The environment for deployment"
   type        = string
+}
+
+variable "rbac_enabled" {
+  description = "value of RBAC enabled"
+  type = string
+}
+
+variable "tags" {
+  description = "Tags to apply to Key Vault resources"
+  type        = map(string)
+  default     = {}  # Set default to empty map if appropriate
 }

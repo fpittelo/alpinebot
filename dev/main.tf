@@ -18,16 +18,20 @@ resource "azurerm_resource_group" "rg" {
 # Create the Azure Key Vault
 
 module "key_vault" {
-  source = "${find_in_parent_folders("modules")}/key_vault"
-  var1 = var.az_kv_name
-  var2 = var.az_location
-  var3 = var.resource_group_name
-  var4 = var.tenant_id
-  var6 = var.openai_key_name
-  var7 = var.openai_key_value
+  source              = "../modules/key_vault"
 
-  tags = var.tags
+  az_rg_name          = var.az_rg_name          # From root module variables
+  az_kv_name          = var.az_kv_name          # From root module variables
+  location            = var.location            # From root module variables
+  tenant_id           = var.tenant_id           # From root module variables
+  
+  enabled_for_disk_encryption = true            # Set to true or false as needed
+  purge_protection_enabled    = true            # Set to true or false as needed
+  enable_rbac_authorization   = true            # Set to true or false as needed
+  
+  tags                = var.tags                # From root module variables
 }
+
 
 # Data block to retrieve the Dev_Admins Azure AD Group
 data "azuread_group" "dev_admins" {
