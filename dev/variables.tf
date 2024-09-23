@@ -98,6 +98,11 @@ variable "rbac_enabled" {
   type = string
 }
 
+variable "appinsights_instrumentation_key" {
+  description = "value of instrumentation key"
+  type = string
+}
+
 variable "tags" {
   description = "Tags to apply to Key Vault resources"
   type        = map(string)
