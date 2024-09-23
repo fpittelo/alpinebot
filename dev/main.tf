@@ -37,7 +37,7 @@ data "azurerm_key_vault" "dev_kv" {
   name                = var.az_kv_name
   resource_group_name = var.az_rg_name
 
-  depends_on = [ azurerm_key_vault.alpinebot_kv ]
+# depends_on = [ azurerm_key_vault.alpinebot_kv ]
 }
 
 # Assign the "Key Vault Secrets Officer" role to the Dev_Admins group using RBAC
@@ -142,7 +142,7 @@ resource "azurerm_linux_web_app" "wap_app" {
 
   app_settings = {
     "WEBSITE_RUN_FROM_PACKAGE"        = "1"
-    "AZURE_OPENAI_KEY" = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.openai_key_name.id})"
+  # "AZURE_OPENAI_KEY" = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.openai_key_name.id})"
     "APPINSIGHTS_INSTRUMENTATIONKEY"  = azurerm_application_insights.apbotinsights.instrumentation_key
   
   }
