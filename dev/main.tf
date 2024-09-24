@@ -47,6 +47,8 @@ module "app_service_plan" {
   wap_sp_sku_os_linux = var.wap_sp_sku_os_linux
 
   tags = var.tags
+
+  depends_on = [ azurerm_resource_group.rg ]
 }
 
 ##### Deploy AlpineBot Linux Web App ######
@@ -59,6 +61,8 @@ module "linux_web_app" {
   location            = var.location
   
   tags = var.tags  
+
+  depends_on = [ azurerm_resource_group.rg ]
 }
 
 #### Deploy App Insights #####
