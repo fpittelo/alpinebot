@@ -146,12 +146,22 @@ jobs:
   
       # Optional: Import the first resource if it's not already imported
       - name: Check and Import AlpineBot Cognitive Account
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true
         run: |
           terraform state show azurerm_cognitive_account.alpinebotaiact || terraform import azurerm_cognitive_account.alpinebotaiact /subscriptions/***/resourceGroups/dev-alpinebot/providers/Microsoft.CognitiveServices/accounts/dev-alpinebot-act
         working-directory: ./${{ env.ENVIRONMENT }}
 
       # Optional: Import the second resource if it's not already imported
       - name: Check and Import AlpineBot OpenAI
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true
         run: |
           terraform state show module.cognitive_account.azurerm_cognitive_account.alpinebot_openai || terraform import module.cognitive_account.azurerm_cognitive_account.alpinebot_openai /subscriptions/***/resourceGroups/dev-alpinebot/providers/Microsoft.CognitiveServices/accounts/dev-alpinebot-act
         working-directory: ./${{ env.ENVIRONMENT }}
