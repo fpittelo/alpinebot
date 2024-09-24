@@ -60,32 +60,6 @@ module "linux_web_app" {
   tags = var.tags  
 }
 
-##### Deploy AlpineBot Azure App Service ######
-resource "azurerm_linux_web_app" "wap_app" {
-  name                = var.wap_website_name
-  location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
-  service_plan_id     = azurerm_service_plan.wap_app.id
-  
-  depends_on = [azurerm_service_plan.wap_sp_website]
-
-  tags = var.tags
-
-  site_config {
-  }
-
-  identity {
-    type = "SystemAssigned"
-  }
-
-  app_settings = {
-    "WEBSITE_RUN_FROM_PACKAGE"        = "1"
-  # "AZURE_OPENAI_KEY" = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.openai_key_name.id})"
-    "APPINSIGHTS_INSTRUMENTATIONKEY"  = azurerm_application_insights.apbotinsights.instrumentation_key
-  
-  }
-}
-
 #### Deploy App Insights #####
 resource "azurerm_application_insights" "apbotinsights" {
   name                = var.apbotinsights_name
