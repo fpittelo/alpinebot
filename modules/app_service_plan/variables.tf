@@ -3,11 +3,6 @@ variable "wap_sp_name" {
   type        = string
 }
 
-variable "wap_website_name" {
-  description = "Web app name"
-  type        = string
-}
-
 variable "wap_sp_sku" {
   description = "Service plan SKU"
   type        = string
@@ -25,16 +20,6 @@ variable "location" {
 
 variable "az_rg_name" {
   description = "Resource group for project"
-  type        = string
-}
-
-variable "azure_openai_key" {
-  description = "OpenAI Key retrieved from Key Vault"
-  type        = string
-}
-
-variable "appinsights_instrumentation_key" {
-  description = "Instrumentation key for Application Insights"
   type        = string
 }
 

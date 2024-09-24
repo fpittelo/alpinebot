@@ -10,21 +10,21 @@ tags  = {
 location                            = "SwitzerlandNorth"
 
 az_backend_sa_name                  = "devbkdalpinebotsa"
-az_backend_container_name           = "dev-bkd-alpinebot-co"
-terraform_key                       = "dev-terraform-state"
+az_backend_container_name           = "dev-alpinebot-bkd-co"
+terraform_key                       = "dev-alpinebot"
 
 az_rg_name                          = "dev-alpinebot"
-az_kv_name                          = "dev-alpinebot-kv"
+az_kv_name                          = "dev-alpinebot-vault"
 
 wap_sp_name                         = "dev-alpinebot-sp"
 wap_website_name                    = "dev-alpinebot-as"
 wap_sp_sku                          = "S1"
 wap_sp_sku_os_linux                 = "Linux"
 
-alpinebotaiact_name                 = "dev-alpinebot-act"
-alpinebotaidepl                     = "dev-alpinebot-dpl"
+alpinebotaiact_name                 = "dev-alpinebot-ai"
+alpinebotaidepl                     = "dev-alpinebot-ai-dpl"
 
-apbotinsights_name                  = "dev-apbotinsights"
+apbotinsights_name                  = "dev-alpinebot-insights"
 appinsights_instrumentation_key     = "your-dev-appinsights-key"
 
 rbac_enabled                        = true
