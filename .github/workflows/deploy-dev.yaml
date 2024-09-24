@@ -159,18 +159,18 @@ jobs:
           terraform apply -var-file="${{ env.ENVIRONMENT }}.tfvars" -auto-approve
         working-directory: ./${{ env.ENVIRONMENT }}
       
-      - name: Retrieve OpenAI Key from Key Vault
-        working-directory: ./${{ env.ENVIRONMENT }}
-        run: |      
-          # Retrieve the secret value from Key Vault
-          SECRET_VALUE=$(az keyvault secret show --name "${{ env.ENVIRONMENT }}-alpinebot-openai-key" --vault-name "${{ env.ENVIRONMENT }}-alpinebot-kv" --query "value" -o tsv)
-      
-          # Export the secret as an environment variable (avoid printing it)
-          echo "SECRET_VALUE=${SECRET_VALUE}" >> $GITHUB_ENV
-        env:
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+#     - name: Retrieve OpenAI Key from Key Vault
+#       working-directory: ./${{ env.ENVIRONMENT }}
+#       run: |      
+#         # Retrieve the secret value from Key Vault
+#         SECRET_VALUE=$(az keyvault secret show --name "${{ env.ENVIRONMENT }}-alpinebot-openai-key" --vault-name "${{ env.ENVIRONMENT }}-alpinebot-kv" --query "value" -o tsv)
+#     
+#         # Export the secret as an environment variable (avoid printing it)
+#         echo "SECRET_VALUE=${SECRET_VALUE}" >> $GITHUB_ENV
+#       env:
+#         AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+#         AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+#         AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       
 #     - name: Deploy Web Application
 #       run: |
