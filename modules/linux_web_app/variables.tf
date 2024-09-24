@@ -19,6 +19,11 @@ variable "wap_sp_name" {
   type        = string
 }
 
+variable "service_plan_id" {
+  description = "value of service plan id"
+  type        = string
+}
+
 variable "app_settings" {
   description = "Application settings for the Linux Web App."
   type        = map(string)

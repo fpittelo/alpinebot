@@ -1,4 +1,4 @@
-output "app_service_plan_id" {
+output "service_plan_id" {
   description = "The ID of the App Service Plan."
   value       = azurerm_service_plan.wap_sp_website.id
 }

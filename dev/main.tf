@@ -52,7 +52,8 @@ module "app_service_plan" {
 ##### Deploy AlpineBot Linux Web App ######
 module "linux_web_app" {
   source              = "../modules/linux_web_app"
-  wap_website_name    = var.wap_website_name
+  wap_website_name    = var.wap_sp_name
+  service_plan_id     = module.app_service_plan.service_plan_id
   wap_sp_name         = var.wap_sp_name
   az_rg_name          = var.az_rg_name
   location            = var.location
