@@ -21,8 +21,8 @@ wap_website_name                    = "dev-alpinebot-as"
 wap_sp_sku                          = "S1"
 wap_sp_sku_os_linux                 = "Linux"
 
-alpinebotaiact_name                 = "dev-alpinebot-act"
-alpinebotaidepl                     = "dev-alpinebot-dpl"
+alpinebotaiact_name                 = "dev-alpinebot-a"
+alpinebotaidepl                     = "dev-alpinebot-d"
 
 apbotinsights_name                  = "dev-apbotinsights"
 appinsights_instrumentation_key     = "your-dev-appinsights-key"
