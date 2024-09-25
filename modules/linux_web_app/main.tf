@@ -1,7 +1,7 @@
 # Create App Service (Web App)
 resource "azurerm_linux_web_app" "wap_app" {
   name                = var.wap_website_name
-  location            = var.location
+  location            = var.az_location
   resource_group_name = var.az_rg_name
   service_plan_id     = var.service_plan_id
   

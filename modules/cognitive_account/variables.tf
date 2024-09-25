@@ -4,7 +4,7 @@ variable "alpinebotaiact_name" {
   type        = string
 }
 
-variable "location" {
+variable "az_location" {
   description = "Location"
   type = string
 }

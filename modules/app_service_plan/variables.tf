@@ -13,7 +13,7 @@ variable "wap_sp_sku_os_linux" {
   type        = string
 }
 
-variable "location" {
+variable "az_location" {
   description = "Location for the resources"
   type        = string
 }

@@ -9,7 +9,7 @@ variable "az_rg_name" {
   type        = string
 }
 
-variable "location" {
+variable "az_location" {
   description = "Location for the resources"
   type        = string
 }

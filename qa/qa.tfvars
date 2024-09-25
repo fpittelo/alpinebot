@@ -7,7 +7,7 @@ tags  = {
   department                          = "IT Department"
 }
 
-location = "SwitzerlandNorth"
+az_location                           = "SwitzerlandNorth"
 
 az_backend_rg_name                    = "qa-bkd-alpinebot"
 az_backend_sa_name                    = "qabkdalpinebotsa"

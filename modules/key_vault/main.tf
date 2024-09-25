@@ -1,6 +1,6 @@
 resource "azurerm_key_vault" "alpinebot_kv" {
   name                        = var.az_kv_name
-  location                    = var.location
+  location                    = var.az_location
   resource_group_name         = var.az_rg_name
   tenant_id                   = var.tenant_id
   sku_name                    = "standard"

@@ -4,7 +4,7 @@
 #### Create Azure Resource Group ######
 resource "azurerm_resource_group" "rg" {
   name            = var.az_rg_name
-  location        = var.location
+  location        = var.az_location
 
   tags            = var.tags
 }
@@ -15,7 +15,7 @@ module "key_vault" {
 
   az_rg_name          = var.az_rg_name          # From root module variables
   az_kv_name          = var.az_kv_name          # From root module variables
-  location            = var.location            # From root module variables
+  location            = var.az_location            # From root module variables
   tenant_id           = var.az_tenant_id        # From root module variables
   
   enabled_for_disk_encryption = false           # Set to true or false as needed
@@ -29,7 +29,7 @@ module "key_vault" {
 module "cognitive_account" {
   source              = "../modules/cognitive_account"
   alpinebotaiact_name = var.alpinebotaiact_name
-  location            = var.location
+  location            = var.az_location
   az_rg_name          = var.az_rg_name
   kind                = var.kind
   sku_name_cog_acct   = var.sku_name_cog_acct
@@ -41,7 +41,7 @@ module "cognitive_account" {
 module "app_service_plan" {
   source              = "../modules/app_service_plan"
   wap_sp_name         = var.wap_sp_name
-  location            = var.location
+  location            = var.az_location
   az_rg_name          = var.az_rg_name
   wap_sp_sku          = var.wap_sp_sku
   wap_sp_sku_os_linux = var.wap_sp_sku_os_linux
@@ -58,7 +58,7 @@ module "linux_web_app" {
   service_plan_id     = module.app_service_plan.service_plan_id
   wap_sp_name         = var.wap_sp_name
   az_rg_name          = var.az_rg_name
-  location            = var.location
+  location            = var.az_location
   
   tags = var.tags  
 
@@ -68,7 +68,7 @@ module "linux_web_app" {
 #### Deploy App Insights #####
 resource "azurerm_application_insights" "apbotinsights" {
   name                = var.apbotinsights_name
-  location            = var.location
+  location            = var.az_location
   resource_group_name = var.az_rg_name
   application_type    = "web"
 
