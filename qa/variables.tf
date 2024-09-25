@@ -15,6 +15,11 @@ variable "az_tenant_id" {
   type = string
 }
 
+variable "az_backend_rg_name" {
+  description = "Resource group name for the Terraform backend storage"
+  type        = string
+}
+
 variable "az_backend_sa_name" {
   description = "Storage account name for the Terraform backend"
   type        = string
@@ -35,12 +40,7 @@ variable "az_kv_name" {
   type = string
 }
 
-variable "terraform_key" {
-  description = "value of terraform state file name"
-  type = string
-}
-
-variable "location" {
+variable "az_location" {
   description = "value of resource group location"
   type = string
 }
@@ -68,17 +68,12 @@ variable "wap_sp_sku" {
   type = string
 }
 
-variable "kind" {
-  description = "value of kind"
-  type = string
-}
-
 variable "wap_sp_sku_os_linux" {
   description = "value of os type"
   type = string
 }
 
-variable "alpinebotaiact_name" {
+variable "alpinebotaiact" {
   description = "value of OpenAI Account"
   type = string
 }
@@ -88,18 +83,8 @@ variable "alpinebotaidepl" {
   type = string
 }
 
-variable "sku_name_cog_acct" {
-  description = "value of sku name"
-  type = string
-}
-
-variable "rbac_enabled" {
-  description = "value of RBAC enabled"
-  type = string
-}
-
-variable "appinsights_instrumentation_key" {
-  description = "value of instrumentation key"
+variable "az_openai_key_value" {
+  description = "value of OpenAI Key"
   type = string
 }
 
