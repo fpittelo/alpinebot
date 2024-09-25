@@ -40,7 +40,7 @@ variable "terraform_key" {
   type = string
 }
 
-variable "location" {
+variable "az_location" {
   description = "value of resource group location"
   type = string
 }

@@ -1,13 +1,13 @@
 #### Variables values ####
 
 tags  = {
-  environment                         = "dev"
-  project                             = "AlpineBot"
-  owner                               = "Fred"
-  department                          = "IT Department"
+  environment                       = "dev"
+  project                           = "AlpineBot"
+  owner                             = "Fred"
+  department                        = "IT Department"
 }
 
-location                            = "SwitzerlandNorth"
+az_location                         = "SwitzerlandNorth"
 
 az_backend_sa_name                  = "devbkdalpinebotsa"
 az_backend_container_name           = "dev-alpinebot-bkd-co"
