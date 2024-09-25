@@ -2,10 +2,10 @@
 
 terraform {
   backend "azurerm" {
-    resource_group_name   = "dev-bkd-alpinebot"         # Replace with your resource group name
-    storage_account_name  = "devbkdalpinebotsa"      # Replace with your storage account name
-    container_name        = "dev-bkd-alpinebot-co"      # Replace with your container name
-    key                   = "dev-bkd-alpinebot.tfstate" # Replace with your Terraform state file name
+    resource_group_name   = "main-bkd-alpinebot"         # Replace with your resource group name
+    storage_account_name  = "mainbkdalpinebotsa"      # Replace with your storage account name
+    container_name        = "main-bkd-alpinebot-co"      # Replace with your container name
+    key                   = "main-bkd-alpinebot.tfstate" # Replace with your Terraform state file name
   }
 
   required_providers {

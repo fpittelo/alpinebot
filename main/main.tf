@@ -23,12 +23,12 @@ resource "azurerm_key_vault" "alpinebot_kv" {
 }
 
 # Data block to retrieve the Dev_Admins Azure AD Group
-data "azuread_group" "dev_admins" {
-  display_name = "Dev_Admins"
+data "azuread_group" "main_admins" {
+  display_name = "main_admins"
 }
 
 # Data block to retrieve the Key Vault details
-data "azurerm_key_vault" "dev_kv" {
+data "azurerm_key_vault" "main_kv" {
   name                = var.az_kv_name
   resource_group_name = var.az_rg_name
 
@@ -36,17 +36,17 @@ data "azurerm_key_vault" "dev_kv" {
 }
 
 # Assign the "Key Vault Secrets Officer" role to the Dev_Admins group using RBAC
-resource "azurerm_role_assignment" "dev_admins_kv_secrets_officer" {
-  scope                = data.azurerm_key_vault.dev_kv.id
+resource "azurerm_role_assignment" "main_admins_kv_secrets_officer" {
+  scope                = data.azurerm_key_vault.main_kv.id
   role_definition_name = "Key Vault Secrets Officer"  # Predefined role in Azure
-  principal_id         = data.azuread_group.dev_admins.object_id
+  principal_id         = data.azuread_group.main_admins.object_id
 }
 
 # Assign the "Key Vault Administrator" role to the Dev_Admins group using RBAC
-resource "azurerm_role_assignment" "dev_admins_kv_administrator" {
-  scope                = data.azurerm_key_vault.dev_kv.id
+resource "azurerm_role_assignment" "main_admins_kv_administrator" {
+  scope                = data.azurerm_key_vault.main_kv.id
   role_definition_name = "Key Vault Administrator"  # Full admin control over the Key Vault
-  principal_id         = data.azuread_group.dev_admins.object_id
+  principal_id         = data.azuread_group.main_admins.object_id
 }
 
 # Output Key Vault name and URL for later use
