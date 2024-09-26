@@ -11,6 +11,9 @@ jobs:
   destroy:
     name: Destroy Terraform Resources
     runs-on: ubuntu-latest
+    environment: ${{ github.ref_name }} # Use the branch name as environment
+    outputs:
+      environment: ${{ steps.setenv.outputs.environment }}
 
     steps:
       - name: Checkout code
@@ -53,6 +56,7 @@ jobs:
           echo "TF_VAR_az_tenant_id=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_az_subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_az_container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" >> $GITHUB_ENV
+          echo "TF_VAR_sp_object_id=${{ secrets.AZURE_SP_OBJECT_ID }}" >> $GITHUB_ENV
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
@@ -70,7 +74,7 @@ jobs:
             -backend-config="storage_account_name=${{ env.ENVIRONMENT }}bkdalpinebotsa" \
             -backend-config="container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" \
             -backend-config="key=${{ env.ENVIRONMENT }}-bkd-alpinebot.tfstate" \
-            -var-file="infra/${{ env.ENVIRONMENT }}.tfvars"
+            -var-file="${{ env.ENVIRONMENT }}.tfvars"
 
       - name: Terraform Destroy
         working-directory: ./infra  # Use the new infra directory
@@ -82,7 +86,7 @@ jobs:
           TF_LOG: DEBUG
           TF_LOG_PATH: terraform_destroy.log
         run: |
-          terraform destroy -var-file="infra/${{ env.ENVIRONMENT }}.tfvars" -auto-approve
+          terraform destroy -var-file="${{ env.ENVIRONMENT }}.tfvars" -auto-approve
 
       - name: Upload Terraform Destroy Log
         if: always()  # This ensures the step runs regardless of previous step outcomes
