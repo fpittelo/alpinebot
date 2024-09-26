@@ -131,7 +131,7 @@ jobs:
             -backend-config="storage_account_name=${{ env.ENVIRONMENT }}bkdalpinebotsa" \
             -backend-config="container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" \
             -backend-config="key=${{ env.ENVIRONMENT }}-bkd-alpinebot.tfstate" \
-            -var-file="infra/${{ env.ENVIRONMENT }}.tfvars"
+            -var-file="${{ env.ENVIRONMENT }}.tfvars"
         working-directory: ./infra  # Update the working directory to the new infra folder
 
       - name: Terraform Apply
@@ -146,7 +146,7 @@ jobs:
           ENVIRONMENT: ${{ env.ENVIRONMENT }}
         run: |
           echo "Using environment: ${{ env.ENVIRONMENT }}"
-          terraform apply -var-file="infra/${{ env.ENVIRONMENT }}.tfvars" -auto-approve
+          terraform apply -var-file="${{ env.ENVIRONMENT }}.tfvars" -auto-approve
         working-directory: ./infra  # Update the working directory to the new infra folder
 
       - name: Upload Terraform Log
