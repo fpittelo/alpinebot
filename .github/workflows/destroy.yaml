@@ -1,4 +1,4 @@
-name: Destroy dev Environment
+name: Destroy Environment
 
 on:
   workflow_dispatch:  # Allows manual trigger from the GitHub Actions UI
@@ -11,18 +11,43 @@ jobs:
   destroy:
     name: Destroy Terraform Resources
     runs-on: ubuntu-latest
-    environment: dev # Must match the federated credential "based on selection" and GitHub Action Secrets name
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set Environment Variables Based on Branch
+        id: set_env
+        run: |
+          # Extract the branch name (remove refs/heads/ from the full ref)
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          echo "Branch Name: $BRANCH_NAME"
+
+          # Set environment and working directory based on branch
+          if [[ "$BRANCH_NAME" == "dev" ]]; then
+            ENVIRONMENT="dev"
+            WORKING_DIRECTORY="./dev"
+          elif [[ "$BRANCH_NAME" == "qa" ]]; then
+            ENVIRONMENT="qa"
+            WORKING_DIRECTORY="./qa"
+          elif [[ "$BRANCH_NAME" == "main" ]]; then
+            ENVIRONMENT="main"
+            WORKING_DIRECTORY="./main"
+          else
+            echo "Unsupported branch: $BRANCH_NAME"
+            exit 1
+          fi
+
+          # Export these variables to be used in subsequent steps
+          echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV
+          echo "WORKING_DIRECTORY=$WORKING_DIRECTORY" >> $GITHUB_ENV
+
       - name: Login to Azure using OIDC
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}             # App Registration client ID
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}             # Tenant ID
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} # Subscription ID
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           allow-no-subscriptions: false
           enable-AzPSSession: false
 
@@ -31,41 +56,40 @@ jobs:
           echo "TF_VAR_az_client_id=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_az_tenant_id=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_az_subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
-          echo "TF_VAR_az_container_name=apbotbackend" >> $GITHUB_ENV  # Replace with actual container name if different
+          echo "TF_VAR_az_container_name=${{ secrets.AZURE_BACKEND_CONTAINER_NAME }}" >> $GITHUB_ENV  # Use a secret for container name
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Init
-        working-directory: ./dev
+        working-directory: ${{ env.WORKING_DIRECTORY }}
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_USE_OIDC: true  # Instruct Terraform to use OIDC-based auth
+          ARM_USE_OIDC: true
         run: |
-          terraform init -var-file="dev.tfvars"
+          terraform init -var-file="${{ env.ENVIRONMENT }}.tfvars"
 
       - name: Terraform Destroy
-        working-directory: ./dev
+        working-directory: ${{ env.WORKING_DIRECTORY }}
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_USE_OIDC: true  # Instruct Terraform to use OIDC-based auth
-          TF_LOG: DEBUG  # Enable detailed Terraform logging
-          TF_LOG_PATH: terraform_destroy.log  # Path to save the log file within the working directory
+          ARM_USE_OIDC: true
+          TF_LOG: DEBUG
+          TF_LOG_PATH: terraform_destroy.log
         run: |
-          terraform destroy -var-file="dev.tfvars" -auto-approve
+          terraform destroy -var-file="${{ env.ENVIRONMENT }}.tfvars" -auto-approve
 
       - name: Upload Terraform Destroy Log
-        if: always()  # This forces the step to run regardless of the outcome of previous steps
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: terraform-destroy-log
-          path: ./dev/terraform_destroy.log  # Path to the log file
+          path: ${{ env.WORKING_DIRECTORY }}/terraform_destroy.log
 
-      # Additional step to destroy the backend resources created manually in dev.yaml
       - name: Cleanup Backend Resources
         run: |
           # Define variables for the backend resources

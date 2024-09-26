@@ -1,9 +1,11 @@
-name: Deploy to dev
+name: Deploy Environment
 
 on:
   push:
     branches:
       - dev
+      - qa
+      - main
 
 permissions:
   id-token: write  # Required for OIDC authentication
@@ -14,11 +16,27 @@ jobs:
   backend:
     name: Deploy Backend
     runs-on: ubuntu-latest
-    environment: dev # must match the federated credential "based on selection" \
+    environment: ${{ github.ref_name }} # must match the federated credential "based on selection" \
     # and match Github Action Secrets name
+    outputs:
+      environment: ${{ steps.setenv.outputs.environment }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Set environment based on branch
+        id: setenv
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+            echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+            echo "environment=dev" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/qa" ]]; then
+            echo "ENVIRONMENT=qa" >> $GITHUB_ENV
+            echo "environment=qa" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "ENVIRONMENT=main" >> $GITHUB_ENV
+            echo "environment=main" >> $GITHUB_OUTPUT
+          fi
 
       - name: Login to Azure using OIDC
         uses: azure/login@v2
@@ -42,9 +60,9 @@ jobs:
       - name: Create backend resources
         run: |
           # Define variables for the backend resources
-          az_backend_rg_name="apbotbackend"
-          az_backend_sa_name="apbotbackend"
-          az_backend_container_name="apbotbackend"
+          az_backend_rg_name="${{ env.ENVIRONMENT }}-bkd-alpinebot"
+          az_backend_sa_name="${{ env.ENVIRONMENT }}bkdalpinebotsa"
+          az_backend_container_name="${{ env.ENVIRONMENT }}-bkd-alpinebot-co"
           az_location="SwitzerlandNorth"
 
           # Re-set subscription context before resource group creation as additional safeguard
@@ -79,10 +97,11 @@ jobs:
   deploy:
     name: Deploy Infra
     runs-on: ubuntu-latest
-    environment: dev #must match the federated credential "based on selection" \
+    environment: ${{ github.ref_name }} #must match the federated credential "based on selection" \
     # and match Github Action Secrets name
     needs: backend # Ensures this runs after the bootstrap job
-  
+    env:
+      ENVIRONMENT: ${{ needs.backend.outputs.environment }}
     steps:
 
       - name: Checkout code
@@ -102,46 +121,68 @@ jobs:
           echo "TF_VAR_az_client_id=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_az_tenant_id=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_az_subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
-          echo "TF_VAR_az_container_name=apbotbackend" >> $GITHUB_ENV  # Replace with actual container name if different
+          echo "TF_VAR_az_container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" >> $GITHUB_ENV  # Replace with actual container name if different
+          echo "TF_VAR_sp_object_id=${{ secrets.AZURE_SP_OBJECT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_az_openai_key_value=${{ secrets.AZURE_OPENAI_KEY }}" >> $GITHUB_ENV  # Add this line
       
       - name: Set Up Terraform
         uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Init
-        working-directory: ./dev
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_USE_OIDC: true  # Instruct Terraform to use OIDC-based auth
+          ARM_USE_OIDC: true
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}
         run: |
-          terraform init -var-file="dev.tfvars"
+          terraform init \
+            -backend-config="resource_group_name=${{ env.ENVIRONMENT }}-bkd-alpinebot" \
+            -backend-config="storage_account_name=${{ env.ENVIRONMENT }}bkdalpinebotsa" \
+            -backend-config="container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" \
+            -backend-config="key=${{ env.ENVIRONMENT }}-bkd-alpinebot.tfstate" \
+            -var-file="${{ env.ENVIRONMENT }}.tfvars"
+        working-directory: ./${{ env.ENVIRONMENT }}
 
-      - name: Terraform Init
-        working-directory: ./dev
-        env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_USE_OIDC: true  # Instruct Terraform to use OIDC-based auth
-        run: |
-          terraform init -var-file="dev.tfvars"
-  
       - name: Terraform Apply
-        working-directory: ./dev
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           ARM_USE_OIDC: true  # Instruct Terraform to use OIDC-based auth
+          TF_VAR_azure_openai_key: ${{ secrets.AZURE_OPENAI_KEY }}
           TF_LOG: DEBUG  # Enable detailed Terraform logging
           TF_LOG_PATH: terraform.log  # Path to save the log file within the working directory
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}  # Ensure ENVIRONMENT is set
         run: |
-          terraform apply -var-file="dev.tfvars" -auto-approve
-        
+          echo "Using environment: ${{ env.ENVIRONMENT }}"
+          terraform apply -var-file="${{ env.ENVIRONMENT }}.tfvars" -auto-approve
+        working-directory: ./${{ env.ENVIRONMENT }}
+      
+#     - name: Retrieve OpenAI Key from Key Vault
+#       working-directory: ./${{ env.ENVIRONMENT }}
+#       run: |      
+#         # Retrieve the secret value from Key Vault
+#         SECRET_VALUE=$(az keyvault secret show --name "${{ env.ENVIRONMENT }}-alpinebot-openai-key" --vault-name "${{ env.ENVIRONMENT }}-alpinebot-kv" --query "value" -o tsv)
+#     
+#         # Export the secret as an environment variable (avoid printing it)
+#         echo "SECRET_VALUE=${SECRET_VALUE}" >> $GITHUB_ENV
+#       env:
+#         AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+#         AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+#         AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      
+#     - name: Deploy Web Application
+#       run: |
+#         # Commands to build and deploy your web application
+#         # Use $SECRET_VALUE as needed
+#       env:
+#         SECRET_VALUE: ${{ env.SECRET_VALUE }} 
+
       - name: Upload Terraform Log
         if: always()  # This forces the step to run regardless of the outcome of previous steps
         uses: actions/upload-artifact@v4
         with:
           name: terraform-log
-          path: ./dev/terraform.log  # Path to the log file
+          path: ./${{ env.ENVIRONMENT }}/terraform.log  # Path to the log file
+          overwrite: true

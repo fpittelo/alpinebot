@@ -1,29 +1,33 @@
 #### Variables values ####
 
-az_backend_rg_name = "apbotbackend"
+tags  = {
+  environment                       = "dev"
+  project                           = "AlpineBot"
+  owner                             = "Fred"
+  department                        = "IT Department"
+}
 
-az_backend_sa_name = "apbotbackend"
+az_location                         = "SwitzerlandNorth"
 
-az_backend_container_name = "apbotbackend"
+az_backend_sa_name                  = "devbkdalpinebotsa"
+az_backend_container_name           = "dev-alpinebot-bkd-co"
+terraform_key                       = "dev-alpinebot"
 
-az_rg_name = "alpinebot"
+az_rg_name                          = "dev-alpinebot"
+az_kv_name                          = "dev-alpinebot-vault"
 
-terraform_key = "terraform.tfstate"
+wap_sp_name                         = "dev-alpinebot-sp"
+wap_website_name                    = "dev-alpinebot-as"
+wap_sp_sku                          = "S1"
+wap_sp_sku_os_linux                 = "Linux"
 
-az_location = "SwitzerlandNorth"
+alpinebotaiact_name                 = "dev-alpinebot-ai"
+alpinebotaidepl                     = "dev-alpinebot-ai-dpl"
 
-wap_website_name = "alpinebot"
+apbotinsights_name                  = "dev-alpinebot-insights"
+appinsights_instrumentation_key     = "your-dev-appinsights-key"
 
-wap_status = "main"
+rbac_enabled                        = true
 
-department = "IT"
-
-project = "AlpineBot"
-
-owner = "Fred"
-
-wap_sp_sku_os_linux = "Linux"
-
-wap_sp_sku = "S1"
-
-environment = "dev"
+kind                                = "OpenAI"
+sku_name_cog_acct                   = "S0"

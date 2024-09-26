@@ -1,8 +1,14 @@
 # providers.tf
 
 terraform {
-  
-    required_providers {
+  backend "azurerm" {
+    resource_group_name   = "main-bkd-alpinebot"         # Replace with your resource group name
+    storage_account_name  = "mainbkdalpinebotsa"      # Replace with your storage account name
+    container_name        = "main-bkd-alpinebot-co"      # Replace with your container name
+    key                   = "main-bkd-alpinebot.tfstate" # Replace with your Terraform state file name
+  }
+
+  required_providers {
     azurerm   = {
       source  = "hashicorp/azurerm"
       version = "~> 4.1.0"  # Use the appropriate version
@@ -12,11 +18,6 @@ terraform {
       version = "~> 2.5.0"
     }
   }
-
-  backend "azurerm" {
-    use_oidc = true
-  }
-
 }
 
 provider "azurerm" {
@@ -32,5 +33,5 @@ provider "azuread" {
   # tenant_id will be passed from main.tf or variables.tf
   client_id = var.az_client_id
   tenant_id = var.az_tenant_id
-# use_oidc = true
+  use_oidc = true
 }
