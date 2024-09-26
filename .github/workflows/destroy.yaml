@@ -23,24 +23,20 @@ jobs:
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           echo "Branch Name: $BRANCH_NAME"
 
-          # Set environment and working directory based on branch
+          # Set environment based on branch
           if [[ "$BRANCH_NAME" == "dev" ]]; then
             ENVIRONMENT="dev"
-            WORKING_DIRECTORY="./dev"
           elif [[ "$BRANCH_NAME" == "qa" ]]; then
             ENVIRONMENT="qa"
-            WORKING_DIRECTORY="./qa"
           elif [[ "$BRANCH_NAME" == "main" ]]; then
             ENVIRONMENT="main"
-            WORKING_DIRECTORY="./main"
           else
             echo "Unsupported branch: $BRANCH_NAME"
             exit 1
           fi
 
-          # Export these variables to be used in subsequent steps
+          # Export environment to be used in subsequent steps
           echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV
-          echo "WORKING_DIRECTORY=$WORKING_DIRECTORY" >> $GITHUB_ENV
 
       - name: Login to Azure using OIDC
         uses: azure/login@v2
@@ -56,23 +52,28 @@ jobs:
           echo "TF_VAR_az_client_id=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_az_tenant_id=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_az_subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
-          echo "TF_VAR_az_container_name=${{ secrets.AZURE_BACKEND_CONTAINER_NAME }}" >> $GITHUB_ENV  # Use a secret for container name
+          echo "TF_VAR_az_container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" >> $GITHUB_ENV
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Init
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        working-directory: ./infra  # Use the new infra directory
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           ARM_USE_OIDC: true
         run: |
-          terraform init -var-file="${{ env.ENVIRONMENT }}.tfvars"
+          terraform init \
+            -backend-config="resource_group_name=${{ env.ENVIRONMENT }}-bkd-alpinebot" \
+            -backend-config="storage_account_name=${{ env.ENVIRONMENT }}bkdalpinebotsa" \
+            -backend-config="container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" \
+            -backend-config="key=${{ env.ENVIRONMENT }}-bkd-alpinebot.tfstate" \
+            -var-file="infra/${{ env.ENVIRONMENT }}.tfvars"
 
       - name: Terraform Destroy
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        working-directory: ./infra  # Use the new infra directory
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -81,21 +82,21 @@ jobs:
           TF_LOG: DEBUG
           TF_LOG_PATH: terraform_destroy.log
         run: |
-          terraform destroy -var-file="${{ env.ENVIRONMENT }}.tfvars" -auto-approve
+          terraform destroy -var-file="infra/${{ env.ENVIRONMENT }}.tfvars" -auto-approve
 
       - name: Upload Terraform Destroy Log
-        if: always()
+        if: always()  # This ensures the step runs regardless of previous step outcomes
         uses: actions/upload-artifact@v4
         with:
           name: terraform-destroy-log
-          path: ${{ env.WORKING_DIRECTORY }}/terraform_destroy.log
+          path: ./infra/terraform_destroy.log  # Path updated to the infra directory
 
       - name: Cleanup Backend Resources
         run: |
           # Define variables for the backend resources
-          az_backend_rg_name="apbotbackend"
-          az_backend_sa_name="apbotbackend"
-          az_backend_container_name="apbotbackend"
+          az_backend_rg_name="${{ env.ENVIRONMENT }}-bkd-alpinebot"
+          az_backend_sa_name="${{ env.ENVIRONMENT }}bkdalpinebotsa"
+          az_backend_container_name="${{ env.ENVIRONMENT }}-bkd-alpinebot-co"
 
           # Delete the storage container
           az storage container delete \
