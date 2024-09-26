@@ -35,6 +35,8 @@ module "cognitive_account" {
   sku_name_cog_acct   = var.sku_name_cog_acct
 
   tags = var.tags
+
+   depends_on = [ azurerm_resource_group.rg ]
 }
 
 ### Creation of Azure Service Plan #########
