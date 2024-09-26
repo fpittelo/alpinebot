@@ -11,6 +11,9 @@ jobs:
   destroy:
     name: Destroy Terraform Resources
     runs-on: ubuntu-latest
+    environment: ${{ github.ref_name }} # Use the branch name as environment
+    outputs:
+      environment: ${{ steps.setenv.outputs.environment }}
 
     steps:
       - name: Checkout code
