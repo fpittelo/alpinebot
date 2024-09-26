@@ -16,8 +16,7 @@ jobs:
   backend:
     name: Deploy Backend
     runs-on: ubuntu-latest
-    environment: ${{ github.ref_name }} # must match the federated credential "based on selection" \
-    # and match Github Action Secrets name
+    environment: ${{ github.ref_name }} # Use the branch name as environment
     outputs:
       environment: ${{ steps.setenv.outputs.environment }}
     steps:
@@ -41,22 +40,17 @@ jobs:
       - name: Login to Azure using OIDC
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}             # App Registration client ID
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}             # Tenant ID
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} # Subscription ID
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           allow-no-subscriptions: false
           enable-AzPSSession: false
 
       - name: Set Azure Subscription
-        run:  |
+        run: |
           echo "Setting Azure Subscription to: ${{ secrets.AZURE_SUBSCRIPTION_ID }}"
           az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Output Active Azure Subscription Details
-        run: |
-          echo "Currently active Azure subscription:"
-          az account show --output table
-      
       - name: Create backend resources
         run: |
           # Define variables for the backend resources
@@ -65,11 +59,9 @@ jobs:
           az_backend_container_name="${{ env.ENVIRONMENT }}-bkd-alpinebot-co"
           az_location="SwitzerlandNorth"
 
-          # Re-set subscription context before resource group creation as additional safeguard
+          # Re-set subscription context before resource group creation as an additional safeguard
           echo "Setting Azure Subscription to: ${{ secrets.AZURE_SUBSCRIPTION_ID }}"
           az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          echo "Currently active Azure subscription:"
-          az account show --output table
 
           # Create resource group if it doesn't exist
           az group create --name $az_backend_rg_name --location $az_location
@@ -80,7 +72,7 @@ jobs:
             --resource-group $az_backend_rg_name \
             --location $az_location \
             --sku Standard_LRS
-          
+
           # Adding a small delay to ensure the storage account is fully provisioned
           sleep 30
 
@@ -97,22 +89,20 @@ jobs:
   deploy:
     name: Deploy Infra
     runs-on: ubuntu-latest
-    environment: ${{ github.ref_name }} #must match the federated credential "based on selection" \
-    # and match Github Action Secrets name
-    needs: backend # Ensures this runs after the bootstrap job
+    environment: ${{ github.ref_name }} # Use the branch name as environment
+    needs: backend # Ensure this runs after the bootstrap job
     env:
       ENVIRONMENT: ${{ needs.backend.outputs.environment }}
     steps:
-
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Login To Azure Using OIDC
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}             # App Registration client ID
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}             # Tenant ID
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} # Subscription ID
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           allow-no-subscriptions: false
           enable-AzPSSession: false
 
@@ -121,9 +111,9 @@ jobs:
           echo "TF_VAR_az_client_id=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_az_tenant_id=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_az_subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
-          echo "TF_VAR_az_container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" >> $GITHUB_ENV  # Replace with actual container name if different
+          echo "TF_VAR_az_container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" >> $GITHUB_ENV
           echo "TF_VAR_sp_object_id=${{ secrets.AZURE_SP_OBJECT_ID }}" >> $GITHUB_ENV
-          echo "TF_VAR_az_openai_key_value=${{ secrets.AZURE_OPENAI_KEY }}" >> $GITHUB_ENV  # Add this line
+          echo "TF_VAR_az_openai_key_value=${{ secrets.AZURE_OPENAI_KEY }}" >> $GITHUB_ENV
       
       - name: Set Up Terraform
         uses: hashicorp/setup-terraform@v2
@@ -142,23 +132,31 @@ jobs:
             -backend-config="container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" \
             -backend-config="key=${{ env.ENVIRONMENT }}-bkd-alpinebot.tfstate" \
             -var-file="${{ env.ENVIRONMENT }}.tfvars"
-        working-directory: ./${{ env.ENVIRONMENT }}
+        working-directory: ./infra  # Update the working directory to the new infra folder
 
       - name: Terraform Apply
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_USE_OIDC: true  # Instruct Terraform to use OIDC-based auth
+          ARM_USE_OIDC: true
           TF_VAR_azure_openai_key: ${{ secrets.AZURE_OPENAI_KEY }}
-          TF_LOG: DEBUG  # Enable detailed Terraform logging
-          TF_LOG_PATH: terraform.log  # Path to save the log file within the working directory
-          ENVIRONMENT: ${{ env.ENVIRONMENT }}  # Ensure ENVIRONMENT is set
+          TF_LOG: DEBUG
+          TF_LOG_PATH: terraform.log
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}
         run: |
           echo "Using environment: ${{ env.ENVIRONMENT }}"
           terraform apply -var-file="${{ env.ENVIRONMENT }}.tfvars" -auto-approve
-        working-directory: ./${{ env.ENVIRONMENT }}
-      
+        working-directory: ./infra  # Update the working directory to the new infra folder
+
+      - name: Upload Terraform Log
+        if: always()  # This ensures the step runs regardless of previous step outcomes
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-log
+          path: ./infra/terraform.log  # Log file now in infra folder
+          overwrite: true
+
 #     - name: Retrieve OpenAI Key from Key Vault
 #       working-directory: ./${{ env.ENVIRONMENT }}
 #       run: |      
@@ -178,11 +176,3 @@ jobs:
 #         # Use $SECRET_VALUE as needed
 #       env:
 #         SECRET_VALUE: ${{ env.SECRET_VALUE }} 
-
-      - name: Upload Terraform Log
-        if: always()  # This forces the step to run regardless of the outcome of previous steps
-        uses: actions/upload-artifact@v4
-        with:
-          name: terraform-log
-          path: ./${{ env.ENVIRONMENT }}/terraform.log  # Path to the log file
-          overwrite: true
