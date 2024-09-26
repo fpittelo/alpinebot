@@ -22,6 +22,8 @@ module "key_vault" {
   purge_protection_enabled    = false           # Set to true or false as needed
   enable_rbac_authorization   = true            # Set to true or false as needed
   
+  depends_on = [ azurerm_resource_group.rg ]
+
   tags                = var.tags                # From root module variables
 }
 
