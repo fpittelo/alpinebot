@@ -19,7 +19,7 @@ resource "azurerm_cosmosdb_account" "db" {
 
   geo_location {
     location          = "SwitzerlandNorth"
-    failover_priority = 1
+    failover_priority = 0
   }
 
   geo_location {
