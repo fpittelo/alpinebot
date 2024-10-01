@@ -69,6 +69,21 @@ module "linux_web_app" {
   depends_on = [ azurerm_resource_group.rg ]
 }
 
+##### Deploy CosmosDB Database ######
+module "azurerm_cosmosdb_account" {
+  source              = "../modules/cosmos_db"
+  az_db_name          = var.az_db_name
+  az_location         = var.az_location
+  az_rg_name          = var.az_rg_name
+  offer_type          = var.offer_type
+  db_kind             = var.db_kind
+  db_identity_type    = "UserAssigned"
+
+  tags = var.tags
+
+  depends_on = [ azurerm_resource_group.rg ]
+}
+
 #### Deploy App Insights #####
 resource "azurerm_application_insights" "apbotinsights" {
   name                = var.apbotinsights_name
