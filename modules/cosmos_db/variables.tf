@@ -15,20 +15,19 @@ variable "az_rg_name" {
   type        = string
 }
 
-variable "offer_type" {
-  description = "offer_type"
+variable "az_db_kind" {
+  description = "DB Kind"
   type        = string
 }
 
-variable "db_kind" {
-  description = "kind"
+variable "az_db_offer_type" {
+  description = "DB Offer Type"
   type        = string
 }
 
-variable "db_identity_type" {
+variable "az_db_identity_type" {
+  description = "Identity type"
   type        = string
-  default     = "None"
-  description = "Type of managed identity (e.g., UserAssigned, SystemAssigned)."
 }
 
 variable "tags" {

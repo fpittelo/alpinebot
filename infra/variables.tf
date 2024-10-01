@@ -73,24 +73,24 @@ variable "kind" {
   type = string
 }
 
+variable "az_db_kind" {
+  description = "value of kind"
+  type = string
+}
+
+variable "az_db_offer_type" {
+  description = "DB Kind"
+  type        = string
+}
+
 variable "az_db_name" {
   description = "value of kind"
   type = string
 }
 
-variable "db_kind" {
-  description = "value of kind"
-  type = string
-}
-
-variable "db_identity_type" {
-  description = "kind"
+variable "az_db_identity_type" {
+  description = "Identity type"
   type        = string
-}
-
-variable "offer_type" {
-  description = "value of kind"
-  type = string
 }
 
 variable "wap_sp_sku_os_linux" {
