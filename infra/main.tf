@@ -22,6 +22,8 @@ module "key_vault" {
   purge_protection_enabled    = false           # Set to true or false as needed
   enable_rbac_authorization   = true            # Set to true or false as needed
   
+  depends_on = [ azurerm_resource_group.rg ]
+
   tags                = var.tags                # From root module variables
 }
 
@@ -63,6 +65,20 @@ module "linux_web_app" {
   az_location         = var.az_location
   
   tags = var.tags  
+
+  depends_on = [ azurerm_resource_group.rg ]
+}
+
+##### Deploy CosmosDB Database ######
+module "azurerm_cosmosdb_account" {
+  source              = "../modules/cosmos_db"
+  az_rg_name          = var.az_rg_name
+  az_location         = var.az_location
+  az_db_name          = var.az_db_name
+  az_db_kind          = var.az_db_kind
+  az_db_offer_type    = var.az_db_offer_type
+  
+  tags                = var.tags
 
   depends_on = [ azurerm_resource_group.rg ]
 }

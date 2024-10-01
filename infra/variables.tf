@@ -73,6 +73,21 @@ variable "kind" {
   type = string
 }
 
+variable "az_db_kind" {
+  description = "value of kind"
+  type = string
+}
+
+variable "az_db_offer_type" {
+  description = "DB Kind"
+  type        = string
+}
+
+variable "az_db_name" {
+  description = "value of kind"
+  type = string
+}
+
 variable "wap_sp_sku_os_linux" {
   description = "value of os type"
   type = string
