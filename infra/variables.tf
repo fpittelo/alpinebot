@@ -88,11 +88,6 @@ variable "az_db_name" {
   type = string
 }
 
-variable "az_db_identity_type" {
-  description = "Identity type"
-  type        = string
-}
-
 variable "wap_sp_sku_os_linux" {
   description = "value of os type"
   type = string

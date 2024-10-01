@@ -25,11 +25,6 @@ variable "az_db_offer_type" {
   type        = string
 }
 
-variable "az_db_identity_type" {
-  description = "Identity type"
-  type        = string
-}
-
 variable "tags" {
   description = "tags"
   type        = map(string)

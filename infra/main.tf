@@ -77,7 +77,6 @@ module "azurerm_cosmosdb_account" {
   az_db_name          = var.az_db_name
   az_db_kind          = var.az_db_kind
   az_db_offer_type    = var.az_db_offer_type
-  az_db_identity_type = var.az_db_identity_type
   
   tags                = var.tags
 
