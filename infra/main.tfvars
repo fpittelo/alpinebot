@@ -24,6 +24,10 @@ wap_sp_sku_os_linux                 = "Linux"
 alpinebotaiact_name                 = "main-alpinebot-ai"
 alpinebotaidepl                     = "main-alpinebot-ai-dpl"
 
+az_db_name                          = "main-alpinebot-db"
+az_db_kind                          = "MongoDB"
+az_db_offer_type                    = "Standard"
+
 apbotinsights_name                  = "main-alpinebot-insights"
 appinsights_instrumentation_key     = "your-main-appinsights-key"
 
