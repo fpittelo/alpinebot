@@ -27,7 +27,7 @@ alpinebotaidepl                     = "dev-alpinebot-ai-dpl"
 az_db_name                          = "deb-alpinebot-db"
 az_db_kind                          = "MongoDB"
 az_db_offer_type                    = "Standard"
-az_db_identity_type                 = "UserAssignedIdentity"
+az_db_identity_type                 = "SystemAssignedIdentity"
 
 apbotinsights_name                  = "dev-alpinebot-insights"
 appinsights_instrumentation_key     = "your-dev-appinsights-key"
