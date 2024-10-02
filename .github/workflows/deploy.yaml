@@ -1,11 +1,13 @@
 name: Deploy Environment
 
 on:
+  pull_request:
+    types:
+      - closed  # Trigger when a pull request is closed (including merged)
+
   push:
     branches:
-      - dev
-      - qa
-      - main
+      - dev  # Allow direct push to 'dev' branch for deployment
 
 permissions:
   id-token: write  # Required for OIDC authentication
@@ -14,6 +16,10 @@ permissions:
 jobs:
   # Step 1: Bootstrap Backend Resources (if not already done)
   backend:
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/dev') || 
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true && 
+      (github.ref == 'refs/heads/qa' || github.ref == 'refs/heads/main'))
     name: Deploy Backend
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name }} # Use the branch name as environment
