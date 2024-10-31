@@ -18,7 +18,10 @@ permissions:
 jobs:
   # Step 1: Bootstrap Backend Resources (if not already done)
   backend:
-    if: github.event.pull_request.merged == true && (github.ref == 'refs/heads/qa' || github.ref == 'refs/heads/main')
+    # Adjusted 'if' condition to include pushes to 'dev' branch
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/dev') ||
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true && (github.ref == 'refs/heads/qa' || github.ref == 'refs/heads/main'))
     name: Deploy Backend
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name }} # Use the branch name as environment
@@ -95,21 +98,12 @@ jobs:
     name: Deploy Infra
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name }} # Use the branch name as environment
-    # Removed the 'needs: backend' dependency
+    needs: backend  # Ensure this runs after the backend job
+    env:
+      ENVIRONMENT: ${{ needs.backend.outputs.environment }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Set environment based on branch
-        id: setenv
-        run: |
-          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-            echo "ENVIRONMENT=dev" >> $GITHUB_ENV
-          elif [[ "${{ github.ref }}" == "refs/heads/qa" ]]; then
-            echo "ENVIRONMENT=qa" >> $GITHUB_ENV
-          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "ENVIRONMENT=main" >> $GITHUB_ENV
-          fi
 
       - name: Login To Azure Using OIDC
         uses: azure/login@v2
@@ -147,7 +141,7 @@ jobs:
             -backend-config="container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" \
             -backend-config="key=${{ env.ENVIRONMENT }}-bkd-alpinebot.tfstate" \
             -var-file="${{ env.ENVIRONMENT }}.tfvars"
-        working-directory: ./infra  # Update the working directory to the new infra folder
+        working-directory: ./infra  # Update the working directory to the infra folder
 
       - name: Terraform Apply
         env:
@@ -162,12 +156,12 @@ jobs:
         run: |
           echo "Using environment: ${{ env.ENVIRONMENT }}"
           terraform apply -var-file="${{ env.ENVIRONMENT }}.tfvars" -auto-approve
-        working-directory: ./infra  # Update the working directory to the new infra folder
+        working-directory: ./infra  # Update the working directory to the infra folder
 
       - name: Upload Terraform Log
         if: always()  # This ensures the step runs regardless of previous step outcomes
         uses: actions/upload-artifact@v4
         with:
           name: terraform-log
-          path: ./infra/terraform.log  # Log file now in infra folder
+          path: ./infra/terraform.log  # Log file in infra folder
           overwrite: true
