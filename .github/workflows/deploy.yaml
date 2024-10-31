@@ -95,12 +95,21 @@ jobs:
     name: Deploy Infra
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name }} # Use the branch name as environment
-    needs: backend # Ensure this runs after the bootstrap job
-    env:
-      ENVIRONMENT: ${{ needs.backend.outputs.environment }}
+    # Removed the 'needs: backend' dependency
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Set environment based on branch
+        id: setenv
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+            echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+          elif [[ "${{ github.ref }}" == "refs/heads/qa" ]]; then
+            echo "ENVIRONMENT=qa" >> $GITHUB_ENV
+          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "ENVIRONMENT=main" >> $GITHUB_ENV
+          fi
 
       - name: Login To Azure Using OIDC
         uses: azure/login@v2
@@ -162,23 +171,3 @@ jobs:
           name: terraform-log
           path: ./infra/terraform.log  # Log file now in infra folder
           overwrite: true
-
-#     - name: Retrieve OpenAI Key from Key Vault
-#       working-directory: ./${{ env.ENVIRONMENT }}
-#       run: |      
-#         # Retrieve the secret value from Key Vault
-#         SECRET_VALUE=$(az keyvault secret show --name "${{ env.ENVIRONMENT }}-alpinebot-openai-key" --vault-name "${{ env.ENVIRONMENT }}-alpinebot-kv" --query "value" -o tsv)
-#     
-#         # Export the secret as an environment variable (avoid printing it)
-#         echo "SECRET_VALUE=${SECRET_VALUE}" >> $GITHUB_ENV
-#       env:
-#         AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-#         AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-#         AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      
-#     - name: Deploy Web Application
-#       run: |
-#         # Commands to build and deploy your web application
-#         # Use $SECRET_VALUE as needed
-#       env:
-#         SECRET_VALUE: ${{ env.SECRET_VALUE }} 
