@@ -1,7 +1,7 @@
 Welcome to AlpineBot! 🚡🇨🇭
 AlpineBot is your friendly, AI-powered Swiss data chat assistant, here to help you navigate the mountains of Swiss public datasets! Whether you’re looking for the next train from Zurich, the latest air quality index in Geneva, or the GDP of Switzerland, AlpineBot has got you covered. 🏔️✨
 
-What is AlpineBot?
+What is AlpineBot?...
 AlpineBot is an intelligent chatbot powered by Azure OpenAI and integrated with public data from OpenData.swiss. It's designed to provide real-time, interactive responses to questions about Swiss public services, transportation, healthcare, and much more!
 
 It’s like having a Swiss guide who knows everything—from train schedules to environmental stats—right in your browser.
