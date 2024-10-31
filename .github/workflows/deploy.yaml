@@ -18,7 +18,7 @@ permissions:
 jobs:
   # Step 1: Bootstrap Backend Resources (if not already done)
   backend:
-    if: github.event.pull_request.merged == true && (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/qa' || github.ref == 'refs/heads/main')
+    if: github.event.pull_request.merged == true && (github.ref == 'refs/heads/qa' || github.ref == 'refs/heads/main')
     name: Deploy Backend
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name }} # Use the branch name as environment
