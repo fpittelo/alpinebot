@@ -1,6 +1,7 @@
 name: Deploy Environment
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - dev
@@ -9,11 +10,11 @@ on:
       - qa
       - main
     types:
-      - closed  # Trigger when a pull request is closed (includes merged)
+      - closed # Trigger when a pull request is closed (includes merged)
 
 permissions:
-  id-token: write  # Required for OIDC authentication
-  contents: read   # Default permission for accessing the repo
+  id-token: write # Required for OIDC authentication
+  contents: read # Default permission for accessing the repo
 
 jobs:
   # Step 1: Bootstrap Backend Resources (if not already done)
@@ -98,7 +99,7 @@ jobs:
     name: Deploy Infra
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name }} # Use the branch name as environment
-    needs: backend  # Ensure this runs after the backend job
+    needs: backend # Ensure this runs after the backend job
     env:
       ENVIRONMENT: ${{ needs.backend.outputs.environment }}
     steps:
@@ -122,7 +123,7 @@ jobs:
           echo "TF_VAR_az_container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" >> $GITHUB_ENV
           echo "TF_VAR_sp_object_id=${{ secrets.AZURE_SP_OBJECT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_az_openai_key_value=${{ secrets.AZURE_OPENAI_KEY }}" >> $GITHUB_ENV
-      
+
       - name: Set Up Terraform
         uses: hashicorp/setup-terraform@v2
 
@@ -141,7 +142,7 @@ jobs:
             -backend-config="container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" \
             -backend-config="key=${{ env.ENVIRONMENT }}-bkd-alpinebot.tfstate" \
             -var-file="${{ env.ENVIRONMENT }}.tfvars"
-        working-directory: ./infra  # Update the working directory to the infra folder
+        working-directory: ./infra # Update the working directory to the infra folder
 
       - name: Terraform Apply
         env:
@@ -156,12 +157,12 @@ jobs:
         run: |
           echo "Using environment: ${{ env.ENVIRONMENT }}"
           terraform apply -var-file="${{ env.ENVIRONMENT }}.tfvars" -auto-approve
-        working-directory: ./infra  # Update the working directory to the infra folder
+        working-directory: ./infra # Update the working directory to the infra folder
 
       - name: Upload Terraform Log
-        if: always()  # This ensures the step runs regardless of previous step outcomes
+        if: always() # This ensures the step runs regardless of previous step outcomes
         uses: actions/upload-artifact@v4
         with:
           name: terraform-log
-          path: ./infra/terraform.log  # Log file in infra folder
+          path: ./infra/terraform.log # Log file in infra folder
           overwrite: true
