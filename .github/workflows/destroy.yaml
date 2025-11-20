@@ -58,6 +58,7 @@ jobs:
           echo "TF_VAR_az_container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" >> $GITHUB_ENV
           echo "TF_VAR_sp_object_id=${{ secrets.AZURE_SP_OBJECT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_postgresql_admin_password=${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}" >> $GITHUB_ENV
+          echo "TF_VAR_postgresql_admin_username=${{ secrets.POSTGRESQL_ADMIN_USERNAME }}" >> $GITHUB_ENV
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
