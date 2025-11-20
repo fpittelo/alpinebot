@@ -20,9 +20,6 @@ variable "environments" {
     wap_sp_sku_os_linux = string
     alpinebotaiact_name = string
     alpinebotaidepl = string
-    az_db_name = string
-    az_db_kind = string
-    az_db_offer_type = string
     apbotinsights_name = string
     appinsights_instrumentation_key = string
     rbac_enabled = bool
@@ -33,6 +30,12 @@ variable "environments" {
     google_client_secret = string
     microsoft_client_id = string
     microsoft_client_secret = string
+    redis_cache_name = string
+    redis_cache_sku_name = string
+    redis_cache_family = string
+    redis_cache_capacity = number
+    postgresql_server_name = string
+    postgresql_database_name = string
   }))
   default = {
     "dev" = {
@@ -54,9 +57,6 @@ variable "environments" {
       wap_sp_sku_os_linux = "Linux"
       alpinebotaiact_name = "dev-alpinebot-ai"
       alpinebotaidepl = "dev-alpinebot-ai-dpl"
-      az_db_name = "dev-alpinebot-db"
-      az_db_kind = "MongoDB"
-      az_db_offer_type = "Standard"
       apbotinsights_name = "dev-alpinebot-insights"
       appinsights_instrumentation_key = "your-dev-appinsights-key"
       rbac_enabled = true
@@ -67,6 +67,12 @@ variable "environments" {
       google_client_secret = "your-google-client-secret"
       microsoft_client_id = "your-microsoft-client-id"
       microsoft_client_secret = "your-microsoft-client-secret"
+      redis_cache_name = "dev-alpinebot-redis"
+      redis_cache_sku_name = "Standard"
+      redis_cache_family = "C"
+      redis_cache_capacity = 1
+      postgresql_server_name = "dev-alpinebot-psql"
+      postgresql_database_name = "dev-alpinebot-db"
     },
     "qa" = {
       tags = {
@@ -87,9 +93,6 @@ variable "environments" {
       wap_sp_sku_os_linux = "Linux"
       alpinebotaiact_name = "qa-alpinebot-ai"
       alpinebotaidepl = "qa-alpinebot-ai-dpl"
-      az_db_name = "qa-alpinebot-db"
-      az_db_kind = "MongoDB"
-      az_db_offer_type = "Standard"
       apbotinsights_name = "qa-alpinebot-insights"
       appinsights_instrumentation_key = "your-qa-appinsights-key"
       rbac_enabled = true
@@ -100,6 +103,12 @@ variable "environments" {
       google_client_secret = ""
       microsoft_client_id = ""
       microsoft_client_secret = ""
+      redis_cache_name = "qa-alpinebot-redis"
+      redis_cache_sku_name = "Standard"
+      redis_cache_family = "C"
+      redis_cache_capacity = 1
+      postgresql_server_name = "qa-alpinebot-psql"
+      postgresql_database_name = "qa-alpinebot-db"
     },
     "main" = {
       tags = {
@@ -120,9 +129,6 @@ variable "environments" {
       wap_sp_sku_os_linux = "Linux"
       alpinebotaiact_name = "main-alpinebot-ai"
       alpinebotaidepl = "main-alpinebot-ai-dpl"
-      az_db_name = "main-alpinebot-db"
-      az_db_kind = "MongoDB"
-      az_db_offer_type = "Standard"
       apbotinsights_name = "main-alpinebot-insights"
       appinsights_instrumentation_key = "your-main-appinsights-key"
       rbac_enabled = true
@@ -133,6 +139,12 @@ variable "environments" {
       google_client_secret = ""
       microsoft_client_id = ""
       microsoft_client_secret = ""
+      redis_cache_name = "main-alpinebot-redis"
+      redis_cache_sku_name = "Standard"
+      redis_cache_family = "C"
+      redis_cache_capacity = 1
+      postgresql_server_name = "main-alpinebot-psql"
+      postgresql_database_name = "main-alpinebot-db"
     }
   }
 }
@@ -155,4 +167,15 @@ variable "az_tenant_id" {
 variable "sp_object_id" {
   description = "The Object ID of the App Service's Service Principal"
   type        = string
+}
+
+variable "postgresql_admin_username" {
+  description = "The username of the PostgreSQL server administrator."
+  type        = string
+}
+
+variable "postgresql_admin_password" {
+  description = "The password of the PostgreSQL server administrator."
+  type        = string
+  sensitive   = true
 }

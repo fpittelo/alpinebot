@@ -17,9 +17,9 @@ resource "azurerm_resource_group" "rg" {
 module "key_vault" {
   source = "../modules/key_vault"
 
-  az_rg_name                  = azurerm_resource_group.rg.name
+  az_rg_name                  = local.environment_vars.az_rg_name
   az_kv_name                  = local.environment_vars.az_kv_name
-  az_location                 = azurerm_resource_group.rg.location
+  az_location                 = local.environment_vars.az_location
   tenant_id                   = var.az_tenant_id
   enabled_for_disk_encryption = false
   purge_protection_enabled    = false
@@ -81,14 +81,28 @@ module "linux_web_app" {
 }
 
 ##### Deploy CosmosDB Database ######
-module "cosmos_db" {
-  source           = "../modules/cosmos_db"
-  az_rg_name       = local.environment_vars.az_rg_name
-  az_location      = local.environment_vars.az_location
-  az_db_name       = local.environment_vars.az_db_name
-  az_db_kind       = local.environment_vars.az_db_kind
-  az_db_offer_type = local.environment_vars.az_db_offer_type
-  tags             = local.environment_vars.tags
+module "redis_cache" {
+  source               = "../modules/redis_cache"
+  redis_cache_name     = local.environment_vars.redis_cache_name
+  az_location          = local.environment_vars.az_location
+  az_rg_name           = local.environment_vars.az_rg_name
+  redis_cache_sku_name = local.environment_vars.redis_cache_sku_name
+  redis_cache_family   = local.environment_vars.redis_cache_family
+  redis_cache_capacity = local.environment_vars.redis_cache_capacity
+  tags                 = local.environment_vars.tags
+
+  depends_on = [azurerm_resource_group.rg]
+}
+
+module "postgresql_db" {
+  source                    = "../modules/postgresql_db"
+  postgresql_server_name    = local.environment_vars.postgresql_server_name
+  az_location               = local.environment_vars.az_location
+  az_rg_name                = local.environment_vars.az_rg_name
+  postgresql_admin_username = var.postgresql_admin_username
+  postgresql_admin_password = var.postgresql_admin_password
+  postgresql_database_name  = local.environment_vars.postgresql_database_name
+  tags                      = local.environment_vars.tags
 
   depends_on = [azurerm_resource_group.rg]
 }

@@ -83,8 +83,9 @@ graph TD
     end
 
     subgraph "Data & Monitoring"
-        Backend_User_Query --> CosmosDB[Azure Cosmos DB for Chat History & Feedback];
-        Backend_Admin_Actions --> CosmosDB;
+        Backend_User_Query -- session data --> Redis[Azure Cache for Redis];
+        Backend_User_Query --> PostgreSQL[Azure DB for PostgreSQL for Chat History & Feedback];
+        Backend_Admin_Actions --> PostgreSQL;
         Backend_User_Query --> AppInsights[Application Insights];
         Ingestion_Func --> AppInsights;
     end
