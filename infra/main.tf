@@ -17,9 +17,9 @@ resource "azurerm_resource_group" "rg" {
 module "key_vault" {
   source = "../modules/key_vault"
 
-  az_rg_name                  = local.environment_vars.az_rg_name
+  az_rg_name                  = azurerm_resource_group.rg.name
   az_kv_name                  = local.environment_vars.az_kv_name
-  az_location                 = local.environment_vars.az_location
+  az_location                 = azurerm_resource_group.rg.location
   tenant_id                   = var.az_tenant_id
   enabled_for_disk_encryption = false
   purge_protection_enabled    = false
@@ -81,7 +81,7 @@ module "linux_web_app" {
 }
 
 ##### Deploy CosmosDB Database ######
-module "azurerm_cosmosdb_account" {
+module "cosmos_db" {
   source           = "../modules/cosmos_db"
   az_rg_name       = local.environment_vars.az_rg_name
   az_location      = local.environment_vars.az_location
