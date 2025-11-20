@@ -167,10 +167,10 @@ jobs:
 #       working-directory: ./${{ env.ENVIRONMENT }}
 #       run: |      
 #         # Retrieve the secret value from Key Vault
-#         SECRET_VALUE=$(az keyvault secret show --name "${{ env.ENVIRONMENT }}-alpinebot-openai-key" --vault-name "${{ env.ENVIRONMENT }}-alpinebot-kv" --query "value" -o tsv)
+#         SECRET_VALUE=$(az keyvault secret show --name \"${{ env.ENVIRONMENT }}-alpinebot-openai-key\" --vault-name \"${{ env.ENVIRONMENT }}-alpinebot-kv\" --query \"value\" -o tsv)
 #     
 #         # Export the secret as an environment variable (avoid printing it)
-#         echo "SECRET_VALUE=${SECRET_VALUE}" >> $GITHUB_ENV
+#         echo \"SECRET_VALUE=${SECRET_VALUE}\" >> $GITHUB_ENV
 #       env:
 #         AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
 #         AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}

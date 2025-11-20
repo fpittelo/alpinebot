@@ -123,3 +123,33 @@ variable "tags" {
   type        = map(string)
   default     = {}  # Set default to empty map if appropriate
 }
+
+variable "auth_enabled" {
+  description = "Enable authentication"
+  type        = bool
+  default     = false
+}
+
+variable "google_client_id" {
+  description = "Google client ID"
+  type        = string
+  default     = ""
+}
+
+variable "google_client_secret" {
+  description = "Google client secret"
+  type        = string
+  default     = ""
+}
+
+variable "microsoft_client_id" {
+  description = "Microsoft client ID"
+  type        = string
+  default     = ""
+}
+
+variable "microsoft_client_secret" {
+  description = "Microsoft client secret"
+  type        = string
+  default     = ""
+}
