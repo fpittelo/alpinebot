@@ -63,7 +63,17 @@ module "linux_web_app" {
   wap_sp_name         = var.wap_sp_name
   az_rg_name          = var.az_rg_name
   az_location         = var.az_location
+  auth_enabled        = var.auth_enabled
+  google_client_id    = var.google_client_id
+  google_client_secret_setting_name = "GOOGLE_CLIENT_SECRET"
+  microsoft_client_id = var.microsoft_client_id
+  microsoft_client_secret_setting_name = "MICROSOFT_CLIENT_SECRET"
   
+  app_settings = {
+    "GOOGLE_CLIENT_SECRET"    = var.google_client_secret
+    "MICROSOFT_CLIENT_SECRET" = var.microsoft_client_secret
+  }
+
   tags = var.tags  
 
   depends_on = [ azurerm_resource_group.rg ]

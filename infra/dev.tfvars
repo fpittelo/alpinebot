@@ -35,3 +35,9 @@ rbac_enabled                        = true
 
 kind                                = "OpenAI"
 sku_name_cog_acct                   = "S0"
+
+auth_enabled                        = true
+google_client_id                    = "your-google-client-id"
+google_client_secret                = "your-google-client-secret"
+microsoft_client_id                 = "your-microsoft-client-id"
+microsoft_client_secret             = "your-microsoft-client-secret"
