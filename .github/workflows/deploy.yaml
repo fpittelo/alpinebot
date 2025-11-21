@@ -113,6 +113,24 @@ jobs:
 
       - name: Set Terraform Environment Variables
         run: |
+          echo "TF_VAR_az_client_id=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_az_tenant_id=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_az_subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_az_container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" >> $GITHUB_ENV
+          echo "TF_VAR_sp_object_id=${{ secrets.AZURE_SP_OBJECT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_az_openai_key_value=${{ secrets.AZURE_OPENAI_KEY }}" >> $GITHUB_ENV
+          echo "TF_VAR_postgresql_admin_password=${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}" >> $GITHUB_ENV
+          echo "TF_VAR_postgresql_admin_username=${{ secrets.POSTGRESQL_ADMIN_USERNAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_google_client_id=${{ secrets.GOOGLE_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_google_client_secret=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> $GITHUB_ENV
+          echo "TF_VAR_microsoft_client_id=${{ secrets.MICROSOFT_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_microsoft_client_secret=${{ secrets.MICROSOFT_CLIENT_SECRET }}" >> $GITHUB_ENV
+
+      - name: Set Up Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
@@ -124,7 +142,7 @@ jobs:
             -backend-config="storage_account_name=${{ env.ENVIRONMENT }}bkdalpinebotsa" \
             -backend-config="container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" \
             -backend-config="key=${{ env.ENVIRONMENT }}-bkd-alpinebot.tfstate"
-        working-directory: ./infra  # Update the working directory to the new infra folder
+        working-directory: ./infra
 
       - name: Terraform Apply
         env:
@@ -139,14 +157,14 @@ jobs:
         run: |
           echo "Using environment: ${{ env.ENVIRONMENT }}"
           terraform apply -var="environment=${{ env.ENVIRONMENT }}" -auto-approve
-        working-directory: ./infra  # Update the working directory to the new infra folder
+        working-directory: ./infra
 
       - name: Upload Terraform Log
-        if: always()  # This ensures the step runs regardless of previous step outcomes
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: terraform-log
-          path: ./infra/terraform.log  # Log file now in infra folder
+          path: ./infra/terraform.log
           overwrite: true
 
 #     - name: Retrieve OpenAI Key from Key Vault
@@ -167,4 +185,4 @@ jobs:
 #         # Commands to build and deploy your web application
 #         # Use $SECRET_VALUE as needed
 #       env:
-#         SECRET_VALUE: ${{ env.SECRET_VALUE }} 
+#         SECRET_VALUE: ${{ env.SECRET_VALUE }}
