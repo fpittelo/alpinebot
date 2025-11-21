@@ -73,6 +73,9 @@ module "linux_web_app" {
   app_settings = {
     "GOOGLE_CLIENT_SECRET"    = local.environment_vars.google_client_secret
     "MICROSOFT_CLIENT_SECRET" = local.environment_vars.microsoft_client_secret
+    "REDIS_HOST"              = module.redis_cache.hostname
+    "REDIS_PORT"              = module.redis_cache.port
+    "REDIS_PASSWORD"          = module.redis_cache.primary_key
   }
 
   tags = local.environment_vars.tags
@@ -86,9 +89,9 @@ module "redis_cache" {
   redis_cache_name     = local.environment_vars.redis_cache_name
   az_location          = local.environment_vars.az_location
   az_rg_name           = local.environment_vars.az_rg_name
-  redis_cache_sku_name = local.environment_vars.redis_cache_sku_name
-  redis_cache_family   = local.environment_vars.redis_cache_family
-  redis_cache_capacity = local.environment_vars.redis_cache_capacity
+  redis_cache_sku_name = "Basic"
+  redis_cache_family   = "C"
+  redis_cache_capacity = 0
   tags                 = local.environment_vars.tags
 
   depends_on = [azurerm_resource_group.rg]

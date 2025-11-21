@@ -31,9 +31,6 @@ variable "environments" {
     microsoft_client_id = string
     microsoft_client_secret = string
     redis_cache_name = string
-    redis_cache_sku_name = string
-    redis_cache_family = string
-    redis_cache_capacity = number
     postgresql_server_name = string
     postgresql_database_name = string
   }))
@@ -68,9 +65,6 @@ variable "environments" {
       microsoft_client_id = "your-microsoft-client-id"
       microsoft_client_secret = "your-microsoft-client-secret"
       redis_cache_name = "dev-alpinebot-redis"
-      redis_cache_sku_name = "Standard"
-      redis_cache_family = "C"
-      redis_cache_capacity = 1
       postgresql_server_name = "dev-alpinebot-psql"
       postgresql_database_name = "dev-alpinebot-db"
     },
@@ -104,9 +98,6 @@ variable "environments" {
       microsoft_client_id = ""
       microsoft_client_secret = ""
       redis_cache_name = "qa-alpinebot-redis"
-      redis_cache_sku_name = "Standard"
-      redis_cache_family = "C"
-      redis_cache_capacity = 1
       postgresql_server_name = "qa-alpinebot-psql"
       postgresql_database_name = "qa-alpinebot-db"
     },
@@ -140,9 +131,6 @@ variable "environments" {
       microsoft_client_id = ""
       microsoft_client_secret = ""
       redis_cache_name = "main-alpinebot-redis"
-      redis_cache_sku_name = "Standard"
-      redis_cache_family = "C"
-      redis_cache_capacity = 1
       postgresql_server_name = "main-alpinebot-psql"
       postgresql_database_name = "main-alpinebot-db"
     }
