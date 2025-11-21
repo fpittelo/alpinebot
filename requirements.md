@@ -7,7 +7,7 @@ This document lists the functional and non-functional requirements for the Alpin
 *   **FR1: User Authentication**
     *   **FR1.1:** The system shall allow users to authenticate using their Google account.
     *   **FR1.2:** The system shall allow users to authenticate using their Microsoft account.
-    *   **FR1.3:** The system shall create a user profile in the database upon the user's first successful login.
+    *   **FR1.3:** The system shall create a user profile in the PostgreSQL database upon the user's first successful login.
 *   **FR2: Chatbot**
     *   **FR2.1:** The system shall provide a web-based chatbot interface with a minimalist and elegant design, inspired by the image in the `inspiration` folder.
     *   **FR2.2:** The chatbot shall answer questions about Switzerland.
@@ -15,7 +15,7 @@ This document lists the functional and non-functional requirements for the Alpin
     *   **FR2.4:** The chatbot shall use the data ingested from public data sources as its knowledge base.
     *   **FR2.5:** The chatbot shall support English, German, and French.
     *   **FR2.6:** The system shall provide a thumb up/thumb down voting mechanism for each chatbot response.
-    *   **FR2.7:** The system shall store the user's feedback in the database.
+    *   **FR2.7:** The system shall store the user's feedback in the PostgreSQL database.
 *   **FR3: Admin Portal**
     *   **FR3.1:** The system shall provide a web-based admin portal for managing the application, with a design consistent with the main application.
     *   **FR3.2:** The admin portal shall require administrators to authenticate.
@@ -29,7 +29,7 @@ This document lists the functional and non-functional requirements for the Alpin
 *   **FR4: Data Ingestion**
     *   **FR4.1:** The system shall be able to ingest data from public data sources via API.
     *   **FR4.2:** The data ingestion process shall be automated and run on a schedule.
-    *   **FR4.3:** The ingested data shall be stored in a Cosmos DB database.
+    *   **FR4.3:** The ingested data shall be stored in a PostgreSQL database.
 
 ## 2. Non-Functional Requirements
 

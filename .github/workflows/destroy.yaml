@@ -57,6 +57,8 @@ jobs:
           echo "TF_VAR_az_subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_az_container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" >> $GITHUB_ENV
           echo "TF_VAR_sp_object_id=${{ secrets.AZURE_SP_OBJECT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_postgresql_admin_password=${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}" >> $GITHUB_ENV
+          echo "TF_VAR_postgresql_admin_username=${{ secrets.POSTGRESQL_ADMIN_USERNAME }}" >> $GITHUB_ENV
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
@@ -73,8 +75,7 @@ jobs:
             -backend-config="resource_group_name=${{ env.ENVIRONMENT }}-bkd-alpinebot" \
             -backend-config="storage_account_name=${{ env.ENVIRONMENT }}bkdalpinebotsa" \
             -backend-config="container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" \
-            -backend-config="key=${{ env.ENVIRONMENT }}-bkd-alpinebot.tfstate" \
-            -var-file="${{ env.ENVIRONMENT }}.tfvars"
+            -backend-config="key=${{ env.ENVIRONMENT }}-bkd-alpinebot.tfstate"
 
       - name: Terraform Destroy
         working-directory: ./infra  # Use the new infra directory
@@ -86,7 +87,7 @@ jobs:
           TF_LOG: DEBUG
           TF_LOG_PATH: terraform_destroy.log
         run: |
-          terraform destroy -var-file="${{ env.ENVIRONMENT }}.tfvars" -auto-approve
+          terraform destroy -var="environment=${{ env.ENVIRONMENT }}" -auto-approve
 
       - name: Upload Terraform Destroy Log
         if: always()  # This ensures the step runs regardless of previous step outcomes

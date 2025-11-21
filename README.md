@@ -23,7 +23,10 @@ AlpineBot is an AI-powered chatbot for everything Switzerland, presented with a 
 
 ### Prerequisites
 
-- Python 3.x, Azure Functions Core Tools, Terraform, Azure CLI
+> [!IMPORTANT]
+> **NO LOCAL OPERATIONS**: Infrastructure deployment and management are handled **exclusively** via GitHub Actions. You do **NOT** need to install or run Terraform locally.
+
+- Python 3.x, Azure Functions Core Tools (for local function development only)
 
 ### Installation
 
@@ -83,8 +86,9 @@ graph TD
     end
 
     subgraph "Data & Monitoring"
-        Backend_User_Query --> CosmosDB[Azure Cosmos DB for Chat History & Feedback];
-        Backend_Admin_Actions --> CosmosDB;
+        Backend_User_Query -- session data --> Redis[Azure Cache for Redis];
+        Backend_User_Query --> PostgreSQL[Azure DB for PostgreSQL for Chat History & Feedback];
+        Backend_Admin_Actions --> PostgreSQL;
         Backend_User_Query --> AppInsights[Application Insights];
         Ingestion_Func --> AppInsights;
     end

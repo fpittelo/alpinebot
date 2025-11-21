@@ -29,7 +29,7 @@ This document outlines the development plan for the AlpineBot project. The proje
 *   **Milestone 1.5: User Feedback**
     *   [ ] **Task 1.5.1:** Implement the thumb up/thumb down user feedback mechanism on the chatbot responses.
     *   [ ] **Task 1.5.2:** Write unit tests for the feedback components.
-    *   [ ] **Task 1.5.3:** Implement the backend logic to store feedback in Cosmos DB.
+    *   [ ] **Task 1.5.3:** Implement the backend logic to store feedback in PostgreSQL.
     *   [ ] **Task 1.5.4:** Write integration tests for the feedback mechanism.
 
 ## Phase 2: Admin Portal and Data Ingestion
@@ -41,7 +41,7 @@ This document outlines the development plan for the AlpineBot project. The proje
 *   **Milestone 2.2: Data Ingestion Pipeline**
     *   [ ] Design a data ingestion pipeline using Azure Functions.
     *   [ ] Implement a function to fetch data from a sample public API.
-    *   [ ] Store the ingested data in Cosmos DB.
+    *   [ ] Store the ingested data in PostgreSQL.
 *   **Milestone 2.3: Data Source Management**
     *   [ ] Create a UI in the admin portal for managing data sources.
     *   [ ] Implement functionality to add, edit, and delete data sources.
