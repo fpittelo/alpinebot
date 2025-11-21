@@ -1,45 +1,34 @@
 name: Destroy Environment
 
 on:
-  workflow_dispatch:  # Allows manual trigger from the GitHub Actions UI
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to destroy'
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - main
 
 permissions:
-  id-token: write  # Required for OIDC authentication
-  contents: read   # Default permission for accessing the repo
+  id-token: write
+  contents: read
 
 jobs:
   destroy:
     name: Destroy Terraform Resources
     runs-on: ubuntu-latest
-    environment: ${{ github.ref_name }} # Use the branch name as environment
-    outputs:
-      environment: ${{ steps.setenv.outputs.environment }}
-
+    environment: ${{ github.event.inputs.environment }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set Environment Variables Based on Branch
+      - name: Set Environment Variables
         id: set_env
         run: |
-          # Extract the branch name (remove refs/heads/ from the full ref)
-          BRANCH_NAME=${GITHUB_REF#refs/heads/}
-          echo "Branch Name: $BRANCH_NAME"
-
-          # Set environment based on branch
-          if [[ "$BRANCH_NAME" == "dev" ]]; then
-            ENVIRONMENT="dev"
-          elif [[ "$BRANCH_NAME" == "qa" ]]; then
-            ENVIRONMENT="qa"
-          elif [[ "$BRANCH_NAME" == "main" ]]; then
-            ENVIRONMENT="main"
-          else
-            echo "Unsupported branch: $BRANCH_NAME"
-            exit 1
-          fi
-
-          # Export environment to be used in subsequent steps
-          echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
 
       - name: Login to Azure using OIDC
         uses: azure/login@v2
