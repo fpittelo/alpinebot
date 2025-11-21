@@ -8,7 +8,10 @@ resource "azurerm_postgresql_flexible_server" "postgresql" {
   administrator_password = var.postgresql_admin_password
   storage_mb             = 32768
   tags                   = var.tags
-  zone                   = null
+
+  lifecycle {
+    ignore_changes = [zone]
+  }
 }
 
 resource "azurerm_postgresql_flexible_server_database" "database" {
