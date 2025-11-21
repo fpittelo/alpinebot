@@ -2,6 +2,15 @@ name: Deploy Environment
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - main
   push:
     branches:
       - dev
@@ -23,18 +32,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set environment based on branch
+      - name: Set environment
         id: setenv
         run: |
-          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-            echo "ENVIRONMENT=dev" >> $GITHUB_ENV
-            echo "environment=dev" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref }}" == "refs/heads/qa" ]]; then
-            echo "ENVIRONMENT=qa" >> $GITHUB_ENV
-            echo "environment=qa" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "ENVIRONMENT=main" >> $GITHUB_ENV
-            echo "environment=main" >> $GITHUB_OUTPUT
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+          else
+            if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+              echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+              echo "environment=dev" >> $GITHUB_OUTPUT
+            elif [[ "${{ github.ref }}" == "refs/heads/qa" ]]; then
+              echo "ENVIRONMENT=qa" >> $GITHUB_ENV
+              echo "environment=qa" >> $GITHUB_OUTPUT
+            elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+              echo "ENVIRONMENT=main" >> $GITHUB_ENV
+              echo "environment=main" >> $GITHUB_OUTPUT
+            fi
           fi
 
       - name: Login to Azure using OIDC
