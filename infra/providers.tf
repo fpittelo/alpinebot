@@ -11,6 +11,14 @@ terraform {
       source  = "hashicorp/azuread"
       version = "~> 2.5.0"
     }
+    random = {
+      source = "hashicorp/random"
+      version = "3.1.0"
+    }
+    postgresql = {
+      source = "cyrilgdn/postgresql"
+      version = "1.17.0"
+    }
   }
 
   backend "azurerm" {
