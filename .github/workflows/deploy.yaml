@@ -113,20 +113,6 @@ jobs:
 
       - name: Set Terraform Environment Variables
         run: |
-          echo "TF_VAR_az_client_id=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
-          echo "TF_VAR_az_tenant_id=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
-          echo "TF_VAR_az_subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
-          echo "TF_VAR_az_container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" >> $GITHUB_ENV
-          echo "TF_VAR_sp_object_id=${{ secrets.AZURE_SP_OBJECT_ID }}" >> $GITHUB_ENV
-          echo "TF_VAR_az_openai_key_value=${{ secrets.AZURE_OPENAI_KEY }}" >> $GITHUB_ENV
-          echo "TF_VAR_postgresql_admin_password=${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}" >> $GITHUB_ENV
-          echo "TF_VAR_postgresql_admin_username=${{ secrets.POSTGRESQL_ADMIN_USERNAME }}" >> $GITHUB_ENV
-      
-      - name: Set Up Terraform
-        uses: hashicorp/setup-terraform@v2
-
-      - name: Terraform Init
-        env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}

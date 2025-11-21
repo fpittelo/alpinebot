@@ -26,10 +26,7 @@ variable "environments" {
     kind = string
     sku_name_cog_acct = string
     auth_enabled = bool
-    google_client_id = string
-    google_client_secret = string
-    microsoft_client_id = string
-    microsoft_client_secret = string
+    auth_enabled = bool
     redis_cache_name = string
     postgresql_server_name = string
     postgresql_database_name = string
@@ -62,10 +59,7 @@ variable "environments" {
       kind = "OpenAI"
       sku_name_cog_acct = "S0"
       auth_enabled = true
-      google_client_id = "your-google-client-id"
-      google_client_secret = "your-google-client-secret"
-      microsoft_client_id = "your-microsoft-client-id"
-      microsoft_client_secret = "your-microsoft-client-secret"
+      auth_enabled = true
       redis_cache_name = "dev-alpinebot-redis"
       postgresql_server_name = "dev-alpinebot-psql"
       postgresql_database_name = "dev-alpinebot-db"
@@ -97,10 +91,7 @@ variable "environments" {
       kind = "OpenAI"
       sku_name_cog_acct = "S0"
       auth_enabled = false
-      google_client_id = ""
-      google_client_secret = ""
-      microsoft_client_id = ""
-      microsoft_client_secret = ""
+      auth_enabled = false
       redis_cache_name = "qa-alpinebot-redis"
       postgresql_server_name = "qa-alpinebot-psql"
       postgresql_database_name = "qa-alpinebot-db"
@@ -132,10 +123,7 @@ variable "environments" {
       kind = "OpenAI"
       sku_name_cog_acct = "S0"
       auth_enabled = false
-      google_client_id = ""
-      google_client_secret = ""
-      microsoft_client_id = ""
-      microsoft_client_secret = ""
+      auth_enabled = false
       redis_cache_name = "main-alpinebot-redis"
       postgresql_server_name = "main-alpinebot-psql"
       postgresql_database_name = "main-alpinebot-db"
@@ -172,6 +160,30 @@ variable "postgresql_admin_username" {
 
 variable "postgresql_admin_password" {
   description = "The password of the PostgreSQL server administrator."
+  type        = string
+  sensitive   = true
+}
+
+variable "google_client_id" {
+  description = "The Client ID for Google OAuth."
+  type        = string
+  sensitive   = true
+}
+
+variable "google_client_secret" {
+  description = "The Client Secret for Google OAuth."
+  type        = string
+  sensitive   = true
+}
+
+variable "microsoft_client_id" {
+  description = "The Client ID for Microsoft OAuth."
+  type        = string
+  sensitive   = true
+}
+
+variable "microsoft_client_secret" {
+  description = "The Client Secret for Microsoft OAuth."
   type        = string
   sensitive   = true
 }
