@@ -33,6 +33,7 @@ variable "environments" {
     redis_cache_name = string
     postgresql_server_name = string
     postgresql_database_name = string
+    log_analytics_workspace_name = string
   }))
   default = {
     "dev" = {
@@ -67,6 +68,7 @@ variable "environments" {
       redis_cache_name = "dev-alpinebot-redis"
       postgresql_server_name = "dev-alpinebot-psql"
       postgresql_database_name = "dev-alpinebot-db"
+      log_analytics_workspace_name = "dev-alpinebot-log"
     },
     "qa" = {
       tags = {
@@ -100,6 +102,7 @@ variable "environments" {
       redis_cache_name = "qa-alpinebot-redis"
       postgresql_server_name = "qa-alpinebot-psql"
       postgresql_database_name = "qa-alpinebot-db"
+      log_analytics_workspace_name = "qa-alpinebot-log"
     },
     "main" = {
       tags = {
@@ -133,6 +136,7 @@ variable "environments" {
       redis_cache_name = "main-alpinebot-redis"
       postgresql_server_name = "main-alpinebot-psql"
       postgresql_database_name = "main-alpinebot-db"
+      log_analytics_workspace_name = "main-alpinebot-log"
     }
   }
 }

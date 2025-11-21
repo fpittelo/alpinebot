@@ -110,14 +110,28 @@ module "postgresql_db" {
   depends_on = [azurerm_resource_group.rg]
 }
 
+#### Deploy Log Analytics Workspace #####
+module "log_analytics_workspace" {
+  source                          = "../modules/log_analytics_workspace"
+  log_analytics_workspace_name    = local.environment_vars.log_analytics_workspace_name
+  az_location                     = local.environment_vars.az_location
+  az_rg_name                      = local.environment_vars.az_rg_name
+  log_analytics_workspace_sku     = "PerGB2018" # Default SKU
+  log_analytics_workspace_retention_in_days = 30 # Default retention
+  tags                            = local.environment_vars.tags
+
+  depends_on = [azurerm_resource_group.rg]
+}
+
 #### Deploy App Insights #####
 resource "azurerm_application_insights" "apbotinsights" {
   name                = local.environment_vars.apbotinsights_name
   location            = local.environment_vars.az_location
   resource_group_name = local.environment_vars.az_rg_name
   application_type    = "web"
+  workspace_id        = module.log_analytics_workspace.log_analytics_workspace_id
 
-  depends_on = [azurerm_resource_group.rg]
+  depends_on = [azurerm_resource_group.rg, module.log_analytics_workspace]
 }
 
 output "instrumentation_key" {
