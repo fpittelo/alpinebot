@@ -16,6 +16,7 @@ jobs:
   backend:
     name: Create Backend
     runs-on: ubuntu-latest
+    environment: ${{ github.ref_name }}
     outputs:
       environment: ${{ steps.setenv.outputs.environment }}
     steps:
