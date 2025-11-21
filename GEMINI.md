@@ -10,7 +10,10 @@ The infrastructure is defined using a modular approach, with separate modules fo
 
 ### Prerequisites
 
-*   Python 3.x, Azure Functions Core Tools
+> [!IMPORTANT]
+> **NO LOCAL OPERATIONS**: This project is designed to be deployed and managed **exclusively** via the GitHub Actions pipeline. You do **NOT** need to run Terraform or Azure CLI commands locally on your machine. All infrastructure changes must be committed to the repository and deployed through the automated workflows.
+
+*   Python 3.x, Azure Functions Core Tools (for local function development only)
 
 ### Configuration
 
@@ -28,7 +31,7 @@ The infrastructure is deployed exclusively through GitHub Actions workflows defi
 *   **Test-Driven Development (TDD):** All code will be developed using a TDD approach, with tests written before the code.
 *   **Modular Terraform:** The Terraform code is organized into modules, with each module responsible for a single Azure service. This promotes reusability and maintainability.
 *   **Multiple Environments:** The project is set up to support multiple environments (dev, qa, main). Environment-specific variables are stored in `.tfvars` files.
-*   **CI/CD:** The infrastructure is deployed using a GitHub Actions workflow, which provides a consistent and automated deployment process.
+*   **CI/CD:** The infrastructure is deployed using a GitHub Actions workflow, which provides a consistent and automated deployment process. **Local Terraform execution is strictly prohibited.**
 *   **Authentication:** User authentication is handled by Azure App Service's built-in authentication and authorization capabilities, integrated with Google and Microsoft as identity providers.
 *   **User Feedback:** User feedback is collected through a voting system on the chatbot's responses and analyzed in the admin portal.
 *   **LLM Management:** The LLM's instructions and behavior are managed through the admin portal to allow for continuous improvement.

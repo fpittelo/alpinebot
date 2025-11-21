@@ -23,7 +23,10 @@ AlpineBot is an AI-powered chatbot for everything Switzerland, presented with a 
 
 ### Prerequisites
 
-- Python 3.x, Azure Functions Core Tools, Terraform, Azure CLI
+> [!IMPORTANT]
+> **NO LOCAL OPERATIONS**: Infrastructure deployment and management are handled **exclusively** via GitHub Actions. You do **NOT** need to install or run Terraform locally.
+
+- Python 3.x, Azure Functions Core Tools (for local function development only)
 
 ### Installation
 

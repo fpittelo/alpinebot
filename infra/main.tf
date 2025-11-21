@@ -76,6 +76,10 @@ module "linux_web_app" {
     "REDIS_HOST"              = module.redis_cache.hostname
     "REDIS_PORT"              = module.redis_cache.port
     "REDIS_PASSWORD"          = module.redis_cache.primary_key
+    "POSTGRES_HOST"           = module.postgresql_db.fqdn
+    "POSTGRES_DB"             = module.postgresql_db.database_name
+    "POSTGRES_USER"           = var.postgresql_admin_username
+    "POSTGRES_PASSWORD"       = var.postgresql_admin_password
   }
 
   tags = local.environment_vars.tags
@@ -83,7 +87,7 @@ module "linux_web_app" {
   depends_on = [azurerm_resource_group.rg]
 }
 
-##### Deploy CosmosDB Database ######
+##### Deploy Redis Cache and PostgreSQL Database ######
 module "redis_cache" {
   source               = "../modules/redis_cache"
   redis_cache_name     = local.environment_vars.redis_cache_name
