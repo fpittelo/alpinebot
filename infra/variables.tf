@@ -34,6 +34,7 @@ variable "environments" {
     postgresql_server_name = string
     postgresql_database_name = string
     log_analytics_workspace_name = string
+    storage_mb = number
   }))
   default = {
     "dev" = {
@@ -69,6 +70,7 @@ variable "environments" {
       postgresql_server_name = "dev-alpinebot-psql"
       postgresql_database_name = "dev-alpinebot-db"
       log_analytics_workspace_name = "dev-alpinebot-log"
+      storage_mb = 32768
     },
     "qa" = {
       tags = {
@@ -103,6 +105,7 @@ variable "environments" {
       postgresql_server_name = "qa-alpinebot-psql"
       postgresql_database_name = "qa-alpinebot-db"
       log_analytics_workspace_name = "qa-alpinebot-log"
+      storage_mb = 32768
     },
     "main" = {
       tags = {
@@ -137,6 +140,7 @@ variable "environments" {
       postgresql_server_name = "main-alpinebot-psql"
       postgresql_database_name = "main-alpinebot-db"
       log_analytics_workspace_name = "main-alpinebot-log"
+      storage_mb = 32768
     }
   }
 }
@@ -147,12 +151,12 @@ variable "az_subscription_id" {
 }
 
 variable "az_client_id" {
-  description = "value of subscription id"
+  description = "The Application (client) ID of the service principal used for authentication."
   type        = string
 }
 
 variable "az_tenant_id" {
-  description = "value of subscription id"
+  description = "The Directory (tenant) ID where the application is registered."
   type        = string
 }
 

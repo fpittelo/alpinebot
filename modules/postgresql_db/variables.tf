@@ -47,3 +47,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "storage_mb" {
+  description = "The storage size in MB for the PostgreSQL server."
+  type        = number
+  default     = 32768
+}

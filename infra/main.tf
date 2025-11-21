@@ -105,6 +105,7 @@ module "postgresql_db" {
   postgresql_admin_username = var.postgresql_admin_username
   postgresql_admin_password = var.postgresql_admin_password
   postgresql_database_name  = local.environment_vars.postgresql_database_name
+  storage_mb                = local.environment_vars.storage_mb
   tags                      = local.environment_vars.tags
 
   depends_on = [azurerm_resource_group.rg]

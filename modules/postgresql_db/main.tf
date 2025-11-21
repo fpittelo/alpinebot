@@ -6,7 +6,7 @@ resource "azurerm_postgresql_flexible_server" "postgresql" {
   sku_name               = var.postgresql_sku_name
   administrator_login    = var.postgresql_admin_username
   administrator_password = var.postgresql_admin_password
-  storage_mb             = 32768
+  storage_mb             = var.storage_mb
   tags                   = var.tags
 
   lifecycle {
