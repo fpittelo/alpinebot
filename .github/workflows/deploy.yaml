@@ -9,6 +9,16 @@ on:
       - main
 
 permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  backend:
+    name: Create Backend
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.setenv.outputs.environment }}
+    steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -74,7 +84,6 @@ permissions:
             --account-name $az_backend_sa_name \
             --account-key $STORAGE_KEY
 
-  # Step 2: Main Terraform Deployment
   deploy:
     name: Deploy Infra
     runs-on: ubuntu-latest
