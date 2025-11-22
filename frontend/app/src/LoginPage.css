@@ -144,9 +144,6 @@
   font-size: 1rem;
 }
 
-.login-button.microsoft .login-icon {
-  border-color: var(--color-charcoal);
-}
 
 .login-note {
   font-size: 0.8rem;

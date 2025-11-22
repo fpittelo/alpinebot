@@ -8,18 +8,8 @@ const LoginPage = () => {
       action: () => {
         window.location.href = "/.auth/login/google?post_login_redirect_uri=/";
       },
-      accent: "#fff",
       variant: "google",
       icon: "G",
-    },
-    {
-      label: "Continue with Microsoft",
-      action: () => {
-        window.location.href = "/.auth/login/aad?post_login_redirect_uri=/";
-      },
-      accent: "#fff",
-      variant: "microsoft",
-      icon: "◆",
     },
   ];
 
