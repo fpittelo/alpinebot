@@ -170,22 +170,25 @@ jobs:
           path: ./infra/terraform.log
           overwrite: true
 
-#     - name: Retrieve OpenAI Key from Key Vault
-#       working-directory: ./${{ env.ENVIRONMENT }}
-#       run: |      
-#         # Retrieve the secret value from Key Vault
-#         SECRET_VALUE=$(az keyvault secret show --name \"${{ env.ENVIRONMENT }}-alpinebot-openai-key\" --vault-name \"${{ env.ENVIRONMENT }}-alpinebot-kv\" --query \"value\" -o tsv)
-#     
-#         # Export the secret as an environment variable (avoid printing it)
-#         echo \"SECRET_VALUE=${SECRET_VALUE}\" >> $GITHUB_ENV
-#       env:
-#         AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-#         AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-#         AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      
-#     - name: Deploy Web Application
-#       run: |
-#         # Commands to build and deploy your web application
-#         # Use $SECRET_VALUE as needed
-#       env:
-#         SECRET_VALUE: ${{ env.SECRET_VALUE }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/app/package.json
+
+      - name: Install Frontend Dependencies
+        run: npm install
+        working-directory: ./frontend/app
+
+      - name: Build Frontend Application
+        run: npm run build
+        working-directory: ./frontend/app
+        env:
+          CI: false  # Disable treating warnings as errors in build
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.ENVIRONMENT }}-alpinebot-as
+          package: ./frontend/app/build

@@ -27,6 +27,7 @@ AlpineBot is an AI-powered chatbot for everything Switzerland, presented with a 
 > **NO LOCAL OPERATIONS**: Infrastructure deployment and management are handled **exclusively** via GitHub Actions. You do **NOT** need to install or run Terraform locally.
 
 - Python 3.x, Azure Functions Core Tools (for local function development only)
+- **OAuth Application Setup Required**: Before the application can be accessed, you must configure OAuth applications for Google and Microsoft. See [OAUTH_SETUP.md](OAUTH_SETUP.md) for detailed instructions.
 
 ### Installation
 
@@ -37,7 +38,13 @@ AlpineBot is an AI-powered chatbot for everything Switzerland, presented with a 
    # Ensure env vars are set: AZURE_OPENAI_KEY, OPENDATA_API_KEY (optional)
    ```
 
-2. **Deploy**:
+2. **Configure OAuth Applications**:
+
+   Before deploying, you must set up OAuth applications for authentication:
+   - Follow the instructions in [OAUTH_SETUP.md](OAUTH_SETUP.md) to create Google and Microsoft OAuth applications
+   - Configure the required GitHub secrets with your OAuth client IDs and secrets
+
+3. **Deploy**:
 
    Infrastructure deployment is managed exclusively through GitHub Actions. Pushing changes to the `dev` branch or merging pull requests into `qa` or `main` will trigger the automated deployment workflows.
 
