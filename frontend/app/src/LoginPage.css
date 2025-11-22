@@ -1,0 +1,66 @@
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url("./background.png");
+  background-size: cover;
+  background-position: center;
+}
+
+.login-container {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 400px;
+}
+
+.login-container h1 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  font-size: 48px;
+  font-weight: 200;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.login-container p {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 300;
+  margin-bottom: 30px;
+  color: #666;
+}
+
+.login-buttons button {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.google-login {
+  background-color: #4285f4;
+  color: white;
+}
+
+.google-login:hover {
+  background-color: #357ae8;
+}
+
+.microsoft-login {
+  background-color: #2f2f2f;
+  color: white;
+}
+
+.microsoft-login:hover {
+  background-color: #1f1f1f;
+}

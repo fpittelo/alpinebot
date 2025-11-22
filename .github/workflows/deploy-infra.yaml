@@ -1,0 +1,100 @@
+name: Deploy Infrastructure
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy infrastructure to'
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy-infra:
+    name: Deploy Terraform Infrastructure
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set environment
+        id: setenv
+        run: |
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+          echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+
+      - name: Login To Azure Using OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          allow-no-subscriptions: false
+          enable-AzPSSession: false
+
+      - name: Set Terraform Environment Variables
+        run: |
+          echo "TF_VAR_az_client_id=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_az_tenant_id=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_az_subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_az_container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" >> $GITHUB_ENV
+          echo "TF_VAR_sp_object_id=${{ secrets.AZURE_SP_OBJECT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_az_openai_key_value=${{ secrets.AZURE_OPENAI_KEY }}" >> $GITHUB_ENV
+          echo "TF_VAR_postgresql_admin_password=${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}" >> $GITHUB_ENV
+          echo "TF_VAR_postgresql_admin_username=${{ secrets.POSTGRESQL_ADMIN_USERNAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_google_client_id=${{ secrets.GOOGLE_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_google_client_secret=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> $GITHUB_ENV
+          echo "TF_VAR_microsoft_client_id=${{ secrets.MICROSOFT_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_microsoft_client_secret=${{ secrets.MICROSOFT_CLIENT_SECRET }}" >> $GITHUB_ENV
+
+      - name: Set Up Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}
+        run: |
+          terraform init \
+            -backend-config="resource_group_name=${{ env.ENVIRONMENT }}-bkd-alpinebot" \
+            -backend-config="storage_account_name=${{ env.ENVIRONMENT }}bkdalpinebotsa" \
+            -backend-config="container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" \
+            -backend-config="key=${{ env.ENVIRONMENT }}-bkd-alpinebot.tfstate"
+        working-directory: ./infra
+
+      - name: Terraform Apply
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true
+          TF_LOG: DEBUG
+          TF_LOG_PATH: terraform.log
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}
+        run: |
+          echo "Using environment: ${{ env.ENVIRONMENT }}"
+          terraform apply -var="environment=${{ env.ENVIRONMENT }}" -auto-approve
+        working-directory: ./infra
+
+      - name: Upload Terraform Log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-log-${{ env.ENVIRONMENT }}
+          path: ./infra/terraform.log
+          overwrite: true
+
+      - name: Output infrastructure information
+        run: |
+          echo "Infrastructure deployment completed for environment: ${{ env.ENVIRONMENT }}"

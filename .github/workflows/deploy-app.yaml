@@ -1,0 +1,66 @@
+name: Deploy Application
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy application to'
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy-app:
+    name: Build and Deploy Frontend Application
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set environment
+        id: setenv
+        run: |
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+          echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+
+      - name: Login To Azure Using OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          allow-no-subscriptions: false
+          enable-AzPSSession: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/app/package.json
+
+      - name: Install Frontend Dependencies
+        run: npm install
+        working-directory: ./frontend/app
+
+      - name: Build Frontend Application
+        run: npm run build
+        working-directory: ./frontend/app
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.ENVIRONMENT }}-alpinebot-as
+          package: ./frontend/app/build
+
+      - name: Output deployment information
+        run: |
+          echo "Frontend application deployed successfully to: ${{ env.ENVIRONMENT }}-alpinebot-as"
