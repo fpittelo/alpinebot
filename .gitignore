@@ -33,3 +33,12 @@ override.tf.json
 
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 # example: *tfplan*
+# Node.js dependencies
+**/node_modules/
+
+# Build outputs
+**/build/
+**/dist/
+
+# Package lock files (optional - remove if you want to commit them)
+package-lock.json
