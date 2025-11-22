@@ -1,6 +1,6 @@
-# AlpineBot _🇨🇭
+# AlpineBot \_🇨🇭
 
-AlpineBot is an AI-powered chatbot for everything Switzerland, presented with a minimalist and elegant design inspired by the provided image in the `inspiration` folder. The interface will feature a clean, airy aesthetic with a focus on white and light gray, and will use a large, high-quality background image of the Swiss Alps. To access the chatbot, users must authenticate using their Google or Microsoft accounts. The application includes an admin portal for full management of the application, including security, performance, data ingestion from live public data sources, and management of the LLM's instructions and behavior.
+AlpineBot is an AI-powered chatbot for everything Switzerland, presented with a minimalist and elegant design. The interface will feature a clean, airy aesthetic with a focus on white and light gray. To access the chatbot, users must authenticate using their Google or Microsoft accounts. The application includes an admin portal for full management of the application, including security, performance, data ingestion from live public data sources, and management of the LLM's instructions and behavior.
 
 ## Features 🚀
 
@@ -8,23 +8,22 @@ AlpineBot is an AI-powered chatbot for everything Switzerland, presented with a 
 - **AI-Powered**: Human-like responses via Azure OpenAI, using a Retrieval-Augmented Generation (RAG) architecture for up-to-date and accurate answers.
 - **Secure Authentication**: Users can log in using their Google or Microsoft accounts.
 - **Admin Portal**: A comprehensive admin portal for managing the application, including:
-    - User management
-    - Security settings
-    - Performance monitoring
-    - Data source management and ingestion
-    - LLM instruction and behavior management
-    - User feedback analysis
+  - User management
+  - Security settings
+  - Performance monitoring
+  - Data source management and ingestion
+  - LLM instruction and behavior management
+  - User feedback analysis
 - **User Feedback**: Users can provide feedback on the chatbot's responses using a thumb up/thumb down voting system.
 - **Real-Time Data Ingestion**: The ability to connect to live public data sources via API and ingest data regularly for up-to-date knowledge.
 - **Multilingual**: Support for English, German, and French (coming soon).
-- **Minimalist Design**: A clean, elegant, and user-friendly interface inspired by the provided image, featuring a large background image of the Swiss Alps and a light color palette.
+- **Minimalist Design**: A clean, elegant, and user-friendly interface and a light color palette.
 
 ## Getting Started ⛷️
 
 ### Prerequisites
 
-> [!IMPORTANT]
-> **NO LOCAL OPERATIONS**: Infrastructure deployment and management are handled **exclusively** via GitHub Actions. You do **NOT** need to install or run Terraform locally.
+> [!IMPORTANT] > **NO LOCAL OPERATIONS**: Infrastructure deployment and management are handled **exclusively** via GitHub Actions. You do **NOT** need to install or run Terraform locally.
 
 - Python 3.x, Azure Functions Core Tools (for local function development only)
 - **OAuth Application Setup Required**: Before the application can be accessed, you must configure OAuth applications for Google and Microsoft. See [OAUTH_SETUP.md](OAUTH_SETUP.md) for detailed instructions.
@@ -41,6 +40,7 @@ AlpineBot is an AI-powered chatbot for everything Switzerland, presented with a 
 2. **Configure OAuth Applications**:
 
    Before deploying, you must set up OAuth applications for authentication:
+
    - Follow the instructions in [OAUTH_SETUP.md](OAUTH_SETUP.md) to create Google and Microsoft OAuth applications
    - Configure the required GitHub secrets with your OAuth client IDs and secrets
 
@@ -54,7 +54,6 @@ AlpineBot is an AI-powered chatbot for everything Switzerland, presented with a 
 - `/backend`: Azure Functions
 - `/terraform`: Infrastructure code
 - `/data`: Sample datasets
-- `/inspiration`: Design inspiration for the user interface.
 
 ## Architecture 🏗️
 

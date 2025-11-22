@@ -9,7 +9,7 @@ This document lists the functional and non-functional requirements for the Alpin
     *   **FR1.2:** The system shall allow users to authenticate using their Microsoft account.
     *   **FR1.3:** The system shall create a user profile in the PostgreSQL database upon the user's first successful login.
 *   **FR2: Chatbot**
-    *   **FR2.1:** The system shall provide a web-based chatbot interface with a minimalist and elegant design, inspired by the image in the `inspiration` folder.
+    *   **FR2.1:** The system shall provide a web-based chatbot interface with a minimalist and elegant design.
     *   **FR2.2:** The chatbot shall answer questions about Switzerland.
     *   **FR2.3:** The chatbot shall use the Azure OpenAI service to generate responses.
     *   **FR2.4:** The chatbot shall use the data ingested from public data sources as its knowledge base.
@@ -44,5 +44,5 @@ This document lists the functional and non-functional requirements for the Alpin
     *   **NFR4.1:** All user data shall be encrypted at rest and in transit.
     *   **NFR4.2:** The system shall be protected against common web vulnerabilities, such as SQL injection and cross-site scripting (XSS).
 *   **NFR5: Usability & Design**
-    *   **NFR5.1:** The chatbot interface shall be simple, intuitive, and have a minimalist and elegant design inspired by the image in the `inspiration` folder. This includes a light color palette, a large background image, and a clean, simple layout.
+    *   **NFR5.1:** The chatbot interface shall be simple, intuitive, and have a minimalist and elegant design. This includes a light color palette and a clean, simple layout.
     *   **NFR5.2:** The admin portal shall be easy to navigate and understand, and its design shall be consistent with the main application.

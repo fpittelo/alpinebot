@@ -11,7 +11,7 @@ This document outlines the development plan for the AlpineBot project. The proje
     *   [X] **Task 1.1.4:** Configure Microsoft as an identity provider within the Terraform configuration. (Completed as part of 1.1.1)
     *   [X] **Task 1.1.5:** Verify authentication configuration deployment through CI/CD pipeline. *(Verification instructions provided in VERIFICATION.md, pending user action)*
 *   **Milestone 1.2: Frontend Authentication UI**
-    *   [ ] **Task 1.2.1:** Create a basic React application with a login page, inspired by the minimalist design. *(in progress, manual `npm install` and background image setup required)*
+    *   [ ] **Task 1.2.1:** Create a basic React application with a login page, inspired by a minimalist design. *(in progress, manual `npm install`)*
     *   [ ] **Task 1.2.2:** Write unit tests for the login page components.
     *   [ ] **Task 1.2.3:** Implement the UI for Google and Microsoft login buttons.
     *   [ ] **Task 1.2.4:** Write end-to-end tests for the login flow.

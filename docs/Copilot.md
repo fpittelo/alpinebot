@@ -2,7 +2,7 @@
 
 This project contains the Terraform infrastructure for a chatbot called AlpineBot. The chatbot is deployed on Azure and uses various Azure services, including Azure OpenAI, Azure App Service, Cosmos DB, and Application Insights.
 
-The chatbot provides information about Switzerland and requires users to authenticate with their Google or Microsoft account. The user interface will have a minimalist and elegant design, inspired by the image in the `inspiration` folder, featuring a large background image of the Swiss Alps and a light color palette. It also features an admin portal for managing the application, security, performance, data ingestion from live public data sources, and the LLM's instructions and behavior. Users can provide feedback on the chatbot's responses using a thumb up/thumb down voting system.
+The chatbot provides information about Switzerland and requires users to authenticate with their Google or Microsoft account. The user interface will have a minimalist and elegant design. It also features an admin portal for managing the application, security, performance, data ingestion from live public data sources, and the LLM's instructions and behavior. Users can provide feedback on the chatbot's responses using a thumb up/thumb down voting system.
 
 The infrastructure is defined using a modular approach, with separate modules for each Azure service. The project is structured to support multiple environments (dev, qa, main).
 
@@ -35,5 +35,5 @@ The infrastructure is deployed exclusively through GitHub Actions workflows defi
 *   **Authentication:** User authentication is handled by Azure App Service's built-in authentication and authorization capabilities, integrated with Google and Microsoft as identity providers.
 *   **User Feedback:** User feedback is collected through a voting system on the chatbot's responses and analyzed in the admin portal.
 *   **LLM Management:** The LLM's instructions and behavior are managed through the admin portal to allow for continuous improvement.
-*   **Design:** The user interface should follow the minimalist and elegant design principles inspired by the image in the `inspiration` folder. This includes a light color palette, a large background image, and a clean, simple layout.
+*   **Design:** The user interface should follow the minimalist and elegant design principles. This includes a clean, simple layout.
 *   **Documentation:** All GitHub activities, such as issues, merges, and pull requests, will be documented. The documentation will be updated if any change occurs.
