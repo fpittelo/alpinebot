@@ -39,7 +39,7 @@ jobs:
     environment: ${{ github.event.inputs.environment }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set Environment Variables
         id: set_env
@@ -82,7 +82,7 @@ jobs:
     needs: destroy-app
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set Environment Variables
         id: set_env
@@ -160,7 +160,7 @@ jobs:
     needs: destroy-infra
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set Environment Variables
         id: set_env

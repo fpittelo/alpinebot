@@ -23,7 +23,7 @@ jobs:
     environment: ${{ github.event.inputs.environment }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set environment
         id: setenv
@@ -79,7 +79,6 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           ARM_USE_OIDC: true
-          TF_VAR_azure_openai_key: ${{ secrets.AZURE_OPENAI_KEY }}
           TF_LOG: DEBUG
           TF_LOG_PATH: terraform.log
           ENVIRONMENT: ${{ env.ENVIRONMENT }}
