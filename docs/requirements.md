@@ -6,8 +6,7 @@ This document lists the functional and non-functional requirements for the Alpin
 
 *   **FR1: User Authentication**
     *   **FR1.1:** The system shall allow users to authenticate using their Google account.
-    *   **FR1.2:** The system shall allow users to authenticate using their Microsoft account.
-    *   **FR1.3:** The system shall create a user profile in the PostgreSQL database upon the user's first successful login.
+    *   **FR1.2:** The system shall create a user profile in the PostgreSQL database upon the user's first successful login.
 *   **FR2: Chatbot**
     *   **FR2.1:** The system shall provide a web-based chatbot interface with a minimalist and elegant design.
     *   **FR2.2:** The chatbot shall answer questions about Switzerland.

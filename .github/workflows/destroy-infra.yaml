@@ -50,8 +50,6 @@ jobs:
           echo "TF_VAR_postgresql_admin_username=${{ secrets.POSTGRESQL_ADMIN_USERNAME }}" >> $GITHUB_ENV
           echo "TF_VAR_google_client_id=${{ secrets.GOOGLE_CLIENT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_google_client_secret=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> $GITHUB_ENV
-          echo "TF_VAR_microsoft_client_id=${{ secrets.MICROSOFT_CLIENT_ID }}" >> $GITHUB_ENV
-          echo "TF_VAR_microsoft_client_secret=${{ secrets.MICROSOFT_CLIENT_SECRET }}" >> $GITHUB_ENV
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2

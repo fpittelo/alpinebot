@@ -1,6 +1,6 @@
 # AlpineBot Frontend Application
 
-This is the React frontend application for AlpineBot, featuring authentication via Google and Microsoft accounts through Azure App Service.
+This is the React frontend application for AlpineBot, featuring authentication via Google accounts through Azure App Service.
 
 ## Authentication Setup
 
@@ -25,32 +25,13 @@ The application uses Azure App Service's built-in authentication and authorizati
    - `GOOGLE_CLIENT_ID`
    - `GOOGLE_CLIENT_SECRET`
 
-#### Microsoft OAuth Application
-
-1. Go to [Azure Portal](https://portal.azure.com/)
-2. Navigate to "Azure Active Directory" > "App registrations"
-3. Click "New registration"
-4. Configure the following:
-   - Name: AlpineBot (or your preferred name)
-   - Supported account types: Accounts in any organizational directory and personal Microsoft accounts
-   - Redirect URI:
-     - Platform: Web
-     - For dev: `https://dev-alpinebot-as.azurewebsites.net/.auth/login/aad/callback`
-     - For qa: `https://qa-alpinebot-as.azurewebsites.net/.auth/login/aad/callback`
-     - For main: `https://main-alpinebot-as.azurewebsites.net/.auth/login/aad/callback`
-5. After creation, go to "Certificates & secrets" and create a new client secret
-6. Note the Application (client) ID and the client secret value
-7. Add these as GitHub secrets:
-   - `MICROSOFT_CLIENT_ID`
-   - `MICROSOFT_CLIENT_SECRET`
-
 ### Authentication Flow
 
-1. **Unauthenticated Access**: When a user visits the application without being authenticated, they see the login page with options to sign in with Google or Microsoft.
+1. **Unauthenticated Access**: When a user visits the application without being authenticated, they see the login page with the option to sign in with Google.
 
 2. **Login Process**: 
-   - User clicks on "Login with Google" or "Login with Microsoft"
-   - The app redirects to Azure App Service's authentication endpoint (/.auth/login/google or /.auth/login/aad)
+   - User clicks on "Continue with Google"
+   - The app redirects to Azure App Service's authentication endpoint (`/.auth/login/google`)
    - Azure App Service handles the OAuth flow with the identity provider
    - After successful authentication, user is redirected back to the app
 

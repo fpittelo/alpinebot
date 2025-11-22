@@ -4,11 +4,11 @@ This document provides detailed specifications for the AlpineBot application.
 
 ## 1. User Authentication
 
-- **1.1. Identity Providers:** Users will be able to authenticate using their Google or Microsoft accounts.
+- **1.1. Identity Providers:** Users authenticate with their Google accounts.
 - **1.2. Authentication Flow:**
   1.  The user visits the AlpineBot web application.
   2.  If the user is not authenticated, they will be redirected to a login page with a minimalist and elegant design.
-  3.  The user selects either "Login with Google" or "Login with Microsoft".
+  3.  The user selects "Continue with Google".
   4.  The user is redirected to the selected identity provider's login page.
   5.  After successful authentication, the user is redirected back to the AlpineBot application.
 - **1.3. User Profile:** A user profile will be created in the application's database (Cosmos DB) after the first successful login. The profile will store the user's name, email address, and a unique identifier from the identity provider.

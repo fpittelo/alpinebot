@@ -17,8 +17,8 @@ resource "azurerm_linux_web_app" "wap_app" {
 
   auth_settings_v2 {
     auth_enabled           = var.auth_enabled
-    require_authentication = var.auth_enabled
-    unauthenticated_action = "RedirectToLoginPage"
+    require_authentication = false
+    unauthenticated_action = "AllowAnonymous"
     
     login {
       token_store_enabled = true
@@ -30,11 +30,6 @@ resource "azurerm_linux_web_app" "wap_app" {
       login_scopes             = ["openid", "profile", "email"]
     }
 
-    microsoft_v2 {
-      client_id                = var.microsoft_client_id
-      client_secret_setting_name = var.microsoft_client_secret_setting_name
-      login_scopes             = ["openid", "profile", "email"]
-    }
   }
 
   tags = var.tags

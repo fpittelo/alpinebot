@@ -220,8 +220,6 @@ All workflows require these GitHub secrets to be configured:
 - `POSTGRESQL_ADMIN_PASSWORD` - PostgreSQL admin password
 - `GOOGLE_CLIENT_ID` - Google OAuth Client ID
 - `GOOGLE_CLIENT_SECRET` - Google OAuth Client Secret
-- `MICROSOFT_CLIENT_ID` - Microsoft OAuth Client ID
-- `MICROSOFT_CLIENT_SECRET` - Microsoft OAuth Client Secret
 
 ## Best Practices
 

@@ -67,12 +67,9 @@ module "linux_web_app" {
   auth_enabled                   = local.environment_vars.auth_enabled
   google_client_id               = var.google_client_id
   google_client_secret_setting_name = "GOOGLE_CLIENT_SECRET"
-  microsoft_client_id            = var.microsoft_client_id
-  microsoft_client_secret_setting_name = "MICROSOFT_CLIENT_SECRET"
 
   app_settings = {
     "GOOGLE_CLIENT_SECRET"    = var.google_client_secret
-    "MICROSOFT_CLIENT_SECRET" = var.microsoft_client_secret
     "REDIS_HOST"              = module.redis_cache.hostname
     "REDIS_PORT"              = module.redis_cache.port
     "REDIS_PASSWORD"          = module.redis_cache.primary_key
