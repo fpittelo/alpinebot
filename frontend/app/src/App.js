@@ -17,8 +17,8 @@ function App() {
         }
         setLoading(false);
       })
-      .catch(error => {
-        console.error('Error checking authentication:', error);
+      .catch(() => {
+        // Silently handle auth check failure - user is not authenticated
         setLoading(false);
       });
   }, []);

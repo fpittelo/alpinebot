@@ -184,8 +184,6 @@ jobs:
       - name: Build Frontend Application
         run: npm run build
         working-directory: ./frontend/app
-        env:
-          CI: false  # Disable treating warnings as errors in build
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
