@@ -29,13 +29,14 @@ The application uses Azure App Service's built-in authentication and authorizati
 
 1. **Unauthenticated Access**: When a user visits the application without being authenticated, they see the login page with the option to sign in with Google.
 
-2. **Login Process**: 
+2. **Login Process**:
+
    - User clicks on "Continue with Google"
    - The app redirects to Azure App Service's authentication endpoint (`/.auth/login/google`)
    - Azure App Service handles the OAuth flow with the identity provider
    - After successful authentication, user is redirected back to the app
 
-3. **Authenticated Access**: 
+3. **Authenticated Access**:
    - The app checks authentication status using the `/.auth/me` endpoint
    - If authenticated, the HomePage component is displayed with user information
    - User can logout using the `/.auth/logout` endpoint
@@ -92,11 +93,13 @@ frontend/app/
 ### "Unauthorized client" Error
 
 This error occurs when:
+
 1. The OAuth application is not properly configured
 2. The redirect URIs don't match the App Service URL
 3. The client ID or secret is incorrect
 
 **Solution**: Verify that:
+
 - OAuth applications are created and configured correctly
 - Redirect URIs match exactly (including protocol and path)
 - GitHub secrets contain the correct client IDs and secrets
@@ -105,6 +108,7 @@ This error occurs when:
 ### Authentication Not Working Locally
 
 The Azure App Service authentication only works when the app is deployed to Azure. For local development, you would need to either:
+
 1. Mock the authentication endpoints
 2. Use Azure Static Web Apps CLI for local emulation
 3. Disable authentication checks during local development

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to destroy infrastructure for'
+        description: "Environment to destroy infrastructure for"
         required: true
         type: choice
         options:

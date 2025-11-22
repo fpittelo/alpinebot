@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to deploy to'
+        description: "Environment to deploy to"
         required: true
         type: choice
         options:
@@ -12,17 +12,17 @@ on:
           - qa
           - main
       deploy_backend:
-        description: 'Deploy backend storage (usually only needed on first deployment)'
+        description: "Deploy backend storage (usually only needed on first deployment)"
         required: false
         type: boolean
         default: false
       deploy_infra:
-        description: 'Deploy infrastructure (Terraform)'
+        description: "Deploy infrastructure (Terraform)"
         required: false
         type: boolean
         default: true
       deploy_app:
-        description: 'Deploy application (Frontend)'
+        description: "Deploy application (Frontend)"
         required: false
         type: boolean
         default: true
@@ -212,8 +212,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: "18"
+          cache: "npm"
           cache-dependency-path: frontend/app/package.json
 
       - name: Install Frontend Dependencies

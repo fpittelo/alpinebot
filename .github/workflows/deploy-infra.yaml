@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to deploy infrastructure to'
+        description: "Environment to deploy infrastructure to"
         required: true
         type: choice
         options:

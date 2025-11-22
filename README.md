@@ -41,8 +41,8 @@ AlpineBot is an AI-powered chatbot for everything Switzerland, presented with a 
 
    Before deploying, you must set up OAuth applications for authentication:
 
-    - Create a Google OAuth application (Web type) and capture its Client ID and Client Secret
-    - Configure the required GitHub secrets (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`) with those values
+   - Create a Google OAuth application (Web type) and capture its Client ID and Client Secret
+   - Configure the required GitHub secrets (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`) with those values
 
 3. **Deploy**:
 
