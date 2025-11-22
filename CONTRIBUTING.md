@@ -35,6 +35,12 @@ Before you begin, ensure you have:
 
 > [!IMPORTANT]
 > **NO LOCAL TERRAFORM OPERATIONS**: Infrastructure deployment and management are handled **exclusively** via GitHub Actions. Do NOT run Terraform commands locally.
+>
+> **If you accidentally run Terraform locally:**
+> - Do NOT commit any local state files (`.tfstate`, `.tfstate.backup`)
+> - Contact project maintainers immediately if you encounter state conflicts
+> - The CI/CD pipeline manages all Terraform state remotely in Azure Storage
+> - Local Terraform runs can cause state conflicts and deployment failures
 
 ### Setting Up Your Development Environment
 

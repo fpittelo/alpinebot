@@ -111,16 +111,9 @@ graph TD
         CompletionModel -.response.-> RAGFunc;
         RAGFunc -.answer.-> Frontend;
     end
-
-    style WebApp fill:#0078d4,color:#fff
-    style OpenAI fill:#0078d4,color:#fff
-    style Redis fill:#0078d4,color:#fff
-    style PostgreSQL fill:#0078d4,color:#fff
-    style KeyVault fill:#0078d4,color:#fff
-    style AppInsights fill:#0078d4,color:#fff
-    style LogAnalytics fill:#0078d4,color:#fff
-    style AppPlan fill:#0078d4,color:#fff
 ```
+
+**Legend:** Solid lines indicate deployed components, dashed lines indicate planned features.
 
 ## Development Process
 
