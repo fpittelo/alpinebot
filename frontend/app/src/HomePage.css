@@ -1,82 +1,290 @@
 .home-page {
+  min-height: 100vh;
+  background-color: var(--color-warm-gray);
+  color: var(--color-charcoal);
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  background-color: #f5f5f5;
 }
 
 .home-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 20px 40px;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 5vw;
+  background-color: #fff;
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 20;
 }
 
-.home-header h1 {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
-  font-size: 32px;
-  font-weight: 200;
-  margin: 0;
-  color: #333;
-}
-
-.user-info {
+.brand-mark {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
 }
 
-.user-info span {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
-  font-size: 16px;
-  color: #666;
+.brand-icon {
+  width: 44px;
+  height: 44px;
+  background-color: var(--color-red);
+  color: #fff;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.brand-text span {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.brand-text small {
+  color: var(--color-mid-gray);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+.primary-nav {
+  display: flex;
+  gap: 24px;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.primary-nav a {
+  color: var(--color-charcoal);
+  opacity: 0.75;
+  transition: opacity 0.2s ease;
+}
+
+.primary-nav a:hover {
+  opacity: 1;
+}
+
+.session-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+}
+
+.session-user {
+  color: var(--color-mid-gray);
 }
 
 .logout-button {
-  padding: 8px 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: white;
-  color: #333;
-  font-size: 14px;
+  padding: 10px 20px;
+  border: 1px solid var(--color-border);
+  background-color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 12px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: border-color 0.2s ease, color 0.2s ease;
 }
 
 .logout-button:hover {
-  background-color: #f5f5f5;
+  border-color: var(--color-charcoal);
+  color: var(--color-charcoal);
 }
 
-.chat-container {
-  flex: 1;
+.home-content {
+  width: min(var(--max-content-width), 90vw);
+  margin: 0 auto;
+  padding: 72px 0 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 96px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 48px;
+  align-items: stretch;
+}
+
+.hero-copy h1 {
+  font-size: clamp(2.75rem, 4vw, 3.5rem);
+  margin: 12px 0 24px;
+}
+
+.hero-body {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #33363a;
+  max-width: 540px;
+}
+
+.eyebrow {
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--color-mid-gray);
+}
+
+.hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.primary-action,
+.secondary-action {
+  border: none;
+  border-radius: 999px;
+  padding: 14px 28px;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.primary-action {
+  background-color: var(--color-charcoal);
+  color: #fff;
+}
+
+.secondary-action {
+  background-color: transparent;
+  color: var(--color-charcoal);
+  border: 1px solid var(--color-border);
+}
+
+.primary-action:hover,
+.secondary-action:hover {
+  transform: translateY(-2px);
+}
+
+.hero-accent {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.accent-swatch {
+  background-color: var(--color-red);
+  color: #fff;
+  width: 100%;
+  min-height: 320px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.categories h2 {
+  font-size: 2rem;
+  margin: 12px 0 36px;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.category-card {
+  background-color: #fff;
+  border-radius: 20px;
+  padding: 28px;
+  border: 1px solid var(--color-border);
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.category-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 2px solid var(--color-border);
+}
+
+.category-card h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.category-card p {
+  margin: 0;
+  color: #4b4f55;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.apertus {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+  align-items: stretch;
+}
+
+.apertus-panel {
+  background-color: #fff;
+  border-radius: 24px;
   padding: 40px;
+  border: 1px solid var(--color-border);
 }
 
-.chat-placeholder {
-  text-align: center;
-  background-color: white;
-  padding: 60px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.apertus-panel h3 {
+  font-size: 2rem;
+  margin: 12px 0 24px;
 }
 
-.chat-placeholder p {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
-  font-size: 24px;
-  font-weight: 300;
-  margin-bottom: 20px;
-  color: #333;
+.apertus-panel p {
+  margin: 0;
+  line-height: 1.6;
+  color: #3b3f44;
 }
 
-.placeholder-text {
-  font-size: 18px !important;
-  color: #999 !important;
+.stats {
+  background-color: var(--color-charcoal);
+  color: #fff;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 32px;
+  gap: 24px;
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+
+.stat-label {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 900px) {
+  .home-header {
+    flex-direction: column;
+  }
+
+  .primary-nav {
+    order: 3;
+  }
+
+  .apertus {
+    grid-template-columns: 1fr;
+  }
 }

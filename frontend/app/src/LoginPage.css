@@ -1,63 +1,165 @@
 .login-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  background-color: #fff;
+}
+
+.eyebrow {
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.login-hero {
+  background-color: var(--color-red);
+  color: #fff;
+  padding: 80px 60px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  gap: 32px;
+}
+
+.hero-brand {
+  display: flex;
   align-items: center;
-  height: 100vh;
+  gap: 24px;
 }
 
-.login-container {
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  width: 400px;
+.hero-badge {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  border: 2px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
 }
 
-.login-container h1 {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
-  font-size: 48px;
-  font-weight: 200;
-  margin-bottom: 10px;
-  color: #333;
+.login-hero p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin: 0;
 }
 
-.login-container p {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
-  font-size: 18px;
-  font-weight: 300;
-  margin-bottom: 30px;
-  color: #666;
+.login-hero h1 {
+  margin: 0;
+  font-size: clamp(2.2rem, 4vw, 3rem);
 }
 
-.login-buttons button {
-  width: 100%;
-  padding: 15px;
-  margin-bottom: 15px;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: 500;
+.hero-stats {
+  display: flex;
+  gap: 32px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.hero-stats span {
+  display: block;
+  font-size: 2rem;
+  letter-spacing: normal;
+}
+
+.login-panel {
+  padding: 80px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 32px;
+  background-color: #fff;
+}
+
+.panel-logo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.panel-logo span {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background-color: var(--color-red);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.panel-logo small {
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-mid-gray);
+  font-size: 12px;
+}
+
+.login-panel h2 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.login-panel p {
+  margin: 0;
+  color: #4b4f55;
+  line-height: 1.6;
+}
+
+.login-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.login-button {
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  padding: 16px 28px;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
-.google-login {
-  background-color: #4285f4;
-  color: white;
+.login-button:hover {
+  border-color: var(--color-charcoal);
+  transform: translateY(-2px);
 }
 
-.google-login:hover {
-  background-color: #357ae8;
+.login-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
 }
 
-.microsoft-login {
-  background-color: #2f2f2f;
-  color: white;
+.login-button.microsoft .login-icon {
+  border-color: var(--color-charcoal);
 }
 
-.microsoft-login:hover {
-  background-color: #1f1f1f;
+.login-note {
+  font-size: 0.8rem;
+  color: var(--color-mid-gray);
+}
+
+@media (max-width: 800px) {
+  .login-hero,
+  .login-panel {
+    padding: 48px 32px;
+  }
+
+  .hero-stats {
+    flex-wrap: wrap;
+  }
 }

@@ -1,31 +1,90 @@
-import React from 'react';
-import './LoginPage.css';
+import React from "react";
+import "./LoginPage.css";
 
 const LoginPage = () => {
-  const handleGoogleLogin = () => {
-    // Redirect to Azure App Service's Google authentication endpoint
-    window.location.href = '/.auth/login/google?post_login_redirect_uri=/';
-  };
-
-  const handleMicrosoftLogin = () => {
-    // Redirect to Azure App Service's Microsoft authentication endpoint
-    window.location.href = '/.auth/login/aad?post_login_redirect_uri=/';
-  };
+  const loginOptions = [
+    {
+      label: "Continue with Google",
+      action: () => {
+        window.location.href = "/.auth/login/google?post_login_redirect_uri=/";
+      },
+      accent: "#fff",
+      variant: "google",
+      icon: "G",
+    },
+    {
+      label: "Continue with Microsoft",
+      action: () => {
+        window.location.href = "/.auth/login/aad?post_login_redirect_uri=/";
+      },
+      accent: "#fff",
+      variant: "microsoft",
+      icon: "◆",
+    },
+  ];
 
   return (
     <div className="login-page">
-      <div className="login-container">
-        <h1>AlpineBot</h1>
-        <p>Your AI assistant for everything Switzerland</p>
-        <div className="login-buttons">
-          <button className="google-login" onClick={handleGoogleLogin}>
-            Login with Google
-          </button>
-          <button className="microsoft-login" onClick={handleMicrosoftLogin}>
-            Login with Microsoft
-          </button>
+      <section className="login-hero" aria-labelledby="login-hero-title">
+        <div className="hero-brand">
+          <div className="hero-badge">+</div>
+          <div>
+            <p className="eyebrow">Apertus</p>
+            <h1 id="login-hero-title">Swiss OpenData at your fingertips</h1>
+          </div>
         </div>
-      </div>
+        <p>
+          Interact with APERTUS, the Swiss LLM, to explore public data from
+          across Switzerland. Ask questions in German, French, Italian, or
+          Romansh and get answers built on transparency and precision.
+        </p>
+        <div className="hero-stats">
+          <div>
+            <span>26</span>
+            <small>Cantons</small>
+          </div>
+          <div>
+            <span>4</span>
+            <small>Languages</small>
+          </div>
+          <div>
+            <span>100%</span>
+            <small>Open</small>
+          </div>
+        </div>
+      </section>
+
+      <section className="login-panel" aria-labelledby="login-panel-title">
+        <div className="panel-header">
+          <div className="panel-logo">
+            <span>+</span>
+            <div>
+              <strong>AlpineBot</strong>
+              <small>Switzerland</small>
+            </div>
+          </div>
+          <h2 id="login-panel-title">Welcome back</h2>
+          <p>Sign in to continue your conversations with APERTUS.</p>
+        </div>
+        <div className="login-buttons">
+          {loginOptions.map((option) => (
+            <button
+              key={option.label}
+              className={`login-button ${option.variant}`}
+              onClick={option.action}
+              type="button"
+            >
+              <span className="login-icon" aria-hidden="true">
+                {option.icon}
+              </span>
+              {option.label}
+            </button>
+          ))}
+        </div>
+        <p className="login-note">
+          By continuing you agree to the AlpineBot acceptable use guidelines.
+        </p>
+      </section>
     </div>
   );
 };
