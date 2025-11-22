@@ -43,64 +43,107 @@ AlpineBot is an AI-powered chatbot for everything Switzerland, presented with a 
 
 ## Project Structure 🗂️
 
-- `/frontend`: React app
-- `/backend`: Azure Functions
-- `/terraform`: Infrastructure code
-- `/data`: Sample datasets
-- `/inspiration`: Design inspiration for the user interface.
+- `/infra`: Terraform infrastructure as code (main configuration)
+- `/modules`: Reusable Terraform modules for Azure services
+  - `cognitive_account`: Azure OpenAI Service
+  - `app_service_plan`: Azure App Service Plan
+  - `linux_web_app`: Azure Web App with authentication
+  - `redis_cache`: Azure Cache for Redis
+  - `postgresql_db`: Azure Database for PostgreSQL
+  - `key_vault`: Azure Key Vault
+  - `log_analytics_workspace`: Log Analytics Workspace
+- `/.github/workflows`: CI/CD pipeline definitions
+- `/inspiration`: Design inspiration for the user interface
+- `/frontend`: React app (planned)
+- `/backend`: Azure Functions (planned)
+- `/data`: Sample datasets (planned)
 
 ## Architecture 🏗️
 
 ```mermaid
 graph TD
-    subgraph "User & Admin Interfaces"
-        User[User] --> Frontend[React Web App];
-        Admin[Admin] --> AdminPortal[React Admin Portal];
+    subgraph "User Interface (Planned)"
+        User[User] --> Frontend[React Web App - To Be Implemented];
+        Admin[Admin] --> AdminPortal[Admin Portal - To Be Implemented];
     end
 
-    subgraph "Authentication"
-        Frontend --> Auth[Azure App Service Auth];
-        Auth --> Google[Google Identity];
-        Auth --> Microsoft[Microsoft Identity];
-        AdminPortal --> AdminAuth[Azure AD B2C];
+    subgraph "Current Infrastructure - Authentication Layer"
+        Frontend --> WebApp[Azure Linux Web App];
+        WebApp --> Auth[Azure App Service Auth];
+        Auth --> Google[Google Identity Provider];
+        Auth --> Microsoft[Microsoft Identity Provider];
     end
 
-    subgraph "Backend Logic (Azure Functions)"
-        Frontend --> Backend_User_Query[User Query Function];
-        AdminPortal --> Backend_Admin_Actions[Admin Actions Function];
+    subgraph "Current Infrastructure - Application Services"
+        WebApp --> AppPlan[Azure App Service Plan];
+        WebApp -.secrets.-> KeyVault[Azure Key Vault];
     end
 
-    subgraph "Data Ingestion & Processing"
-        PublicData[Public Data Sources] --> Ingestion_Func[Data Ingestion Function];
-        Ingestion_Func -- chunks of text --> Embedding_Model[Azure OpenAI Embedding Model];
-        Embedding_Model -- vectors --> VectorDB[Azure AI Search - Vector DB];
+    subgraph "Current Infrastructure - AI Services"
+        WebApp --> OpenAI[Azure OpenAI Service];
+        OpenAI --> CompletionModel[GPT Completion Model];
+        OpenAI --> EmbeddingModel[Text Embedding Model - Planned];
     end
 
-    subgraph "RAG Workflow"
-        Backend_User_Query -- user query --> Embedding_Model;
-        Embedding_Model -- query vector --> VectorDB;
-        VectorDB -- relevant chunks --> Backend_User_Query;
-        Backend_User_Query -- prompt + context --> OpenAI_Completion[Azure OpenAI Completion Model];
-        OpenAI_Completion -- generated response --> Backend_User_Query;
-        Backend_User_Query -- final answer --> Frontend;
+    subgraph "Current Infrastructure - Data Layer"
+        WebApp --> Redis[Azure Cache for Redis];
+        WebApp --> PostgreSQL[Azure Database for PostgreSQL];
+        PostgreSQL --> ChatHistory[Chat History & Feedback];
     end
 
-    subgraph "Data & Monitoring"
-        Backend_User_Query -- session data --> Redis[Azure Cache for Redis];
-        Backend_User_Query --> PostgreSQL[Azure DB for PostgreSQL for Chat History & Feedback];
-        Backend_Admin_Actions --> PostgreSQL;
-        Backend_User_Query --> AppInsights[Application Insights];
-        Ingestion_Func --> AppInsights;
+    subgraph "Current Infrastructure - Monitoring & Logging"
+        WebApp --> AppInsights[Application Insights];
+        AppInsights --> LogAnalytics[Log Analytics Workspace];
     end
+
+    subgraph "Planned - Data Ingestion Pipeline"
+        DataSources[Public Data Sources] -.-> IngestionFunc[Data Ingestion Function - Planned];
+        IngestionFunc -.-> EmbeddingModel;
+        EmbeddingModel -.-> VectorDB[Vector Database - Planned];
+    end
+
+    subgraph "Planned - RAG Workflow"
+        Frontend -.user query.-> RAGFunc[RAG Function - Planned];
+        RAGFunc -.-> EmbeddingModel;
+        EmbeddingModel -.-> VectorDB;
+        VectorDB -.relevant context.-> RAGFunc;
+        RAGFunc -.prompt + context.-> CompletionModel;
+        CompletionModel -.response.-> RAGFunc;
+        RAGFunc -.answer.-> Frontend;
+    end
+
+    style WebApp fill:#0078d4,color:#fff
+    style OpenAI fill:#0078d4,color:#fff
+    style Redis fill:#0078d4,color:#fff
+    style PostgreSQL fill:#0078d4,color:#fff
+    style KeyVault fill:#0078d4,color:#fff
+    style AppInsights fill:#0078d4,color:#fff
+    style LogAnalytics fill:#0078d4,color:#fff
+    style AppPlan fill:#0078d4,color:#fff
 ```
 
 ## Development Process
 
 This project follows an iterative development process and a Test-Driven Development (TDD) approach. All development will be done in small, manageable increments, with tests written before the code. All GitHub activities, such as issues, merges, and pull requests, will be documented. The documentation will be updated if any change occurs.
 
+### Documentation Management
+
+The project maintains several documentation files that must be kept up to date:
+
+- **README.md**: Project overview, getting started guide, and architecture diagram
+- **plan.md**: Development plan with milestones and task tracking
+- **specs.md**: Detailed technical specifications
+- **requirements.md**: Functional and non-functional requirements
+- **CHANGELOG.md**: Version history and notable changes
+- **CONTRIBUTING.md**: Contribution guidelines and development workflow
+
+When making changes to the project, always update the relevant documentation files to reflect the current state of the project. The Mermaid diagram in README.md should be updated whenever the architecture changes.
+
 ## Contributing & License 📜
 
-We welcome PRs! AlpineBot is MIT Licensed.
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to get started, our development process, and how to submit pull requests.
+
+AlpineBot is MIT Licensed. See [LICENSE](LICENSE) for more information.
 
 ## Contact 📧
 

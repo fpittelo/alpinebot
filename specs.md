@@ -11,7 +11,7 @@ This document provides detailed specifications for the AlpineBot application.
     3.  The user selects either "Login with Google" or "Login with Microsoft".
     4.  The user is redirected to the selected identity provider's login page.
     5.  After successful authentication, the user is redirected back to the AlpineBot application.
-*   **1.3. User Profile:** A user profile will be created in the application's database (Cosmos DB) after the first successful login. The profile will store the user's name, email address, and a unique identifier from the identity provider.
+*   **1.3. User Profile:** A user profile will be created in the application's database (PostgreSQL) after the first successful login. The profile will store the user's name, email address, and a unique identifier from the identity provider.
 
 ## 2. Admin Portal
 
@@ -40,8 +40,8 @@ This document provides detailed specifications for the AlpineBot application.
 
 *   **3.1. Data Ingestion Pipeline:** The data ingestion pipeline will be implemented as an Azure Function that is triggered on a schedule (e.g., once a day).
 *   **3.2. Data Fetching:** The Azure Function will fetch data from the API endpoint of a data source.
-*   **3.3. Data Storage:** The ingested data will be stored in a dedicated Cosmos DB collection. Each document in the collection will represent a single data record and will include a timestamp indicating when the data was ingested.
-*   **3.4. Data Transformation:** The data may need to be transformed before it is stored in Cosmos DB. The transformation logic will be implemented in the Azure Function.
+*   **3.3. Data Storage:** The ingested data will be stored in a PostgreSQL database. Each record will include metadata such as the source and timestamp indicating when the data was ingested.
+*   **3.4. Data Transformation:** The data may need to be transformed before it is stored in PostgreSQL. The transformation logic will be implemented in the Azure Function.
 
 ## 4. Chatbot
 

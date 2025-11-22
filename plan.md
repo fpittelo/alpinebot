@@ -2,6 +2,27 @@
 
 This document outlines the development plan for the AlpineBot project. The project will follow a Test-Driven Development (TDD) approach.
 
+## Phase 0: Foundation & Documentation
+
+*   **Milestone 0.1: Infrastructure Foundation**
+    *   [X] **Task 0.1.1:** Set up Azure Resource Group with Terraform
+    *   [X] **Task 0.1.2:** Configure Azure Key Vault for secrets management
+    *   [X] **Task 0.1.3:** Deploy Azure OpenAI Service (Cognitive Account)
+    *   [X] **Task 0.1.4:** Set up Azure App Service Plan and Linux Web App
+    *   [X] **Task 0.1.5:** Configure Azure Cache for Redis
+    *   [X] **Task 0.1.6:** Deploy Azure Database for PostgreSQL
+    *   [X] **Task 0.1.7:** Set up Log Analytics Workspace and Application Insights
+    *   [X] **Task 0.1.8:** Implement CI/CD pipeline with GitHub Actions
+    *   [X] **Task 0.1.9:** Configure multi-environment support (dev, qa, main)
+
+*   **Milestone 0.2: Documentation Management**
+    *   [X] **Task 0.2.1:** Create CHANGELOG.md for version tracking
+    *   [X] **Task 0.2.2:** Create CONTRIBUTING.md with contribution guidelines
+    *   [X] **Task 0.2.3:** Update README.md with accurate architecture diagram
+    *   [X] **Task 0.2.4:** Update specs.md to reflect PostgreSQL usage
+    *   [X] **Task 0.2.5:** Add documentation maintenance guidelines
+    *   [X] **Task 0.2.6:** Ensure consistency across all documentation
+
 ## Phase 1: Core Infrastructure and Authentication
 
 *   **Milestone 1.1: Authentication Backend**
