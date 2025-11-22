@@ -1,0 +1,61 @@
+name: Destroy Application
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to destroy application for'
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  destroy-app:
+    name: Stop and Clear Application Deployment
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set Environment Variables
+        id: set_env
+        run: |
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+
+      - name: Login to Azure using OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          allow-no-subscriptions: false
+          enable-AzPSSession: false
+
+      - name: Stop Web App
+        run: |
+          az_webapp_name="${{ env.ENVIRONMENT }}-alpinebot-as"
+          echo "Stopping web app: $az_webapp_name"
+          
+          # Get resource group name for the web app
+          az_rg_name=$(az webapp show --name $az_webapp_name --query resourceGroup -o tsv 2>/dev/null || echo "")
+          
+          if [ -n "$az_rg_name" ]; then
+            az webapp stop --name $az_webapp_name --resource-group $az_rg_name
+            echo "Web app stopped successfully"
+          else
+            echo "Web app not found or already deleted"
+          fi
+
+      - name: Output destroy information
+        run: |
+          echo "Application stopped for environment: ${{ env.ENVIRONMENT }}"
+          echo "Note: This workflow stops the web app but does not delete the App Service resource."
+          echo "To fully remove the App Service, use the destroy-infra workflow."
