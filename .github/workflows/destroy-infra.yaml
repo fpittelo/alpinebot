@@ -1,0 +1,94 @@
+name: Destroy Infrastructure
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to destroy infrastructure for'
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  destroy-infra:
+    name: Destroy Terraform Infrastructure
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set Environment Variables
+        id: set_env
+        run: |
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+
+      - name: Login to Azure using OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          allow-no-subscriptions: false
+          enable-AzPSSession: false
+
+      - name: Set Terraform Environment Variables
+        run: |
+          echo "TF_VAR_az_client_id=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_az_tenant_id=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_az_subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_az_container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" >> $GITHUB_ENV
+          echo "TF_VAR_sp_object_id=${{ secrets.AZURE_SP_OBJECT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_postgresql_admin_password=${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}" >> $GITHUB_ENV
+          echo "TF_VAR_postgresql_admin_username=${{ secrets.POSTGRESQL_ADMIN_USERNAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_google_client_id=${{ secrets.GOOGLE_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_google_client_secret=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> $GITHUB_ENV
+          echo "TF_VAR_microsoft_client_id=${{ secrets.MICROSOFT_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_microsoft_client_secret=${{ secrets.MICROSOFT_CLIENT_SECRET }}" >> $GITHUB_ENV
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        working-directory: ./infra
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true
+        run: |
+          terraform init \
+            -backend-config="resource_group_name=${{ env.ENVIRONMENT }}-bkd-alpinebot" \
+            -backend-config="storage_account_name=${{ env.ENVIRONMENT }}bkdalpinebotsa" \
+            -backend-config="container_name=${{ env.ENVIRONMENT }}-bkd-alpinebot-co" \
+            -backend-config="key=${{ env.ENVIRONMENT }}-bkd-alpinebot.tfstate"
+
+      - name: Terraform Destroy
+        working-directory: ./infra
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_USE_OIDC: true
+          TF_LOG: DEBUG
+          TF_LOG_PATH: terraform_destroy.log
+        run: |
+          terraform destroy -var="environment=${{ env.ENVIRONMENT }}" -auto-approve
+
+      - name: Upload Terraform Destroy Log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-destroy-log-${{ env.ENVIRONMENT }}
+          path: ./infra/terraform_destroy.log
+
+      - name: Output destroy information
+        run: |
+          echo "Infrastructure destruction completed for environment: ${{ env.ENVIRONMENT }}"

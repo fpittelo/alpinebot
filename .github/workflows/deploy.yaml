@@ -1,4 +1,4 @@
-name: Deploy Environment
+name: Deploy Full Environment (Orchestrator)
 
 on:
   workflow_dispatch:
@@ -11,11 +11,21 @@ on:
           - dev
           - qa
           - main
-  push:
-    branches:
-      - dev
-      - qa
-      - main
+      deploy_backend:
+        description: 'Deploy backend storage (usually only needed on first deployment)'
+        required: false
+        type: boolean
+        default: false
+      deploy_infra:
+        description: 'Deploy infrastructure (Terraform)'
+        required: false
+        type: boolean
+        default: true
+      deploy_app:
+        description: 'Deploy application (Frontend)'
+        required: false
+        type: boolean
+        default: true
 
 permissions:
   id-token: write
@@ -23,33 +33,19 @@ permissions:
 
 jobs:
   backend:
-    name: Create Backend
+    name: Create Backend Storage
+    if: ${{ github.event.inputs.deploy_backend == 'true' }}
     runs-on: ubuntu-latest
-    environment: ${{ github.ref_name }}
-    outputs:
-      environment: ${{ steps.setenv.outputs.environment }}
+    environment: ${{ github.event.inputs.environment }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set environment
         id: setenv
         run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
-            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
-          else
-            if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-              echo "ENVIRONMENT=dev" >> $GITHUB_ENV
-              echo "environment=dev" >> $GITHUB_OUTPUT
-            elif [[ "${{ github.ref }}" == "refs/heads/qa" ]]; then
-              echo "ENVIRONMENT=qa" >> $GITHUB_ENV
-              echo "environment=qa" >> $GITHUB_OUTPUT
-            elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-              echo "ENVIRONMENT=main" >> $GITHUB_ENV
-              echo "environment=main" >> $GITHUB_OUTPUT
-            fi
-          fi
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+          echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
 
       - name: Login to Azure using OIDC
         uses: azure/login@v2
@@ -99,16 +95,28 @@ jobs:
             --account-name $az_backend_sa_name \
             --account-key $STORAGE_KEY
 
-  deploy:
-    name: Deploy Infra
+      - name: Output backend information
+        run: |
+          echo "Backend storage created successfully:"
+          echo "  Resource Group: ${{ env.ENVIRONMENT }}-bkd-alpinebot"
+          echo "  Storage Account: ${{ env.ENVIRONMENT }}bkdalpinebotsa"
+          echo "  Container: ${{ env.ENVIRONMENT }}-bkd-alpinebot-co"
+
+  deploy-infra:
+    name: Deploy Infrastructure
+    if: ${{ always() && github.event.inputs.deploy_infra == 'true' && (needs.backend.result == 'success' || needs.backend.result == 'skipped') }}
     runs-on: ubuntu-latest
-    environment: ${{ github.ref_name }} # Use the branch name as environment
-    needs: backend # Ensure this runs after the bootstrap job
-    env:
-      ENVIRONMENT: ${{ needs.backend.outputs.environment }}
+    environment: ${{ github.event.inputs.environment }}
+    needs: backend
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Set environment
+        id: setenv
+        run: |
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+          echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
 
       - name: Login To Azure Using OIDC
         uses: azure/login@v2
@@ -158,7 +166,6 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           ARM_USE_OIDC: true
-          TF_VAR_azure_openai_key: ${{ secrets.AZURE_OPENAI_KEY }}
           TF_LOG: DEBUG
           TF_LOG_PATH: terraform.log
           ENVIRONMENT: ${{ env.ENVIRONMENT }}
@@ -171,26 +178,60 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: terraform-log
+          name: terraform-log-${{ env.ENVIRONMENT }}
           path: ./infra/terraform.log
           overwrite: true
 
-#     - name: Retrieve OpenAI Key from Key Vault
-#       working-directory: ./${{ env.ENVIRONMENT }}
-#       run: |      
-#         # Retrieve the secret value from Key Vault
-#         SECRET_VALUE=$(az keyvault secret show --name \"${{ env.ENVIRONMENT }}-alpinebot-openai-key\" --vault-name \"${{ env.ENVIRONMENT }}-alpinebot-kv\" --query \"value\" -o tsv)
-#     
-#         # Export the secret as an environment variable (avoid printing it)
-#         echo \"SECRET_VALUE=${SECRET_VALUE}\" >> $GITHUB_ENV
-#       env:
-#         AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-#         AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-#         AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      
-#     - name: Deploy Web Application
-#       run: |
-#         # Commands to build and deploy your web application
-#         # Use $SECRET_VALUE as needed
-#       env:
-#         SECRET_VALUE: ${{ env.SECRET_VALUE }}
+      - name: Output infrastructure information
+        run: |
+          echo "Infrastructure deployment completed for environment: ${{ env.ENVIRONMENT }}"
+
+  deploy-app:
+    name: Deploy Application
+    if: ${{ always() && github.event.inputs.deploy_app == 'true' && (needs.deploy-infra.result == 'success' || needs.deploy-infra.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    needs: deploy-infra
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set environment
+        id: setenv
+        run: |
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+          echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+
+      - name: Login To Azure Using OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          allow-no-subscriptions: false
+          enable-AzPSSession: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/app/package.json
+
+      - name: Install Frontend Dependencies
+        run: npm install
+        working-directory: ./frontend/app
+
+      - name: Build Frontend Application
+        run: npm run build
+        working-directory: ./frontend/app
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.ENVIRONMENT }}-alpinebot-as
+          package: ./frontend/app/build
+
+      - name: Output deployment information
+        run: |
+          echo "Frontend application deployed successfully to: ${{ env.ENVIRONMENT }}-alpinebot-as"

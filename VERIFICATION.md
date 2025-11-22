@@ -14,17 +14,17 @@ git checkout -b feature/authentication-backend
 
 Commit all the changes you've made to the following files:
 
-*   `README.md`
-*   `GEMINI.md`
-*   `plan.md`
-*   `specs.md`
-*   `requirements.md`
-*   `modules/linux_web_app/main.tf`
-*   `modules/linux_web_app/variables.tf`
-*   `infra/main.tf`
-*   `infra/variables.tf`
-*   `infra/dev.tfvars`
-*   `.github/workflows/deploy.yaml`
+- `README.md`
+- `GEMINI.md`
+- `plan.md`
+- `specs.md`
+- `requirements.md`
+- `modules/linux_web_app/main.tf`
+- `modules/linux_web_app/variables.tf`
+- `infra/main.tf`
+- `infra/variables.tf`
+- `infra/dev.tfvars`
+- `.github/workflows/deploy.yaml`
 
 ```bash
 git add .
@@ -45,12 +45,7 @@ In GitHub, create a new pull request from the `feature/authentication-backend` b
 
 ## 5. Verify the CI/CD Pipeline
 
-The pull request will trigger the GitHub Actions workflow defined in `.github/workflows/deploy.yaml`. The workflow will run the `terraform_validate` and `terraform_plan` jobs.
-
-*   **`terraform_validate`:** This job will validate the Terraform configuration. If it fails, there is a syntax error in the Terraform code.
-*   **`terraform_plan`:** This job will generate a Terraform plan. If it fails, there is an issue with the configuration that prevents Terraform from creating a valid plan.
-
-If both of these jobs pass, the Terraform configuration is valid.
+The pull request will trigger the GitHub Actions workflow defined in `.github/workflows/deploy.yaml`.
 
 ## 6. Merge the Pull Request
 

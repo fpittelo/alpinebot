@@ -1,4 +1,4 @@
-name: Destroy Environment
+name: Destroy Full Environment (Orchestrator)
 
 on:
   workflow_dispatch:
@@ -11,19 +11,78 @@ on:
           - dev
           - qa
           - main
+      destroy_app:
+        description: 'Destroy application deployment (stop Web App)'
+        required: false
+        type: boolean
+        default: true
+      destroy_infra:
+        description: 'Destroy infrastructure (Terraform resources)'
+        required: false
+        type: boolean
+        default: true
+      destroy_backend:
+        description: 'Destroy backend storage (WARNING: deletes Terraform state!)'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   id-token: write
   contents: read
 
 jobs:
-  destroy:
-    name: Destroy Terraform Resources
+  destroy-app:
+    name: Destroy Application
+    if: ${{ github.event.inputs.destroy_app == 'true' }}
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Set Environment Variables
+        id: set_env
+        run: |
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+
+      - name: Login to Azure using OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          allow-no-subscriptions: false
+          enable-AzPSSession: false
+
+      - name: Stop Web App
+        run: |
+          az_webapp_name="${{ env.ENVIRONMENT }}-alpinebot-as"
+          echo "Stopping web app: $az_webapp_name"
+          
+          # Get resource group name for the web app
+          az_rg_name=$(az webapp show --name $az_webapp_name --query resourceGroup -o tsv 2>/dev/null || echo "")
+          
+          if [ -n "$az_rg_name" ]; then
+            az webapp stop --name $az_webapp_name --resource-group $az_rg_name
+            echo "Web app stopped successfully"
+          else
+            echo "Web app not found or already deleted"
+          fi
+
+      - name: Output destroy information
+        run: |
+          echo "Application stopped for environment: ${{ env.ENVIRONMENT }}"
+
+  destroy-infra:
+    name: Destroy Infrastructure
+    if: ${{ always() && github.event.inputs.destroy_infra == 'true' && (needs.destroy-app.result == 'success' || needs.destroy-app.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    needs: destroy-app
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set Environment Variables
         id: set_env
@@ -57,7 +116,7 @@ jobs:
         uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Init
-        working-directory: ./infra  # Use the new infra directory
+        working-directory: ./infra
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -71,7 +130,7 @@ jobs:
             -backend-config="key=${{ env.ENVIRONMENT }}-bkd-alpinebot.tfstate"
 
       - name: Terraform Destroy
-        working-directory: ./infra  # Use the new infra directory
+        working-directory: ./infra
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -83,11 +142,39 @@ jobs:
           terraform destroy -var="environment=${{ env.ENVIRONMENT }}" -auto-approve
 
       - name: Upload Terraform Destroy Log
-        if: always()  # This ensures the step runs regardless of previous step outcomes
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: terraform-destroy-log
-          path: ./infra/terraform_destroy.log  # Path updated to the infra directory
+          name: terraform-destroy-log-${{ env.ENVIRONMENT }}
+          path: ./infra/terraform_destroy.log
+
+      - name: Output destroy information
+        run: |
+          echo "Infrastructure destruction completed for environment: ${{ env.ENVIRONMENT }}"
+
+  destroy-backend:
+    name: Destroy Backend Storage
+    if: ${{ always() && github.event.inputs.destroy_backend == 'true' && (needs.destroy-infra.result == 'success' || needs.destroy-infra.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    needs: destroy-infra
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set Environment Variables
+        id: set_env
+        run: |
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+
+      - name: Login to Azure using OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          allow-no-subscriptions: false
+          enable-AzPSSession: false
 
       - name: Cleanup Backend Resources
         run: |
@@ -97,15 +184,26 @@ jobs:
           az_backend_container_name="${{ env.ENVIRONMENT }}-bkd-alpinebot-co"
 
           # Delete the storage container
+          echo "Deleting storage container: $az_backend_container_name"
           az storage container delete \
             --name $az_backend_container_name \
-            --account-name $az_backend_sa_name
+            --account-name $az_backend_sa_name || echo "Container not found or already deleted"
 
           # Delete the storage account
+          echo "Deleting storage account: $az_backend_sa_name"
           az storage account delete \
             --name $az_backend_sa_name \
             --resource-group $az_backend_rg_name \
-            --yes
+            --yes || echo "Storage account not found or already deleted"
 
           # Delete the resource group
-          az group delete --name $az_backend_rg_name --yes --no-wait
+          echo "Deleting resource group: $az_backend_rg_name"
+          az group delete --name $az_backend_rg_name --yes --no-wait || echo "Resource group not found or already deleted"
+
+      - name: Output cleanup information
+        run: |
+          echo "Backend storage cleanup completed:"
+          echo "  Resource Group: ${{ env.ENVIRONMENT }}-bkd-alpinebot"
+          echo "  Storage Account: ${{ env.ENVIRONMENT }}bkdalpinebotsa"
+          echo "  Container: ${{ env.ENVIRONMENT }}-bkd-alpinebot-co"
+          echo "WARNING: Terraform state has been deleted!"
