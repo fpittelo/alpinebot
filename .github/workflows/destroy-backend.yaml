@@ -69,3 +69,5 @@ jobs:
           echo "  Resource Group: ${{ env.ENVIRONMENT }}-bkd-alpinebot"
           echo "  Storage Account: ${{ env.ENVIRONMENT }}bkdalpinebotsa"
           echo "  Container: ${{ env.ENVIRONMENT }}-bkd-alpinebot-co"
+          echo "⚠️  WARNING: Terraform state has been permanently deleted!"
+          echo "⚠️  You will not be able to manage existing infrastructure with Terraform."

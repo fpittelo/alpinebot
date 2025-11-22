@@ -58,14 +58,19 @@ Successfully refactored the monolithic deployment and destroy workflows into mod
    - Proper job dependencies with conditional execution
    - Safe defaults to prevent accidental state deletion
 
-### Documentation (1 file)
+### Documentation (2 files)
 
-1. **README.md** - Comprehensive workflow documentation
+1. **README.md** - Comprehensive workflow documentation in `.github/workflows/`
    - Overview of all workflows and their purpose
    - When to use each workflow
    - Usage examples for common scenarios
    - Best practices and troubleshooting guide
    - Migration notes from old workflows
+
+2. **WORKFLOW_MODULARIZATION_SUMMARY.md** - Implementation summary in repository root
+   - Complete overview of changes
+   - Technical details and design decisions
+   - Testing considerations and next steps
 
 ## Key Improvements
 
