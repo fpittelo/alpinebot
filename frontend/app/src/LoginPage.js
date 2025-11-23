@@ -2,6 +2,12 @@ import React from "react";
 import "./LoginPage.css";
 
 const LoginPage = () => {
+  const handleNavigation = (e, path) => {
+    e.preventDefault();
+    window.history.pushState({}, "", path);
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
+
   const loginOptions = [
     {
       label: "Continue with Google",
@@ -19,14 +25,14 @@ const LoginPage = () => {
         <div className="hero-brand">
           <div className="hero-badge">+</div>
           <div>
-            <p className="eyebrow">OpenAI</p>
+            <p className="eyebrow">AlpineBot</p>
             <h1 id="login-hero-title">Swiss OpenData at your fingertips</h1>
           </div>
         </div>
         <p>
-          Interact with OpenAI, the Swiss hosted, to explore public data from
-          across Switzerland. Ask questions in German, French, Italian, or
-          Romansh and get answers built on transparency and precision.
+          A friendly chatbot powered by Swiss-hosted OpenAI, connecting you
+          to publicly available Swiss open data. Explore government information,
+          statistics, and more in a modern, minimalist interface.
         </p>
         <div className="hero-stats">
           <div>
@@ -53,8 +59,8 @@ const LoginPage = () => {
               <small>Switzerland</small>
             </div>
           </div>
-          <h2 id="login-panel-title">Welcome back</h2>
-          <p>Sign in to continue your conversations with OpenAI.</p>
+          <h2 id="login-panel-title">Get Started</h2>
+          <p>Sign in with your Google account to start exploring Swiss open data.</p>
         </div>
         <div className="login-buttons">
           {loginOptions.map((option) => (
@@ -74,6 +80,20 @@ const LoginPage = () => {
         <p className="login-note">
           By continuing you agree to the AlpineBot acceptable use guidelines.
         </p>
+        <footer className="login-footer">
+          <a href="/privacy" onClick={(e) => handleNavigation(e, "/privacy")} className="footer-link">Privacy</a>
+          <span className="footer-separator">•</span>
+          <a href="/about" onClick={(e) => handleNavigation(e, "/about")} className="footer-link">About</a>
+          <span className="footer-separator">•</span>
+          <a
+            href="https://www.swiss-ai.org/OpenAI"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-link"
+          >
+            OpenAI ↗
+          </a>
+        </footer>
       </section>
     </div>
   );
