@@ -19,7 +19,7 @@ Purpose: This file defines the desired state of the product, service. It serves 
 
 - The design of the website is modern, sleek, minimalist in the Swiss spirit.
 
-- The hosting is MS Azure Switzerland datacenter, powered by the Swiss LLM Apertus, secured by Google authentication for users and Azure MS Entra ID for Admins.
+- The hosting is MS Azure Switzerland datacenter, powered by the Swiss hosted OpenAI, secured by Google authentication for users and Azure MS Entra ID for Admins.
 
 - Security and data privacy is paramount for this project.
 
@@ -33,7 +33,7 @@ Lists the functional and non-functional requirements for the AlpineBot project.
   - **FR1.2:** The design of the landing page (and website overall) must reflect Swiss minimalist modern design.
   - **FR1.3:** The landing page briefly describe the site purpose to interact in a friendly manner via a chatbot with Swiss publicly availailable open data.
   - **FR1.4:** The landing page will provide links to the following AlpineBot website pages: a privacy statement, an about page.
-  - **FR1.5:** The landing page will provide links, open to a new tab or browser window, to the following external sources: Apertus (https://www.swiss-ai.org/apertus)
+  - **FR1.5:** The landing page will provide links, open to a new tab or browser window, to the following external sources: OpenAI (https://www.swiss-ai.org/OpenAI)
 
 - **FR2: Authentication flow**
 

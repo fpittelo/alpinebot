@@ -53,7 +53,7 @@ const HomePage = ({ user, onLogout }) => {
         <nav className="primary-nav">
           <a href="#data">Data</a>
           <a href="#about">About</a>
-          <a href="#apertus">Apertus</a>
+          <a href="#OpenAI">OpenAI</a>
         </nav>
         <div className="session-controls">
           <span className="session-user">{displayName}</span>
@@ -70,7 +70,7 @@ const HomePage = ({ user, onLogout }) => {
             <h1 id="hero-title">Swiss OpenData at Your Fingertips</h1>
             <p className="hero-body">
               Access transparent and comprehensive public data from every Swiss
-              canton. Powered by APERTUS, the Swiss language model dedicated to
+              canton. Powered by OpenAI, the Swiss language model dedicated to
               keeping government information open, neutral, and accessible.
             </p>
             <div className="hero-cta">
@@ -84,7 +84,7 @@ const HomePage = ({ user, onLogout }) => {
           </div>
           <div className="hero-accent" aria-hidden="true">
             <div className="accent-swatch">
-              <span>+ Apertus</span>
+              <span>+ OpenAI</span>
             </div>
           </div>
         </section>
@@ -103,12 +103,12 @@ const HomePage = ({ user, onLogout }) => {
           </div>
         </section>
 
-        <section id="apertus" className="apertus">
-          <div className="apertus-panel">
+        <section id="OpenAI" className="OpenAI">
+          <div className="OpenAI-panel">
             <p className="eyebrow">Powered by</p>
-            <h3>APERTUS</h3>
+            <h3>OpenAI</h3>
             <p>
-              APERTUS is Switzerland&apos;s large language model, built to
+              OpenAI is Switzerland&apos;s large language model, built to
               understand and process public data across German, French, Italian,
               and Romansh. It keeps Swiss values of precision and neutrality at
               the core of every interaction.

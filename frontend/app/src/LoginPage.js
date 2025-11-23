@@ -19,12 +19,12 @@ const LoginPage = () => {
         <div className="hero-brand">
           <div className="hero-badge">+</div>
           <div>
-            <p className="eyebrow">Apertus</p>
+            <p className="eyebrow">OpenAI</p>
             <h1 id="login-hero-title">Swiss OpenData at your fingertips</h1>
           </div>
         </div>
         <p>
-          Interact with APERTUS, the Swiss LLM, to explore public data from
+          Interact with OpenAI, the Swiss hosted, to explore public data from
           across Switzerland. Ask questions in German, French, Italian, or
           Romansh and get answers built on transparency and precision.
         </p>
@@ -54,7 +54,7 @@ const LoginPage = () => {
             </div>
           </div>
           <h2 id="login-panel-title">Welcome back</h2>
-          <p>Sign in to continue your conversations with APERTUS.</p>
+          <p>Sign in to continue your conversations with OpenAI.</p>
         </div>
         <div className="login-buttons">
           {loginOptions.map((option) => (
