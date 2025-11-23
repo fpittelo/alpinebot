@@ -22,7 +22,7 @@ def get_openai_client():
         azure_endpoint=api_base
     )
 
-@app.route(route="chat", methods=["POST"], auth_level=func.AuthLevel.FUNCTION)
+@app.route(route="chat", methods=["POST"], auth_level=func.AuthLevel.ANONYMOUS)
 def chat(req: func.HttpRequest) -> func.HttpResponse:
     """
     HTTP trigger function for chatbot queries.

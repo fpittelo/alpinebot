@@ -82,6 +82,20 @@ npm start
 
 **Note**: When running locally, the Azure App Service authentication endpoints (`/.auth/me`, `/.auth/login/*`, `/.auth/logout`) will not work unless you configure a local development proxy or mock these endpoints.
 
+### Environment Variables
+
+The application requires the following environment variable to connect to the backend API:
+
+- `REACT_APP_FUNCTION_APP_URL`: The URL of the Azure Function App (e.g., `https://dev-alpinebot-func.azurewebsites.net`)
+
+For local development, create a `.env.local` file (see `.env.example` for reference):
+
+```bash
+REACT_APP_FUNCTION_APP_URL=https://dev-alpinebot-func.azurewebsites.net
+```
+
+This variable is automatically set during CI/CD deployment based on the environment.
+
 ### Building for Production
 
 ```bash
