@@ -1,0 +1,112 @@
+import azure.functions as func
+import json
+import logging
+import os
+from openai import AzureOpenAI
+
+app = func.FunctionApp()
+
+# Initialize Azure OpenAI client
+def get_openai_client():
+    """Initialize and return Azure OpenAI client with secure configuration."""
+    api_key = os.environ.get("AZURE_OPENAI_API_KEY")
+    api_base = os.environ.get("AZURE_OPENAI_ENDPOINT")
+    api_version = os.environ.get("AZURE_OPENAI_API_VERSION", "2024-02-15-preview")
+    
+    if not api_key or not api_base:
+        raise ValueError("Azure OpenAI credentials not configured. Set AZURE_OPENAI_API_KEY and AZURE_OPENAI_ENDPOINT.")
+    
+    return AzureOpenAI(
+        api_key=api_key,
+        api_version=api_version,
+        azure_endpoint=api_base
+    )
+
+@app.route(route="chat", methods=["POST"], auth_level=func.AuthLevel.FUNCTION)
+def chat(req: func.HttpRequest) -> func.HttpResponse:
+    """
+    HTTP trigger function for chatbot queries.
+    
+    Accepts POST requests with JSON body containing:
+    - message: User's query message (required)
+    - conversation_history: Optional array of previous messages
+    
+    Returns:
+    - JSON response with the chatbot's reply
+    """
+    logging.info('Chatbot function processing a request.')
+    
+    try:
+        # Parse request body
+        req_body = req.get_json()
+        user_message = req_body.get('message')
+        conversation_history = req_body.get('conversation_history', [])
+        
+        if not user_message:
+            return func.HttpResponse(
+                json.dumps({"error": "Missing 'message' in request body"}),
+                mimetype="application/json",
+                status_code=400
+            )
+        
+        # Initialize OpenAI client
+        client = get_openai_client()
+        deployment_name = os.environ.get("AZURE_OPENAI_DEPLOYMENT_NAME", "gpt-4")
+        
+        # Build messages for OpenAI
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are AlpineBot, a friendly AI assistant specialized in providing "
+                    "information about Switzerland. You help users with questions about Swiss "
+                    "culture, geography, history, public services, and general information. "
+                    "Respond in a helpful, accurate, and engaging manner."
+                )
+            }
+        ]
+        
+        # Add conversation history
+        if conversation_history:
+            messages.extend(conversation_history)
+        
+        # Add current user message
+        messages.append({"role": "user", "content": user_message})
+        
+        # Call Azure OpenAI
+        logging.info(f"Sending request to Azure OpenAI deployment: {deployment_name}")
+        response = client.chat.completions.create(
+            model=deployment_name,
+            messages=messages,
+            temperature=0.7,
+            max_tokens=800,
+            top_p=0.95
+        )
+        
+        # Extract response
+        assistant_message = response.choices[0].message.content
+        
+        # Return response
+        return func.HttpResponse(
+            json.dumps({
+                "response": assistant_message,
+                "status": "success"
+            }),
+            mimetype="application/json",
+            status_code=200
+        )
+        
+    except ValueError as ve:
+        logging.error(f"Configuration error: {str(ve)}")
+        return func.HttpResponse(
+            json.dumps({"error": f"Configuration error: {str(ve)}"}),
+            mimetype="application/json",
+            status_code=500
+        )
+    except Exception as e:
+        logging.error(f"Error processing chat request: {str(e)}")
+        return func.HttpResponse(
+            json.dumps({"error": f"An error occurred: {str(e)}"}),
+            mimetype="application/json",
+            status_code=500
+        )
