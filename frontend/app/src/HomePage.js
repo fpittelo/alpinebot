@@ -85,17 +85,33 @@ const HomePage = ({ user, onLogout }) => {
           </div>
         </div>
         <nav className="primary-nav">
-          <a href="/privacy" onClick={(e) => {
-            e.preventDefault();
-            window.history.pushState({}, "", "/privacy");
-            window.dispatchEvent(new PopStateEvent("popstate"));
-          }}>Privacy</a>
-          <a href="/about" onClick={(e) => {
-            e.preventDefault();
-            window.history.pushState({}, "", "/about");
-            window.dispatchEvent(new PopStateEvent("popstate"));
-          }}>About</a>
-          <a href="https://www.swiss-ai.org/OpenAI" target="_blank" rel="noopener noreferrer">OpenAI</a>
+          <a
+            href="/privacy"
+            onClick={(e) => {
+              e.preventDefault();
+              window.history.pushState({}, "", "/privacy");
+              window.dispatchEvent(new PopStateEvent("popstate"));
+            }}
+          >
+            Privacy
+          </a>
+          <a
+            href="/about"
+            onClick={(e) => {
+              e.preventDefault();
+              window.history.pushState({}, "", "/about");
+              window.dispatchEvent(new PopStateEvent("popstate"));
+            }}
+          >
+            About
+          </a>
+          <a
+            href="https://www.swiss-ai.org/OpenAI"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            OpenAI
+          </a>
         </nav>
         <div className="session-controls">
           <span className="session-user">{displayName}</span>
@@ -111,7 +127,9 @@ const HomePage = ({ user, onLogout }) => {
             <div key={message.id} className={`message ${message.type}`}>
               <div className="message-content">
                 <div className="message-avatar">
-                  {message.type === "bot" ? "+" : displayName.charAt(0).toUpperCase()}
+                  {message.type === "bot"
+                    ? "+"
+                    : displayName.charAt(0).toUpperCase()}
                 </div>
                 <div className="message-body">
                   <div className="message-header">
