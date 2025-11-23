@@ -6,12 +6,14 @@ Purpose: This file defines the desired state of the product, service. It serves 
 
 # Content Focus
 
-- Context: General informations for the development
-- Functional Requirements: What the system must do.
-- Technical Design/Interface: Details of the interface.
-- Acceptance Criteria: How successful implementation is defined.
+  ## 1. Context: General informations for the development
+  ## 2. Functional Requirements: What the system must do.
+  ## 3. Non-Functional Requirements
+  ## 4. Technical Design/Interface: Details of the interface.
+  ## 5. Acceptance Criteria: How successful implementation is defined.
+  ## 6. Plan
 
-## Context
+## 1. Context
 
 - The AlpineBot web site is a IA powered website chatbot providing accurate information about Swiss publicly available open data in a friendly manner.
 
@@ -21,22 +23,9 @@ Purpose: This file defines the desired state of the product, service. It serves 
 
 - Security and data privacy is paramount for this project.
 
-## Functional Requirements
+## 2. Functional Requirements
 
-## 1. User Authentication
-
-- **1.2. Authentication Flow:**
-  1.  At firts access, the user must land on the AlpineBot landing login web page which has a sleek minimalist look.
-  2.  The user selects "Continue with Google".
-  3.  The user is redirected to the selected identity provider's login page.
-  4.  After successful authentication, the user is redirected back to the AlpineBot chat application.
-- **1.3. User Profile:** A user profile will be created in the application's database after the first successful login. The profile will store the user's name, email address, and a unique identifier from the identity provider.
-
-# AlpineBot Requirements
-
-This document lists the functional and non-functional requirements for the AlpineBot project.
-
-## 1. Functional Requirements
+Lists the functional and non-functional requirements for the AlpineBot project.
 
 - **FR1: Website landing page**
 
@@ -45,15 +34,14 @@ This document lists the functional and non-functional requirements for the Alpin
   - **FR1.3:** The landing page briefly describe the site purpose to interact in a friendly manner via a chatbot with Swiss publicly availailable open data.
   - **FR1.4:** The landing page will provide links to the following AlpineBot website pages: a privacy statement, an about page.
   - **FR1.5:** The landing page will provide links, open to a new tab or browser window, to the following external sources: Apertus (https://www.swiss-ai.org/apertus)
-
-The landing login pag will be minimalist and modern. A button will allow to login with a Google account
-  
  
 - **FR2: Authentication flow**
 
   - **FR2.1:** From the AlpineBot landing page, the system shall allow users to authenticate using their Google account via a login button.
-  - **FR1.3:** The user selects "Continue with Google". The user is redirected to the selected identity provider's login page.
-  - **FR2.3:** After a successful authentication, The system shall create a user profile in the PostgreSQL database upon the user's first successful login.
+  - **FR2.2:** The user selects "Continue with Google". The user is redirected to the selected identity provider's login page.
+  - **FR2.3:** After successful authentication, the user is redirected back to the AlpineBot chat application.
+  - **FR2.4:** After a successful authentication, The system shall create a user profile in the PostgreSQL database upon the user's first successful login.
+  - **FR2.5:** The profile will store the user's name, email address, and a unique identifier from the identity provider.
 
 - **FR3: Chatbot**
 
@@ -119,7 +107,7 @@ The landing login pag will be minimalist and modern. A button will allow to logi
   - The page will show the total number of thumb up and thumb down votes.
   - The page will show the percentage of good vs. bad responses.
 
-## 2. Non-Functional Requirements
+## 3. Non-Functional Requirements
 
 - **NFR1: Performance**
   - **NFR1.1:** The chatbot shall respond to user queries within 3 seconds.
@@ -135,11 +123,11 @@ The landing login pag will be minimalist and modern. A button will allow to logi
   - **NFR5.1:** The chatbot interface shall be simple, intuitive, and have a minimalist and elegant design. This includes a light color palette and a clean, simple layout.
   - **NFR5.2:** The admin portal shall be easy to navigate and understand, and its design shall be consistent with the main application.
 
-# AlpineBot Development Plan
+## 4. Technical Design/Interface: Details of the interface.
 
-This document outlines the development plan for the AlpineBot project. The project will follow a Test-Driven Development (TDD) approach.
+## 5. Acceptance Criteria: How successful implementation is defined.
 
-## Phase 1: Core Infrastructure and Authentication
+## 6. Plan
 
 - **Milestone 1.1: Authentication Backend**
   - [x] **Task 1.1.1:** Define Terraform configuration for Azure App Service Authentication.
