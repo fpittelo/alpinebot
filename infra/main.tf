@@ -151,7 +151,7 @@ module "function_app" {
     "AZURE_OPENAI_API_KEY"         = var.az_openai_key_value
     "AZURE_OPENAI_ENDPOINT"        = module.cognitive_account.cognitive_account_endpoint
     "AZURE_OPENAI_DEPLOYMENT_NAME" = local.environment_vars.alpinebotaidepl
-    "AZURE_OPENAI_API_VERSION"     = "2024-02-15-preview"
+    "AZURE_OPENAI_API_VERSION"     = local.environment_vars.azure_openai_api_version
   }
 
   cors_allowed_origins = [

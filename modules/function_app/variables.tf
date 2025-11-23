@@ -32,7 +32,7 @@ variable "app_settings" {
 variable "cors_allowed_origins" {
   description = "List of allowed CORS origins"
   type        = list(string)
-  default     = ["*"]
+  default     = []
 }
 
 variable "app_insights_connection_string" {

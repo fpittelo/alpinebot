@@ -33,6 +33,7 @@ variable "environments" {
     storage_mb                      = number
     function_app_name               = string
     function_storage_account_name   = string
+    azure_openai_api_version        = string
   }))
   default = {
     "dev" = {
@@ -67,6 +68,7 @@ variable "environments" {
       storage_mb                      = 32768
       function_app_name               = "dev-alpinebot-func"
       function_storage_account_name   = "devalpinebotfuncsa"
+      azure_openai_api_version        = "2024-02-15-preview"
     },
     "qa" = {
       tags = {
@@ -100,6 +102,7 @@ variable "environments" {
       storage_mb                      = 32768
       function_app_name               = "qa-alpinebot-func"
       function_storage_account_name   = "qaalpinebotfuncsa"
+      azure_openai_api_version        = "2024-08-01-preview"
     },
     "main" = {
       tags = {
@@ -133,6 +136,7 @@ variable "environments" {
       storage_mb                      = 32768
       function_app_name               = "main-alpinebot-func"
       function_storage_account_name   = "mainalpinebotfuncsa"
+      azure_openai_api_version        = "2024-08-01-preview"
     }
   }
 }
