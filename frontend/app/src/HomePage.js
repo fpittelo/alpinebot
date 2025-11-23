@@ -56,12 +56,10 @@ const HomePage = ({ user, onLogout }) => {
       }
 
       // Build conversation history for API
-      const conversationHistory = messages
-        .filter((msg) => msg.type !== "bot" || !msg.text.includes("placeholder"))
-        .map((msg) => ({
-          role: msg.type === "user" ? "user" : "assistant",
-          content: msg.text,
-        }));
+      const conversationHistory = messages.map((msg) => ({
+        role: msg.type === "user" ? "user" : "assistant",
+        content: msg.text,
+      }));
 
       // Call Azure Function App API
       const response = await fetch(`${functionAppUrl}/api/chat`, {
@@ -89,7 +87,8 @@ const HomePage = ({ user, onLogout }) => {
       };
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
-      console.error("Error calling chat API:", error);
+      // Log error without sensitive details
+      console.error("Error calling chat API");
       const errorMessage = {
         id: Date.now() + 1,
         type: "bot",
