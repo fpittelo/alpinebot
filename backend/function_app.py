@@ -38,7 +38,15 @@ def chat(req: func.HttpRequest) -> func.HttpResponse:
     
     try:
         # Parse request body
-        req_body = req.get_json()
+        try:
+            req_body = req.get_json()
+        except ValueError:
+            return func.HttpResponse(
+                json.dumps({"error": "Invalid JSON in request body"}),
+                mimetype="application/json",
+                status_code=400
+            )
+        
         user_message = req_body.get('message')
         conversation_history = req_body.get('conversation_history', [])
         
@@ -48,6 +56,22 @@ def chat(req: func.HttpRequest) -> func.HttpResponse:
                 mimetype="application/json",
                 status_code=400
             )
+        
+        # Validate conversation_history structure
+        if not isinstance(conversation_history, list):
+            return func.HttpResponse(
+                json.dumps({"error": "'conversation_history' must be an array"}),
+                mimetype="application/json",
+                status_code=400
+            )
+        
+        for msg in conversation_history:
+            if not isinstance(msg, dict) or 'role' not in msg or 'content' not in msg:
+                return func.HttpResponse(
+                    json.dumps({"error": "Invalid conversation_history format. Each message must have 'role' and 'content' fields"}),
+                    mimetype="application/json",
+                    status_code=400
+                )
         
         # Initialize OpenAI client
         client = get_openai_client()
@@ -84,6 +108,14 @@ def chat(req: func.HttpRequest) -> func.HttpResponse:
         )
         
         # Extract response
+        if not response.choices or len(response.choices) == 0:
+            logging.error("OpenAI response contained no choices")
+            return func.HttpResponse(
+                json.dumps({"error": "No response generated from AI service"}),
+                mimetype="application/json",
+                status_code=500
+            )
+        
         assistant_message = response.choices[0].message.content
         
         # Return response

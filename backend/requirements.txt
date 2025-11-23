@@ -2,5 +2,5 @@
 # Ref: aka.ms/functions-azure-monitor-python 
 # azure-monitor-opentelemetry 
 
-azure-functions
-openai
+azure-functions==1.24.0
+openai==2.8.1
