@@ -10,10 +10,16 @@ This Terraform module creates an Azure Function App with Linux hosting and Pytho
 ## Features
 
 - Python 3.12 runtime
-- Configurable CORS origins
+- Configurable CORS origins with validation
 - Application Insights integration
 - Custom app settings support
 - Uses existing App Service Plan
+
+## Security Notes
+
+- CORS validation prevents wildcard `*` origins
+- Explicit origins must be specified (no default wildcard)
+- Note: Advanced wildcard patterns (e.g., `http://*`) are not validated; use explicit URLs for maximum security
 
 ## Usage
 
