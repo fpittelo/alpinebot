@@ -78,9 +78,6 @@ const LoginPage = () => {
             </button>
           ))}
         </div>
-        <p className="login-note">
-          By continuing you agree to the AlpineBot acceptable use guidelines.
-        </p>
         <footer className="login-footer">
           <a
             href="/privacy"
@@ -99,12 +96,11 @@ const LoginPage = () => {
           </a>
           <span className="footer-separator">•</span>
           <a
-            href="https://www.swiss-ai.org/OpenAI"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/guidelines"
+            onClick={(e) => handleNavigation(e, "/guidelines")}
             className="footer-link"
           >
-            OpenAI ↗
+            Guidelines ↗
           </a>
         </footer>
       </section>

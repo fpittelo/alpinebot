@@ -147,12 +147,12 @@ Lists the functional and non-functional requirements for the AlpineBot project.
   - [x] **Task 1.1.4:** _(Deprecated)_ Microsoft identity provider support removed in favor of a Google-only experience.
   - [x] **Task 1.1.5:** Verify authentication configuration deployment through CI/CD pipeline. _(Verification instructions provided in VERIFICATION.md, pending user action)_
 - **Milestone 1.2: Frontend Authentication UI**
-  - [ ] **Task 1.2.1:** Create a basic React application with a login page, inspired by a minimalist design.
+  - [x] **Task 1.2.1:** Create a basic React application with a login page, inspired by a minimalist design.
   - [ ] **Task 1.2.2:** Write unit tests for the login page components.
-  - [ ] **Task 1.2.3:** Implement the UI for the Google login button and CTA.
+  - [x] **Task 1.2.3:** Implement the UI for the Google login button and CTA.
   - [ ] **Task 1.2.4:** Write end-to-end tests for the login flow.
 - **Milestone 1.3: Basic Chatbot Interface**
-  - [ ] **Task 1.3.1:** Create a basic chatbot interface using React, following the established design principles.
+  - [x] **Task 1.3.1:** Create a basic chatbot interface using React, following the established design principles.
   - [ ] **Task 1.3.2:** Write unit tests for the chatbot interface components.
   - [ ] **Task 1.3.3:** Implement a mock chatbot service for testing.
   - [ ] **Task 1.3.4:** Write integration tests for the chatbot interface and the mock service.
