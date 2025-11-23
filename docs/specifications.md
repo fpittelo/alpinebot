@@ -6,12 +6,12 @@ Purpose: This file defines the desired state of the product, service. It serves 
 
 # Content Focus
 
-  1. Context: General informations for the development
-  2. Functional Requirements: What the system must do.
-  3. Non-Functional Requirements
-  4. Technical Design/Interface: Details of the interface.
-  5. Acceptance Criteria: How successful implementation is defined.
-  6. Plan
+1. Context: General informations for the development
+2. Functional Requirements: What the system must do.
+3. Non-Functional Requirements
+4. Technical Design/Interface: Details of the interface.
+5. Acceptance Criteria: How successful implementation is defined.
+6. Plan
 
 ## 1. Context
 
@@ -34,7 +34,7 @@ Lists the functional and non-functional requirements for the AlpineBot project.
   - **FR1.3:** The landing page briefly describe the site purpose to interact in a friendly manner via a chatbot with Swiss publicly availailable open data.
   - **FR1.4:** The landing page will provide links to the following AlpineBot website pages: a privacy statement, an about page.
   - **FR1.5:** The landing page will provide links, open to a new tab or browser window, to the following external sources: Apertus (https://www.swiss-ai.org/apertus)
- 
+
 - **FR2: Authentication flow**
 
   - **FR2.1:** From the AlpineBot landing page, the system shall allow users to authenticate using their Google account via a login button.
@@ -128,6 +128,8 @@ Lists the functional and non-functional requirements for the AlpineBot project.
 ## 5. Acceptance Criteria: How successful implementation is defined.
 
 ## 6. Plan
+
+## Phase 1: Landing and chat pages, authentication flow
 
 - **Milestone 1.1: Authentication Backend**
   - [x] **Task 1.1.1:** Define Terraform configuration for Azure App Service Authentication.
