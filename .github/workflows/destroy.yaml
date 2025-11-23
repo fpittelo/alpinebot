@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to destroy'
+        description: "Environment to destroy"
         required: true
         type: choice
         options:
@@ -12,17 +12,17 @@ on:
           - qa
           - main
       destroy_app:
-        description: 'Destroy application deployment (stop Web App)'
+        description: "Destroy application deployment (stop Web App)"
         required: false
         type: boolean
         default: true
       destroy_infra:
-        description: 'Destroy infrastructure (Terraform resources)'
+        description: "Destroy infrastructure (Terraform resources)"
         required: false
         type: boolean
         default: true
       destroy_backend:
-        description: 'Destroy backend storage (WARNING: deletes Terraform state!)'
+        description: "Destroy backend storage (WARNING: deletes Terraform state!)"
         required: false
         type: boolean
         default: false
@@ -59,10 +59,10 @@ jobs:
         run: |
           az_webapp_name="${{ env.ENVIRONMENT }}-alpinebot-as"
           echo "Stopping web app: $az_webapp_name"
-          
+
           # Get resource group name for the web app
           az_rg_name=$(az webapp show --name $az_webapp_name --query resourceGroup -o tsv 2>/dev/null || echo "")
-          
+
           if [ -n "$az_rg_name" ]; then
             az webapp stop --name $az_webapp_name --resource-group $az_rg_name
             echo "Web app stopped successfully"
@@ -109,8 +109,6 @@ jobs:
           echo "TF_VAR_postgresql_admin_username=${{ secrets.POSTGRESQL_ADMIN_USERNAME }}" >> $GITHUB_ENV
           echo "TF_VAR_google_client_id=${{ secrets.GOOGLE_CLIENT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_google_client_secret=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> $GITHUB_ENV
-          echo "TF_VAR_microsoft_client_id=${{ secrets.MICROSOFT_CLIENT_ID }}" >> $GITHUB_ENV
-          echo "TF_VAR_microsoft_client_secret=${{ secrets.MICROSOFT_CLIENT_SECRET }}" >> $GITHUB_ENV
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2

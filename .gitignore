@@ -41,4 +41,15 @@ override.tf.json
 **/dist/
 
 # Package lock files (optional - remove if you want to commit them)
-package-lock.json
+# package-lock.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.venv/
+venv/
+ENV/
