@@ -6,12 +6,12 @@ Purpose: This file defines the desired state of the product, service. It serves 
 
 # Content Focus
 
-  *1. Context:* General informations for the development
-  *2. Functional Requirements:* What the system must do.
-  *3. Non-Functional Requirements*
-  *4. Technical Design/Interface:* Details of the interface.
-  *5. Acceptance Criteria:* How successful implementation is defined.
-  *6. Plan*
+  1. Context: General informations for the development
+  2. Functional Requirements: What the system must do.
+  3. Non-Functional Requirements
+  4. Technical Design/Interface: Details of the interface.
+  5. Acceptance Criteria: How successful implementation is defined.
+  6. Plan
 
 ## 1. Context
 
