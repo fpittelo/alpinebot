@@ -46,14 +46,22 @@ AlpineBot is an AI-powered chatbot for everything Switzerland, presented with a 
 
 3. **Deploy**:
 
-   Infrastructure deployment is managed exclusively through GitHub Actions. Pushing changes to the `dev` branch or merging pull requests into `qa` or `main` will trigger the automated deployment workflows.
+   Infrastructure deployment is managed exclusively through GitHub Actions. The deployment consists of three main components:
+   
+   - **Infrastructure** (Terraform): Deploys all Azure resources including App Service Plan, Web App, OpenAI, Function App, databases, etc.
+   - **Function App** (Backend): Deploys the Python Azure Functions backend that connects to Azure OpenAI
+   - **Frontend** (React): Deploys the React web application
+   
+   Use the orchestrator workflow (`Deploy Full Environment`) to deploy all components, or individual workflows for specific components. Pushing changes to the `dev` branch or merging pull requests into `qa` or `main` will trigger the automated deployment workflows.
 
 ## Project Structure 🗂️
 
 - `/frontend`: React app
-- `/backend`: Azure Functions
-- `/terraform`: Infrastructure code
+- `/backend`: Azure Functions (Python 3.12)
+- `/infra`: Infrastructure as Code (Terraform)
+- `/modules`: Reusable Terraform modules
 - `/data`: Sample datasets
+- `/.github/workflows`: CI/CD pipelines
 
 ## Architecture 🏗️
 
