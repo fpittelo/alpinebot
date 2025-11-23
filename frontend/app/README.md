@@ -2,6 +2,25 @@
 
 This is the React frontend application for AlpineBot, featuring authentication via Google accounts through Azure App Service.
 
+## Product Context & Hosting
+
+- AlpineBot is an AI-powered chatbot that surfaces Swiss open data insights for end users in a friendly tone.
+- The landing page and chat UI run on Azure App Service in the Switzerland region, reflecting the minimalist Swiss design language outlined in `docs/specifications.md`.
+- Azure OpenAI (Swiss hosted) generates responses, while PostgreSQL and related Azure services in Switzerland store profiles, chat history, feedback, and data-ingestion artifacts securely.
+- End-user authentication uses Google accounts through Azure App Service Easy Auth; the forthcoming admin portal will enforce Azure Entra ID for administrators.
+- Security and privacy (encryption, hard tenancy, continuous monitoring) are baseline requirements across all environments.
+
+## Key Features (per specifications)
+
+- **Landing experience:** A sleek landing page introduces the Swiss open data mission and links to Privacy, About, and the external OpenAI resource in new tabs.
+- **Authentication:** The “Continue with Google” CTA (/.auth/login/google) provisions a PostgreSQL profile with the user’s name, email, and IdP identifier on first login.
+- **Chatbot experience:** A minimalist React interface backed by Azure OpenAI and curated Swiss open data knowledge, supporting English, German, and French.
+- **User profiles:** Phase 2 introduces a secure portal for managing avatars, viewing up to 100 recent interactions, and deleting entries individually or in bulk.
+- **Feedback loop:** Every chatbot response exposes thumbs up/down, copy, and refresh controls, persisting votes plus context for analytics.
+- **Admin portal:** A separate Entra ID–secured React app will list users, manage data sources and security settings, display ingestion status/performance metrics, and tune LLM instructions.
+- **Data ingestion:** Scheduled Azure Functions fetch, transform, and store public data into PostgreSQL to keep the knowledge base current.
+- **LLM management & analytics:** Administrators adjust prompts/parameters and review aggregated feedback (totals and good/bad ratios) inside the portal.
+
 ## Authentication Setup
 
 The application uses Azure App Service's built-in authentication and authorization (Easy Auth) feature. The authentication is handled at the infrastructure level, requiring proper OAuth application configuration.
@@ -112,3 +131,11 @@ The Azure App Service authentication only works when the app is deployed to Azur
 1. Mock the authentication endpoints
 2. Use Azure Static Web Apps CLI for local emulation
 3. Disable authentication checks during local development
+
+## Roadmap Alignment
+
+- **Phase 1:** Landing page, authentication UI, baseline chatbot, and feedback widgets (current React app scope).
+- **Phase 2:** Admin portal scaffolding plus data ingestion, source management, LLM controls, and feedback analytics.
+- **Phase 3:** Advanced RAG workflows, multilingual hardening, performance/security improvements, and production go-live readiness.
+
+Refer to `docs/specifications.md` for the authoritative milestone and task breakdown.

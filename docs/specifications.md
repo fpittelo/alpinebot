@@ -16,11 +16,9 @@ Purpose: This file defines the desired state of the product, service. It serves 
 ## 1. Context
 
 - The AlpineBot web site is a IA powered website chatbot providing accurate information about Swiss publicly available open data in a friendly manner.
-
 - The design of the website is modern, sleek, minimalist in the Swiss spirit.
-
 - The hosting is MS Azure Switzerland datacenter, powered by the Swiss hosted OpenAI, secured by Google authentication for users and Azure MS Entra ID for Admins.
-
+- The public-facing frontend is a React single-page application deployed to Azure App Service (Switzerland region) with Google-based Easy Auth exactly as described in `frontend/app/README.md`.
 - Security and data privacy is paramount for this project.
 
 ## 2. Functional Requirements
@@ -42,24 +40,21 @@ Lists the functional and non-functional requirements for the AlpineBot project.
   - **FR2.3:** After successful authentication, the user is redirected back to the AlpineBot chat application.
   - **FR2.4:** After a successful authentication, The system shall create a user profile in the PostgreSQL database upon the user's first successful login.
   - **FR2.5:** The profile will store the user's name, email address, and a unique identifier from the identity provider.
+  - **FR2.6:** Google sign-in shall leverage Azure App Service Easy Auth endpoints (`/.auth/login/google`, `/.auth/me`, `/.auth/logout`) configured per `frontend/app/README.md`.
+  - **FR2.7:** The admin portal shall require Azure Entra ID authentication before exposing administrative capabilities.
 
 - **FR3: Chatbot**
 
   - **FR3.1:** The system shall provide a web-based chatbot interface with a minimalist and elegant design.
   - **FR3.2:** The chatbot shall answer questions about Switzerland.
-  - **FR3.3:** The chatbot shall use the Azure OpenAI service to generate responses.
-  - **FR3.4:** The chatbot interface will be a simple, easy-to-use web application built with React. The design will be a light color palette nd a clean, simple layout.
-  - **FR3.5:** The chatbot will use the Azure OpenAI service to generate responses.
-  - **FR3.6:** The chatbot will use the data ingested from the public data sources as its knowledge base.
-  - **FR3.7:** The chatbot will be able to understand and respond to users in English, German, and French.
-  - **FR3.8:** Each chatbot response will have a thumb up and a thumb down button.
-  - **FR3.9:** When a user clicks one of these buttons, the vote will be recorded in the database.
-  - **FR3.10:** The recorded data will include the chat history, the response, and the user's vote.
-  - **FR3.4:** The chatbot shall use the data ingested from public data sources as its knowledge base.
-  - **FR3.5:** The chatbot shall support English, German, and French.
-  - **FR3.6:** The chatbot shall support voting button to rate, copy and refresh each chatbot respons.
-  - **FR3.7:** The system shall support to store a minimal history of users' interactions (100 maximum) in their respective profile page.
-  - **FR3.8:** The system shall store the user's feedback in the PostgreSQL database.
+  - **FR3.3:** The chatbot shall use the Azure OpenAI service (Swiss hosted) to generate responses.
+  - **FR3.4:** The chatbot interface will be a simple, easy-to-use React application (see README) with a light color palette and clean layout.
+  - **FR3.5:** The chatbot will use data ingested from public data sources as its knowledge base.
+  - **FR3.6:** The chatbot will be able to understand and respond to users in English, German, and French.
+  - **FR3.7:** Each response will expose thumbs up/down, copy, and refresh controls.
+  - **FR3.8:** When a user interacts with these controls, the vote plus chat history, response, and user identifier will be recorded in PostgreSQL.
+  - **FR3.9:** The system shall maintain up to 100 recent interactions per user profile, visible within the user’s profile page.
+  - **FR3.10:** The stored feedback data shall drive the analytics views surfaced in the admin portal.
 
 - **FR4: User's Profile Portal**
 
@@ -100,8 +95,10 @@ Lists the functional and non-functional requirements for the AlpineBot project.
   - **FR6.5:** The ingested data will be stored in a dedicated PostgreSQL database. Each document in the collection will represent a single data record and will include a timestamp indicating when the data was ingested.
 
 - **FR7: LLM Management:**
+
   - The admin portal will provide a page to manage the LLM's instructions and behavior.
   - Administrators will be able to update the LLM's system prompt, temperature, and other parameters.
+
 - **FR8: User Feedback Analysis:**
   - The admin portal will display a page with user feedback data.
   - The page will show the total number of thumb up and thumb down votes.
@@ -124,6 +121,13 @@ Lists the functional and non-functional requirements for the AlpineBot project.
   - **NFR5.2:** The admin portal shall be easy to navigate and understand, and its design shall be consistent with the main application.
 
 ## 4. Technical Design/Interface: Details of the interface.
+
+- **Public frontend:** React SPA in `frontend/app`, deployed to Azure App Service with Google Easy Auth; implementation notes and local-development steps live in `frontend/app/README.md`.
+- **Authentication:** Google OAuth via Easy Auth for end users, Azure Entra ID for the admin portal.
+- **Chatbot backend:** Azure Functions expose APIs that call Azure OpenAI, returning responses plus metadata for persistence and feedback tracking.
+- **Data layer:** PostgreSQL stores user profiles, chat history (max 100 entries per user), feedback votes, and data source definitions; a vector store will support Phase 3 RAG needs.
+- **Admin portal:** A separate React application (Phase 2) surfaces user lists, data-source management, ingestion status, metrics, and LLM configuration controls under Entra ID protection.
+- **CI/CD:** GitHub Actions handle deployments for the frontend today (see README); future workflows will cover the admin portal and Azure Functions to keep environments consistent.
 
 ## 5. Acceptance Criteria: How successful implementation is defined.
 
