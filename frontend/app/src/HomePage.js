@@ -106,11 +106,14 @@ const HomePage = ({ user, onLogout }) => {
             About
           </a>
           <a
-            href="https://www.swiss-ai.org/OpenAI"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/guidelines"
+            onClick={(e) => {
+              e.preventDefault();
+              window.history.pushState({}, "", "/guidelines");
+              window.dispatchEvent(new PopStateEvent("popstate"));
+            }}
           >
-            OpenAI
+            Guidelines
           </a>
         </nav>
         <div className="session-controls">
