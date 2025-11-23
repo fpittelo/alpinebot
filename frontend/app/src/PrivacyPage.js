@@ -1,12 +1,18 @@
 import React from "react";
-import "./PrivacyPage.css";
+import "./StaticPage.css";
 
 const PrivacyPage = () => {
+  const handleNavigation = (e) => {
+    e.preventDefault();
+    window.history.pushState({}, "", "/");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
+
   return (
-    <div className="privacy-page">
+    <div className="page-container">
       <header className="page-header">
         <div className="brand-mark">
-          <a href="/" className="brand-link">
+          <a href="/" onClick={handleNavigation} className="brand-link">
             <div className="brand-icon">+</div>
             <div className="brand-text">
               <span>AlpineBot</span>
@@ -55,7 +61,7 @@ const PrivacyPage = () => {
             individual chat interactions or your entire chat history.
           </p>
           <div className="page-actions">
-            <a href="/" className="primary-button">
+            <a href="/" onClick={handleNavigation} className="primary-button">
               Back to Home
             </a>
           </div>

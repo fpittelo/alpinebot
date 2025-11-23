@@ -2,6 +2,12 @@ import React from "react";
 import "./LoginPage.css";
 
 const LoginPage = () => {
+  const handleNavigation = (e, path) => {
+    e.preventDefault();
+    window.history.pushState({}, "", path);
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
+
   const loginOptions = [
     {
       label: "Continue with Google",
@@ -75,9 +81,9 @@ const LoginPage = () => {
           By continuing you agree to the AlpineBot acceptable use guidelines.
         </p>
         <footer className="login-footer">
-          <a href="/privacy" className="footer-link">Privacy</a>
+          <a href="/privacy" onClick={(e) => handleNavigation(e, "/privacy")} className="footer-link">Privacy</a>
           <span className="footer-separator">•</span>
-          <a href="/about" className="footer-link">About</a>
+          <a href="/about" onClick={(e) => handleNavigation(e, "/about")} className="footer-link">About</a>
           <span className="footer-separator">•</span>
           <a
             href="https://www.swiss-ai.org/OpenAI"

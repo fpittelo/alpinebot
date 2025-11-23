@@ -1,12 +1,18 @@
 import React from "react";
-import "./AboutPage.css";
+import "./StaticPage.css";
 
 const AboutPage = () => {
+  const handleNavigation = (e) => {
+    e.preventDefault();
+    window.history.pushState({}, "", "/");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
+
   return (
-    <div className="about-page">
+    <div className="page-container">
       <header className="page-header">
         <div className="brand-mark">
-          <a href="/" className="brand-link">
+          <a href="/" onClick={handleNavigation} className="brand-link">
             <div className="brand-icon">+</div>
             <div className="brand-text">
               <span>AlpineBot</span>
@@ -34,13 +40,13 @@ const AboutPage = () => {
           </p>
           <h2>Technology</h2>
           <p>
-            AlpineBot is powered by OpenAI, Switzerland's large language model,
-            and hosted entirely within Swiss data centers. We support German,
-            French, Italian, and Romansh to serve all Swiss language
+            AlpineBot is powered by Swiss-hosted OpenAI technology, leveraging
+            advanced language models within Swiss data centers. We support
+            German, French, Italian, and Romansh to serve all Swiss language
             communities.
           </p>
           <div className="page-actions">
-            <a href="/" className="primary-button">
+            <a href="/" onClick={handleNavigation} className="primary-button">
               Back to Home
             </a>
           </div>
