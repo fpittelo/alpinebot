@@ -2,58 +2,35 @@
 
 This document provides detailed specifications for the AlpineBot application.
 
+Purpose: This file defines the desired state of the product, service. It serves as the single source of truth for the entire development lifecycle—from design to testing and deployment.
+
+# Content Focus
+
+- Context: General informations for the development
+- Functional Requirements: What the system must do.
+- Technical Design/Interface: Details of the interface.
+- Acceptance Criteria: How successful implementation is defined.
+
+## Context
+
+- The AlpineBot web site is a IA powered website chatbot providing accurate information about Swiss publicly available open data in a friendly manner.
+
+- The design of the website is modern, sleek, minimalist in the Swiss spirit.
+
+- The hosting is MS Azure Switzerland datacenter, powered by the Swiss LLM Apertus, secured by Google authentication for users and Azure MS Entra ID for Admins.
+
+- Security and data privacy is paramount for this project.
+
+## Functional Requirements
+
 ## 1. User Authentication
 
-- **1.1. Identity Providers:** Users authenticate with their Google accounts.
 - **1.2. Authentication Flow:**
-  1.  The user visits the AlpineBot web application.
-  2.  If the user is not authenticated, they will be redirected to a login page with a minimalist and elegant design.
-  3.  The user selects "Continue with Google".
-  4.  The user is redirected to the selected identity provider's login page.
-  5.  After successful authentication, the user is redirected back to the AlpineBot application.
-- **1.3. User Profile:** A user profile will be created in the application's database (Cosmos DB) after the first successful login. The profile will store the user's name, email address, and a unique identifier from the identity provider.
-
-## 2. Admin Portal
-
-- **2.1. Access Control:** The admin portal will be a separate web application with its own authentication system (e.g., Azure AD B2C). Only authorized administrators will be able to access the portal. The design will be consistent with the main application's minimalist aesthetic.
-- **2.2. User Management:** Administrators will be able to view a list of all users who have authenticated with the chatbot application.
-- **2.3. Security Settings:** Administrators will be able to manage security settings for the application, such as configuring allowed IP addresses and setting up alerts for suspicious activity.
-- **2.4. Performance Monitoring:** The admin portal will display real-time performance metrics for the application, including:
-  - Number of active users
-  - Chatbot response times
-  - API usage
-  - Error rates
-- **2.5. Data Source Management:**
-  - Administrators will be able to add, edit, and delete data sources.
-  - A data source is defined by a name, a description, and an API endpoint.
-  - Administrators will be able to trigger the data ingestion pipeline for a specific data source manually.
-  - The admin portal will display the status of the data ingestion pipeline for each data source.
-- **2.6. LLM Management:**
-  - The admin portal will provide a page to manage the LLM's instructions and behavior.
-  - Administrators will be able to update the LLM's system prompt, temperature, and other parameters.
-- **2.7. User Feedback Analysis:**
-  - The admin portal will display a page with user feedback data.
-  - The page will show the total number of thumb up and thumb down votes.
-  - The page will show the percentage of good vs. bad responses.
-
-## 3. Data Ingestion
-
-- **3.1. Data Ingestion Pipeline:** The data ingestion pipeline will be implemented as an Azure Function that is triggered on a schedule (e.g., once a day).
-- **3.2. Data Fetching:** The Azure Function will fetch data from the API endpoint of a data source.
-- **3.3. Data Storage:** The ingested data will be stored in a dedicated Cosmos DB collection. Each document in the collection will represent a single data record and will include a timestamp indicating when the data was ingested.
-- **3.4. Data Transformation:** The data may need to be transformed before it is stored in Cosmos DB. The transformation logic will be implemented in the Azure Function.
-
-## 4. Chatbot
-
-- **4.1. Chatbot Interface:** The chatbot interface will be a simple, easy-to-use web application built with React. The design will be a light color palette nd a clean, simple layout.
-- **4.2. AI Engine:** The chatbot will use the Azure OpenAI service to generate responses.
-- **4.3. Knowledge Base:** The chatbot will use the data ingested from the public data sources as its knowledge base.
-- **4.4. Multilingual Support:** The chatbot will be able to understand and respond to users in English, German, and French.
-- **4.5. User Feedback:**
-  - Each chatbot response will have a thumb up and a thumb down button.
-  - When a user clicks one of these buttons, the vote will be recorded in the database.
-  - The recorded data will include the chat history, the response, and the user's vote.
-
+  1.  At firts access, the user must land on the AlpineBot landing login web page which has a sleek minimalist look.
+  2.  The user selects "Continue with Google".
+  3.  The user is redirected to the selected identity provider's login page.
+  4.  After successful authentication, the user is redirected back to the AlpineBot chat application.
+- **1.3. User Profile:** A user profile will be created in the application's database after the first successful login. The profile will store the user's name, email address, and a unique identifier from the identity provider.
 
 # AlpineBot Requirements
 
@@ -61,28 +38,51 @@ This document lists the functional and non-functional requirements for the Alpin
 
 ## 1. Functional Requirements
 
-- **FR1: User Authentication**
-  - **FR1.1:** The system shall allow users to authenticate using their Google account.
-  - **FR1.2:** The system shall create a user profile in the PostgreSQL database upon the user's first successful login.
-- **FR2: Website landing login page**
-  - **FR2.1:** The system shall allow users to authenticate using their Google account.
-  - **FR2.2:** The system shall create a user profile in the PostgreSQL database upon the user's first successful login.
+- **FR1: Website landing page**
+
+  - **FR1.1:** The AlpineBot website has a landing web page which has a sleek minimalist look.
+  - **FR1.2:** The design of the landing page (and website overall) must reflect Swiss minimalist modern design.
+  - **FR1.3:** The landing page briefly describe the site purpose to interact in a friendly manner via a chatbot with Swiss publicly availailable open data.
+  - **FR1.4:** The landing page will provide links to the following AlpineBot website pages: a privacy statement, an about page.
+  - **FR1.5:** The landing page will provide links, open to a new tab or browser window, to the following external sources: Apertus (https://www.swiss-ai.org/apertus)
+
+The landing login pag will be minimalist and modern. A button will allow to login with a Google account
+  
+ 
+- **FR2: Authentication flow**
+
+  - **FR2.1:** From the AlpineBot landing page, the system shall allow users to authenticate using their Google account via a login button.
+  - **FR1.3:** The user selects "Continue with Google". The user is redirected to the selected identity provider's login page.
+  - **FR2.3:** After a successful authentication, The system shall create a user profile in the PostgreSQL database upon the user's first successful login.
+
 - **FR3: Chatbot**
+
   - **FR3.1:** The system shall provide a web-based chatbot interface with a minimalist and elegant design.
   - **FR3.2:** The chatbot shall answer questions about Switzerland.
   - **FR3.3:** The chatbot shall use the Azure OpenAI service to generate responses.
+  - **FR3.4:** The chatbot interface will be a simple, easy-to-use web application built with React. The design will be a light color palette nd a clean, simple layout.
+  - **FR3.5:** The chatbot will use the Azure OpenAI service to generate responses.
+  - **FR3.6:** The chatbot will use the data ingested from the public data sources as its knowledge base.
+  - **FR3.7:** The chatbot will be able to understand and respond to users in English, German, and French.
+  - **FR3.8:** Each chatbot response will have a thumb up and a thumb down button.
+  - **FR3.9:** When a user clicks one of these buttons, the vote will be recorded in the database.
+  - **FR3.10:** The recorded data will include the chat history, the response, and the user's vote.
   - **FR3.4:** The chatbot shall use the data ingested from public data sources as its knowledge base.
   - **FR3.5:** The chatbot shall support English, German, and French.
   - **FR3.6:** The chatbot shall support voting button to rate, copy and refresh each chatbot respons.
   - **FR3.7:** The system shall support to store a minimal history of users' interactions (100 maximum) in their respective profile page.
   - **FR3.8:** The system shall store the user's feedback in the PostgreSQL database.
+
 - **FR4: User's Profile Portal**
+
   - **FR4.1:** The user profile shall allow each users to manage their profile securely.
   - **FR4.2:** The user profile portal shall support to manage a profile picture similar to github profile picture.
   - **FR4.3:** The user profile portal shall support to manage th
   - **FR4.4:** The user profile shall display a minimalist history of their chat of 100 interaction maximum.
   - **FR4.5:** The user shall have the capacity to delete individual history chat or delete his chat history in bulk.
+
 - **FR5: Admin Portal**
+
   - **FR5.1:** The system shall provide a web-based admin portal for managing the application, with a design consistent with the main application.
   - **FR5.2:** The admin portal shall require administrators to authenticate.
   - **FR5.3:** The admin portal shall allow administrators to view a list of all users.
@@ -92,10 +92,32 @@ This document lists the functional and non-functional requirements for the Alpin
   - **FR5.7:** The admin portal shall display real-time performance metrics for the application.
   - **FR5.8:** The admin portal shall allow administrators to manage the LLM's instructions and behavior.
   - **FR5.9:** The admin portal shall display user feedback data, including the total number of votes and the percentage of good vs. bad responses.
+  - **FR5.10:** The admin portal will be a separate web application with its own authentication system. Only authorized administrators will be able to access the admin portal. The design will be consistent with the main application's minimalist aesthetic.
+  - **FR5.11:** Administrators will be able to view a list of all users who have authenticated with the chatbot application.
+  - **FR5.12:** Administrators will be able to manage security settings for the application, such as configuring allowed IP addresses and setting up alerts for suspicious activity.
+  - **FR5.13:** The admin portal will display real-time performance metrics for the application, including: Number of active users; Chatbot response times; API usage; error rates.
+  - **FR5.14:** Administrators will be able to add, edit, and delete data sources.
+  - **FR5.15.1:** A data source is defined by a name, a description, and an API endpoint.
+  - **FR5.15.2:** Administrators will be able to trigger the data ingestion pipeline for a specific data source manually.
+  - **FR5.15.3:** The admin portal will display the status of the data ingestion pipeline for each data source.
+
 - **FR6: Data Ingestion**
+
   - **FR6.1:** The system shall be able to ingest data from public data sources via API.
   - **FR6.2:** The data ingestion process shall be automated and run on a schedule.
   - **FR6.3:** The ingested data shall be stored in a PostgreSQL database.
+  - **FR6.4:** The data ingestion pipeline will be implemented as an Azure Function that is triggered on a schedule (e.g., once a day).
+  - **FR6.4.1:** The Azure Function will fetch data from the API endpoint of a data source.
+  - **FR6.4.2:** The data may need to be transformed before it is stored. The transformation logic will be implemented in the Azure Function.
+  - **FR6.5:** The ingested data will be stored in a dedicated PostgreSQL database. Each document in the collection will represent a single data record and will include a timestamp indicating when the data was ingested.
+
+- **FR7: LLM Management:**
+  - The admin portal will provide a page to manage the LLM's instructions and behavior.
+  - Administrators will be able to update the LLM's system prompt, temperature, and other parameters.
+- **FR8: User Feedback Analysis:**
+  - The admin portal will display a page with user feedback data.
+  - The page will show the total number of thumb up and thumb down votes.
+  - The page will show the percentage of good vs. bad responses.
 
 ## 2. Non-Functional Requirements
 
