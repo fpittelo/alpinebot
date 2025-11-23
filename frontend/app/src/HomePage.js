@@ -30,7 +30,7 @@ const HomePage = ({ user, onLogout }) => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
 
@@ -43,20 +43,63 @@ const HomePage = ({ user, onLogout }) => {
     };
 
     setMessages((prev) => [...prev, userMessage]);
+    const currentMessage = inputValue;
     setInputValue("");
     setIsTyping(true);
 
-    // Simulate bot response (placeholder for future API integration)
-    setTimeout(() => {
+    try {
+      // Get Function App URL from environment variable
+      const functionAppUrl = process.env.REACT_APP_FUNCTION_APP_URL || "";
+      
+      if (!functionAppUrl) {
+        throw new Error("Function App URL not configured");
+      }
+
+      // Build conversation history for API
+      const conversationHistory = messages
+        .filter((msg) => msg.type !== "bot" || !msg.text.includes("placeholder"))
+        .map((msg) => ({
+          role: msg.type === "user" ? "user" : "assistant",
+          content: msg.text,
+        }));
+
+      // Call Azure Function App API
+      const response = await fetch(`${functionAppUrl}/api/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: currentMessage,
+          conversation_history: conversationHistory,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
       const botMessage = {
         id: Date.now() + 1,
         type: "bot",
-        text: "I'm a placeholder response. Integration with Azure OpenAI will be implemented in future tasks.",
+        text: data.response || "I apologize, but I couldn't generate a response.",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, botMessage]);
+    } catch (error) {
+      console.error("Error calling chat API:", error);
+      const errorMessage = {
+        id: Date.now() + 1,
+        type: "bot",
+        text: "I apologize, but I'm having trouble connecting to the service. Please try again later.",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   const handleVote = (messageId, vote) => {
