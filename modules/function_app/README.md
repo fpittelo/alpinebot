@@ -52,7 +52,7 @@ module "function_app" {
 | az_rg_name | Resource group name | string | n/a | yes |
 | service_plan_id | ID of the App Service Plan for the Function App | string | n/a | yes |
 | app_settings | Application settings for the Function App | map(string) | {} | no |
-| cors_allowed_origins | List of allowed CORS origins | list(string) | ["*"] | no |
+| cors_allowed_origins | List of allowed CORS origins (must be explicitly configured, no default) | list(string) | [] | yes |
 | app_insights_connection_string | Application Insights connection string | string | n/a | yes |
 | tags | Tags to apply to Function App resources | map(string) | n/a | yes |
 

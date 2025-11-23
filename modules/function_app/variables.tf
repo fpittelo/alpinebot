@@ -33,6 +33,11 @@ variable "cors_allowed_origins" {
   description = "List of allowed CORS origins"
   type        = list(string)
   default     = []
+
+  validation {
+    condition     = !contains(var.cors_allowed_origins, "*")
+    error_message = "CORS wildcard origin '*' is not allowed. Please specify explicit origins for security."
+  }
 }
 
 variable "app_insights_connection_string" {
