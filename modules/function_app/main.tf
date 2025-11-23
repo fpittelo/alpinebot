@@ -22,7 +22,7 @@ resource "azurerm_linux_function_app" "function_app" {
     application_stack {
       python_version = "3.12"
     }
-    
+
     cors {
       allowed_origins = var.cors_allowed_origins
     }
@@ -30,8 +30,8 @@ resource "azurerm_linux_function_app" "function_app" {
 
   app_settings = merge(
     {
-      "FUNCTIONS_WORKER_RUNTIME"       = "python"
-      "AzureWebJobsFeatureFlags"       = "EnableWorkerIndexing"
+      "FUNCTIONS_WORKER_RUNTIME"              = "python"
+      "AzureWebJobsFeatureFlags"              = "EnableWorkerIndexing"
       "APPLICATIONINSIGHTS_CONNECTION_STRING" = var.app_insights_connection_string
     },
     var.app_settings

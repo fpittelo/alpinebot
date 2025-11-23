@@ -58,25 +58,25 @@ module "app_service_plan" {
 
 ##### Deploy AlpineBot Linux Web App ######
 module "linux_web_app" {
-  source                         = "../modules/linux_web_app"
-  wap_website_name               = local.environment_vars.wap_website_name
-  service_plan_id                = module.app_service_plan.service_plan_id
-  wap_sp_name                    = local.environment_vars.wap_sp_name
-  az_rg_name                     = local.environment_vars.az_rg_name
-  az_location                    = local.environment_vars.az_location
-  auth_enabled                   = local.environment_vars.auth_enabled
-  google_client_id               = var.google_client_id
+  source                            = "../modules/linux_web_app"
+  wap_website_name                  = local.environment_vars.wap_website_name
+  service_plan_id                   = module.app_service_plan.service_plan_id
+  wap_sp_name                       = local.environment_vars.wap_sp_name
+  az_rg_name                        = local.environment_vars.az_rg_name
+  az_location                       = local.environment_vars.az_location
+  auth_enabled                      = local.environment_vars.auth_enabled
+  google_client_id                  = var.google_client_id
   google_client_secret_setting_name = "GOOGLE_CLIENT_SECRET"
 
   app_settings = {
-    "GOOGLE_CLIENT_SECRET"    = var.google_client_secret
-    "REDIS_HOST"              = module.redis_cache.hostname
-    "REDIS_PORT"              = module.redis_cache.port
-    "REDIS_PASSWORD"          = module.redis_cache.primary_key
-    "POSTGRES_HOST"           = module.postgresql_db.fqdn
-    "POSTGRES_DB"             = module.postgresql_db.database_name
-    "POSTGRES_USER"           = var.postgresql_admin_username
-    "POSTGRES_PASSWORD"       = var.postgresql_admin_password
+    "GOOGLE_CLIENT_SECRET" = var.google_client_secret
+    "REDIS_HOST"           = module.redis_cache.hostname
+    "REDIS_PORT"           = module.redis_cache.port
+    "REDIS_PASSWORD"       = module.redis_cache.primary_key
+    "POSTGRES_HOST"        = module.postgresql_db.fqdn
+    "POSTGRES_DB"          = module.postgresql_db.database_name
+    "POSTGRES_USER"        = var.postgresql_admin_username
+    "POSTGRES_PASSWORD"    = var.postgresql_admin_password
   }
 
   tags = local.environment_vars.tags
@@ -114,13 +114,13 @@ module "postgresql_db" {
 
 #### Deploy Log Analytics Workspace #####
 module "log_analytics_workspace" {
-  source                          = "../modules/log_analytics_workspace"
-  log_analytics_workspace_name    = local.environment_vars.log_analytics_workspace_name
-  az_location                     = local.environment_vars.az_location
-  az_rg_name                      = local.environment_vars.az_rg_name
-  log_analytics_workspace_sku     = "PerGB2018" # Default SKU
-  log_analytics_workspace_retention_in_days = 30 # Default retention
-  tags                            = local.environment_vars.tags
+  source                                    = "../modules/log_analytics_workspace"
+  log_analytics_workspace_name              = local.environment_vars.log_analytics_workspace_name
+  az_location                               = local.environment_vars.az_location
+  az_rg_name                                = local.environment_vars.az_rg_name
+  log_analytics_workspace_sku               = "PerGB2018" # Default SKU
+  log_analytics_workspace_retention_in_days = 30          # Default retention
+  tags                                      = local.environment_vars.tags
 
   depends_on = [azurerm_resource_group.rg]
 }
@@ -148,10 +148,10 @@ module "function_app" {
   app_insights_connection_string = azurerm_application_insights.apbotinsights.connection_string
 
   app_settings = {
-    "AZURE_OPENAI_API_KEY"       = var.az_openai_key_value
-    "AZURE_OPENAI_ENDPOINT"      = module.cognitive_account.cognitive_account_endpoint
+    "AZURE_OPENAI_API_KEY"         = var.az_openai_key_value
+    "AZURE_OPENAI_ENDPOINT"        = module.cognitive_account.cognitive_account_endpoint
     "AZURE_OPENAI_DEPLOYMENT_NAME" = local.environment_vars.alpinebotaidepl
-    "AZURE_OPENAI_API_VERSION"   = "2024-02-15-preview"
+    "AZURE_OPENAI_API_VERSION"     = "2024-02-15-preview"
   }
 
   cors_allowed_origins = [
@@ -164,8 +164,8 @@ module "function_app" {
 }
 
 output "instrumentation_key" {
-  value = azurerm_application_insights.apbotinsights.instrumentation_key
-  sensitive = true  # Mark as sensitive
+  value     = azurerm_application_insights.apbotinsights.instrumentation_key
+  sensitive = true # Mark as sensitive
 }
 
 output "app_id" {

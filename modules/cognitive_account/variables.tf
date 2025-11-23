@@ -6,25 +6,25 @@ variable "alpinebotaiact_name" {
 
 variable "az_location" {
   description = "Location"
-  type = string
+  type        = string
 }
 
 variable "az_rg_name" {
   description = "value of resource group name"
-  type = string
+  type        = string
 }
 
 variable "kind" {
   description = "value of kind"
-  type = string
+  type        = string
 }
 
 variable "sku_name_cog_acct" {
   description = "value of sku name"
-  type = string
+  type        = string
 }
 
 variable "tags" {
   description = "value of tags"
-  type = map(string)
+  type        = map(string)
 }
