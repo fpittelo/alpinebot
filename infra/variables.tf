@@ -31,6 +31,8 @@ variable "environments" {
     postgresql_database_name = string
     log_analytics_workspace_name = string
     storage_mb = number
+    function_app_name = string
+    function_storage_account_name = string
   }))
   default = {
     "dev" = {
@@ -63,6 +65,8 @@ variable "environments" {
       postgresql_database_name = "dev-alpinebot-db"
       log_analytics_workspace_name = "dev-alpinebot-log"
       storage_mb = 32768
+      function_app_name = "dev-alpinebot-func"
+      function_storage_account_name = "devalpinebotfuncsa"
     },
     "qa" = {
       tags = {
@@ -94,6 +98,8 @@ variable "environments" {
       postgresql_database_name = "qa-alpinebot-db"
       log_analytics_workspace_name = "qa-alpinebot-log"
       storage_mb = 32768
+      function_app_name = "qa-alpinebot-func"
+      function_storage_account_name = "qaalpinebotfuncsa"
     },
     "main" = {
       tags = {
@@ -125,6 +131,8 @@ variable "environments" {
       postgresql_database_name = "main-alpinebot-db"
       log_analytics_workspace_name = "main-alpinebot-log"
       storage_mb = 32768
+      function_app_name = "main-alpinebot-func"
+      function_storage_account_name = "mainalpinebotfuncsa"
     }
   }
 }
@@ -168,6 +176,12 @@ variable "google_client_id" {
 
 variable "google_client_secret" {
   description = "The Client Secret for Google OAuth."
+  type        = string
+  sensitive   = true
+}
+
+variable "az_openai_key_value" {
+  description = "The API key for Azure OpenAI service."
   type        = string
   sensitive   = true
 }

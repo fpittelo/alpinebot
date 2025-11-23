@@ -136,6 +136,33 @@ resource "azurerm_application_insights" "apbotinsights" {
   depends_on = [azurerm_resource_group.rg, module.log_analytics_workspace]
 }
 
+#### Deploy Azure Function App ######
+module "function_app" {
+  source = "../modules/function_app"
+
+  function_app_name              = local.environment_vars.function_app_name
+  storage_account_name           = local.environment_vars.function_storage_account_name
+  az_location                    = local.environment_vars.az_location
+  az_rg_name                     = local.environment_vars.az_rg_name
+  service_plan_id                = module.app_service_plan.service_plan_id
+  app_insights_connection_string = azurerm_application_insights.apbotinsights.connection_string
+
+  app_settings = {
+    "AZURE_OPENAI_API_KEY"       = var.az_openai_key_value
+    "AZURE_OPENAI_ENDPOINT"      = module.cognitive_account.cognitive_account_endpoint
+    "AZURE_OPENAI_DEPLOYMENT_NAME" = local.environment_vars.alpinebotaidepl
+    "AZURE_OPENAI_API_VERSION"   = "2024-02-15-preview"
+  }
+
+  cors_allowed_origins = [
+    "https://${local.environment_vars.wap_website_name}.azurewebsites.net"
+  ]
+
+  tags = local.environment_vars.tags
+
+  depends_on = [azurerm_resource_group.rg, module.app_service_plan, azurerm_application_insights.apbotinsights]
+}
+
 output "instrumentation_key" {
   value = azurerm_application_insights.apbotinsights.instrumentation_key
   sensitive = true  # Mark as sensitive

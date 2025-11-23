@@ -21,6 +21,11 @@ on:
         required: false
         type: boolean
         default: true
+      deploy_function:
+        description: "Deploy Function App (Backend)"
+        required: false
+        type: boolean
+        default: true
       deploy_app:
         description: "Deploy application (Frontend)"
         required: false
@@ -184,12 +189,59 @@ jobs:
         run: |
           echo "Infrastructure deployment completed for environment: ${{ env.ENVIRONMENT }}"
 
-  deploy-app:
-    name: Deploy Application
-    if: ${{ always() && github.event.inputs.deploy_app == 'true' && (needs.deploy-infra.result == 'success' || needs.deploy-infra.result == 'skipped') }}
+  deploy-function:
+    name: Deploy Function App
+    if: ${{ always() && github.event.inputs.deploy_function == 'true' && (needs.deploy-infra.result == 'success' || needs.deploy-infra.result == 'skipped') }}
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
     needs: deploy-infra
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set environment
+        id: setenv
+        run: |
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+          echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+
+      - name: Login To Azure Using OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          allow-no-subscriptions: false
+          enable-AzPSSession: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: |
+          cd backend
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+        
+      - name: Deploy to Azure Function App
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ env.ENVIRONMENT }}-alpinebot-func
+          package: ./backend
+
+      - name: Output deployment information
+        run: |
+          echo "Function App deployed successfully to: ${{ env.ENVIRONMENT }}-alpinebot-func"
+          echo "Function URL: https://${{ env.ENVIRONMENT }}-alpinebot-func.azurewebsites.net"
+
+  deploy-app:
+    name: Deploy Application
+    if: ${{ always() && github.event.inputs.deploy_app == 'true' && (needs.deploy-function.result == 'success' || needs.deploy-function.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    needs: deploy-function
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
