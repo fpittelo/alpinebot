@@ -52,14 +52,3 @@ variable "google_client_secret_setting_name" {
   default     = ""
 }
 
-variable "microsoft_client_id" {
-  description = "Microsoft client ID"
-  type        = string
-  default     = ""
-}
-
-variable "microsoft_client_secret_setting_name" {
-  description = "Microsoft client secret setting name"
-  type        = string
-  default     = ""
-}
