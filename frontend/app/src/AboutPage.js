@@ -41,9 +41,7 @@ const AboutPage = () => {
           <h2>Technology</h2>
           <p>
             AlpineBot is powered by Swiss-hosted OpenAI technology, leveraging
-            advanced language models within Swiss data centers. We support
-            German, French, Italian, and Romansh to serve all Swiss language
-            communities.
+            advanced language models within Swiss data centers.
           </p>
           <div className="page-actions">
             <a href="/" onClick={handleNavigation} className="primary-button">

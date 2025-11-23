@@ -30,8 +30,8 @@ const LoginPage = () => {
           </div>
         </div>
         <p>
-          A friendly chatbot powered by Swiss-hosted OpenAI, connecting you
-          to publicly available Swiss open data. Explore government information,
+          A friendly chatbot powered by Swiss-hosted OpenAI, connecting you to
+          publicly available Swiss open data. Explore government information,
           statistics, and more in a modern, minimalist interface.
         </p>
         <div className="hero-stats">
@@ -59,8 +59,9 @@ const LoginPage = () => {
               <small>Switzerland</small>
             </div>
           </div>
-          <h2 id="login-panel-title">Get Started</h2>
-          <p>Sign in with your Google account to start exploring Swiss open data.</p>
+          <p>
+            Sign in with your Google account to start exploring Swiss open data.
+          </p>
         </div>
         <div className="login-buttons">
           {loginOptions.map((option) => (
@@ -81,9 +82,21 @@ const LoginPage = () => {
           By continuing you agree to the AlpineBot acceptable use guidelines.
         </p>
         <footer className="login-footer">
-          <a href="/privacy" onClick={(e) => handleNavigation(e, "/privacy")} className="footer-link">Privacy</a>
+          <a
+            href="/privacy"
+            onClick={(e) => handleNavigation(e, "/privacy")}
+            className="footer-link"
+          >
+            Privacy
+          </a>
           <span className="footer-separator">•</span>
-          <a href="/about" onClick={(e) => handleNavigation(e, "/about")} className="footer-link">About</a>
+          <a
+            href="/about"
+            onClick={(e) => handleNavigation(e, "/about")}
+            className="footer-link"
+          >
+            About
+          </a>
           <span className="footer-separator">•</span>
           <a
             href="https://www.swiss-ai.org/OpenAI"

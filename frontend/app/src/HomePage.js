@@ -108,9 +108,8 @@ const HomePage = ({ user, onLogout }) => {
             <p className="eyebrow">Powered by</p>
             <h3>OpenAI</h3>
             <p>
-              OpenAI is Switzerland&apos;s large language model, built to
-              understand and process public data across German, French, Italian,
-              and Romansh. It keeps Swiss values of precision and neutrality at
+              OpenAI is built to
+              understand and process public data. It keeps Swiss values of precision and neutrality at
               the core of every interaction.
             </p>
           </div>
