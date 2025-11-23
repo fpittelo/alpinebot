@@ -55,6 +55,7 @@ Lists the functional and non-functional requirements for the AlpineBot project.
   - **FR3.8:** When a user interacts with these controls, the vote plus chat history, response, and user identifier will be recorded in PostgreSQL.
   - **FR3.9:** The system shall maintain up to 100 recent interactions per user profile, visible within the user’s profile page.
   - **FR3.10:** The stored feedback data shall drive the analytics views surfaced in the admin portal.
+  - **FR3.11:** Below the chatbox, in small font, an mention will specify "AlpineBot can make mistakes. Check important info.".
 
 - **FR4: User's Profile Portal**
 
@@ -95,14 +96,17 @@ Lists the functional and non-functional requirements for the AlpineBot project.
   - **FR6.5:** The ingested data will be stored in a dedicated PostgreSQL database. Each document in the collection will represent a single data record and will include a timestamp indicating when the data was ingested.
 
 - **FR7: LLM Management:**
-
-  - The admin portal will provide a page to manage the LLM's instructions and behavior.
-  - Administrators will be able to update the LLM's system prompt, temperature, and other parameters.
+  - **FR7.1:**The admin portal will provide a page to manage the LLM's instructions and behavior.
+  - **FR7.2:** Administrators will be able to update the LLM's system prompt, temperature, and other parameters.
 
 - **FR8: User Feedback Analysis:**
-  - The admin portal will display a page with user feedback data.
-  - The page will show the total number of thumb up and thumb down votes.
-  - The page will show the percentage of good vs. bad responses.
+  - **FR8.1:** The admin portal will display a page with user feedback data.
+  - **FR8.2:** The page will show the total number of thumb up and thumb down votes.
+  - **FR8.3:** The page will show the percentage of good vs. bad responses.
+
+- **FR9: Additional Wesite pages:**
+  - **FR9.1:** A *guidelines" page containing generice guidelines. The page will be accessible with link available on the login page between "Privacy" and "About".
+  - **FR9.2:** A *data" page containing information about how data is used. The page will be accessible with link available on the login page between "Privacy" and "About".
 
 ## 3. Non-Functional Requirements
 
@@ -123,11 +127,12 @@ Lists the functional and non-functional requirements for the AlpineBot project.
 ## 4. Technical Design/Interface: Details of the interface.
 
 - **Public frontend:** React SPA in `frontend/app`, deployed to Azure App Service with Google Easy Auth; implementation notes and local-development steps live in `frontend/app/README.md`.
+- **Font:** The only font allowed for the website is Space Grotesk font.
 - **Authentication:** Google OAuth via Easy Auth for end users, Azure Entra ID for the admin portal.
 - **Chatbot backend:** Azure Functions expose APIs that call Azure OpenAI, returning responses plus metadata for persistence and feedback tracking.
 - **Data layer:** PostgreSQL stores user profiles, chat history (max 100 entries per user), feedback votes, and data source definitions; a vector store will support Phase 3 RAG needs.
 - **Admin portal:** A separate React application (Phase 2) surfaces user lists, data-source management, ingestion status, metrics, and LLM configuration controls under Entra ID protection.
-- **CI/CD:** GitHub Actions handle deployments for the frontend today (see README); future workflows will cover the admin portal and Azure Functions to keep environments consistent.
+- **CI/CD:** GitHub Actions handle deployments for the frontend; future workflows will cover the admin portal and Azure Functions to keep environments consistent.
 
 ## 5. Acceptance Criteria: How successful implementation is defined.
 
