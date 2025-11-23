@@ -49,7 +49,6 @@ function App() {
     );
   }
 
-  // Simple routing based on path
   const renderStaticPage = () => {
     switch (currentPath) {
       case "/about":
@@ -59,9 +58,14 @@ function App() {
       case "/guidelines":
         return <GuidelinesPage />;
       default:
-        return <HomePage user={user} onLogout={handleLogout} />;
+        return null;
     }
   };
+
+  const staticPage = renderStaticPage();
+  if (staticPage) {
+    return <div className="App">{staticPage}</div>;
+  }
 
   return (
     <div className="App">

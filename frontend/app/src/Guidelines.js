@@ -1,7 +1,7 @@
 import React from "react";
 import "./StaticPage.css";
 
-const AboutPage = () => {
+const GuidelinesPage = () => {
   const handleNavigation = (e) => {
     e.preventDefault();
     window.history.pushState({}, "", "/");
