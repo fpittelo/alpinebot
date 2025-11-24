@@ -56,8 +56,8 @@ jobs:
         with:
           app-name: ${{ env.ENVIRONMENT }}-alpinebot-func
           package: ./backend
-          scm-do-build-during-deployment: true
-          enable-oryx-build: true
+          scm-do-build-during-deployment: 'true'
+          enable-oryx-build: 'true'
 
       - name: Output deployment information
         run: |
