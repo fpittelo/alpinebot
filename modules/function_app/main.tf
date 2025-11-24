@@ -33,6 +33,8 @@ resource "azurerm_linux_function_app" "function_app" {
       "FUNCTIONS_WORKER_RUNTIME"              = "python"
       "AzureWebJobsFeatureFlags"              = "EnableWorkerIndexing"
       "APPLICATIONINSIGHTS_CONNECTION_STRING" = var.app_insights_connection_string
+      "SCM_DO_BUILD_DURING_DEPLOYMENT"        = "true"
+      "ENABLE_ORYX_BUILD"                     = "true"
     },
     var.app_settings
   )

@@ -54,6 +54,8 @@ jobs:
       - name: Build Frontend Application
         run: npm run build
         working-directory: ./frontend/app
+        env:
+          REACT_APP_FUNCTION_APP_URL: https://${{ env.ENVIRONMENT }}-alpinebot-func.azurewebsites.net
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
