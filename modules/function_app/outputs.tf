@@ -17,3 +17,8 @@ output "function_app_url" {
   description = "The URL of the Function App"
   value       = "https://${azurerm_linux_function_app.function_app.default_hostname}"
 }
+
+output "principal_id" {
+  description = "The Principal ID of the System Assigned Identity"
+  value       = azurerm_linux_function_app.function_app.identity[0].principal_id
+}

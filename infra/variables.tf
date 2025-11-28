@@ -184,9 +184,5 @@ variable "google_client_secret" {
   sensitive   = true
 }
 
-variable "az_openai_key_value" {
-  description = "The API key for Azure OpenAI service."
-  type        = string
-  sensitive   = true
-}
+
 
