@@ -12,7 +12,9 @@ resource "azurerm_key_vault" "alpinebot_kv" {
   tags = var.tags
 
   network_acls {
-    default_action = "Deny"
-    bypass         = "AzureServices"
+    default_action             = "Deny"
+    bypass                     = "AzureServices"
+    ip_rules                   = var.key_vault_ip_rules
+    virtual_network_subnet_ids = var.key_vault_subnet_ids
   }
 }

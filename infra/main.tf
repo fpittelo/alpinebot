@@ -30,12 +30,28 @@ module "key_vault" {
   tags = local.environment_vars.tags
 }
 
+# Get the current service principal/client object ID
+data "azurerm_client_config" "current" {}
+
+# Assign Key Vault Secrets Officer role to the current service principal
+resource "azurerm_role_assignment" "key_vault_secrets_officer" {
+  scope                = module.key_vault.key_vault_id
+  role_definition_name = "Key Vault Secrets Officer"
+  principal_id         = data.azurerm_client_config.current.object_id
+
+  depends_on = [module.key_vault]
+}
+
 resource "azurerm_key_vault_secret" "openai_key" {
   name         = "openai-api-key"
   value        = module.cognitive_account.openai_key
   key_vault_id = module.key_vault.key_vault_id
 
-  depends_on = [module.key_vault, module.cognitive_account]
+  depends_on = [
+    module.key_vault,
+    module.cognitive_account,
+    azurerm_role_assignment.key_vault_secrets_officer
+  ]
 }
 
 #### Deploy AlpineBot OpenAI Account ######

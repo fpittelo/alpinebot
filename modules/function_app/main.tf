@@ -18,6 +18,10 @@ resource "azurerm_linux_function_app" "function_app" {
   storage_account_name       = azurerm_storage_account.function_storage.name
   storage_account_access_key = azurerm_storage_account.function_storage.primary_access_key
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   site_config {
     application_stack {
       python_version = "3.12"
