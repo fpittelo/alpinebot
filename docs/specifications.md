@@ -2,204 +2,132 @@
 
 This document provides detailed specifications for the AlpineBot application.
 
-Purpose: This file defines the desired state of the product, service. It serves as the single source of truth for the entire development lifecycle—from design to testing and deployment.
+**Purpose:** This file defines the desired state of the product and serves as the single source of truth for the entire development lifecycle.
 
 # Content Focus
 
-1. Context: General informations for the development
-2. Functional Requirements: What the system must do.
+1. Context
+2. Functional Requirements
 3. Non-Functional Requirements
-4. Technical Design/Interface: Details of the interface.
-5. Acceptance Criteria: How successful implementation is defined.
-6. Plan
+4. Technical Design
+5. Plan
 
 ## 1. Context
 
-- The AlpineBot web site is a IA powered website chatbot providing accurate information about Swiss publicly available open data in a friendly manner.
-- The design of the website is modern, sleek, minimalist in the Swiss spirit.
-- The hosting is MS Azure Switzerland datacenter, powered by the Swiss hosted OpenAI, secured by Google authentication for users and Azure MS Entra ID for Admins.
-- The public-facing frontend is a React single-page application deployed to Azure App Service (Switzerland region) with Google-based Easy Auth exactly as described in `frontend/app/README.md`.
-- Security and data privacy is paramount for this project.
+- **AlpineBot** is an AI-powered chatbot providing accurate information about Swiss publicly available open data.
+- **Design:** Modern, sleek, minimalist, "Swiss style".
+- **Hosting:** MS Azure Switzerland, powered by Swiss-hosted OpenAI.
+- **Auth:** Google authentication for users (via Azure App Service Easy Auth), Azure Entra ID for Admins.
+- **Frontend:** React SPA deployed to Azure App Service.
+- **Security:** Paramount importance for data privacy.
 
 ## 2. Functional Requirements
 
-Lists the functional and non-functional requirements for the AlpineBot project.
+### FR1: Website Landing & General UI
 
-- **FR1: Website landing page**
+- **FR1.1:** Sleek, minimalist landing page reflecting Swiss design.
+- **FR1.2:** Briefly describes the purpose: friendly interaction with Swiss open data.
+- **FR1.3:** Links to **Privacy Statement**, **About**, and **Guidelines** pages.
+- **FR1.4:** External link to OpenAI (https://www.swiss-ai.org/OpenAI) opening in a new tab.
 
-  - **FR1.1:** The AlpineBot website has a landing web page which has a sleek minimalist look.
-  - **FR1.2:** The design of the landing page (and website overall) must reflect Swiss minimalist modern design.
-  - **FR1.3:** The landing page briefly describe the site purpose to interact in a friendly manner via a chatbot with Swiss publicly availailable open data.
-  - **FR1.4:** The landing page will provide links to the following AlpineBot website pages: a privacy statement, an about page.
-  - **FR1.5:** The landing page will provide links, open to a new tab or browser window, to the following external sources: OpenAI (https://www.swiss-ai.org/OpenAI)
+### FR2: Authentication Flow
 
-- **FR2: Authentication flow**
+- **FR2.1:** Login via Google ("Continue with Google") using Azure App Service Easy Auth.
+- **FR2.2:** Redirects to AlpineBot chat upon successful login.
+- **FR2.3:** Creates a user profile in PostgreSQL on first login (storing name, email, provider ID).
+- **FR2.4:** Admin portal requires Azure Entra ID authentication.
 
-  - **FR2.1:** From the AlpineBot landing page, the system shall allow users to authenticate using their Google account via a login button.
-  - **FR2.2:** The user selects "Continue with Google". The user is redirected to the selected identity provider's login page.
-  - **FR2.3:** After successful authentication, the user is redirected back to the AlpineBot chat application.
-  - **FR2.4:** After a successful authentication, The system shall create a user profile in the PostgreSQL database upon the user's first successful login.
-  - **FR2.5:** The profile will store the user's name, email address, and a unique identifier from the identity provider.
-  - **FR2.6:** Google sign-in shall leverage Azure App Service Easy Auth endpoints (`/.auth/login/google`, `/.auth/me`, `/.auth/logout`) configured per `frontend/app/README.md`.
-  - **FR2.7:** The admin portal shall require Azure Entra ID authentication before exposing administrative capabilities.
+### FR3: Chatbot Interface & Logic
 
-- **FR3: Chatbot**
+- **FR3.1:** Minimalist web-based chat interface.
+- **FR3.2:** Answers questions about Switzerland using Azure OpenAI (Swiss hosted).
+- **FR3.3:** Supports English, German, and French.
+- **FR3.4:** **Controls:** Thumbs up/down, Copy, Refresh for each response.
+- **FR3.5:** **Disclaimer:** "AlpineBot can make mistakes. Check important info." displayed below chat.
+- **FR3.6:** **Persistence:** Votes, chat history, and user ID recorded in PostgreSQL.
+- **FR3.7:** **History:** Maintains last 100 interactions per user.
 
-  - **FR3.1:** The system shall provide a web-based chatbot interface with a minimalist and elegant design.
-  - **FR3.2:** The chatbot shall answer questions about Switzerland.
-  - **FR3.3:** The chatbot shall use the Azure OpenAI service (Swiss hosted) to generate responses.
-  - **FR3.4:** The chatbot interface will be a simple, easy-to-use React application (see README) with a light color palette and clean layout.
-  - **FR3.5:** The chatbot will use data ingested from public data sources as its knowledge base.
-  - **FR3.6:** The chatbot will be able to understand and respond to users in English, German, and French.
-  - **FR3.7:** Each response will expose thumbs up/down, copy, and refresh controls.
-  - **FR3.8:** When a user interacts with these controls, the vote plus chat history, response, and user identifier will be recorded in PostgreSQL.
-  - **FR3.9:** The system shall maintain up to 100 recent interactions per user profile, visible within the user’s profile page.
-  - **FR3.10:** The stored feedback data shall drive the analytics views surfaced in the admin portal.
-  - **FR3.11:** Below the chatbox, in small font, an mention will specify "AlpineBot can make mistakes. Check important info.".
+### FR4: User Profile Portal
 
-- **FR4: User's Profile Portal**
+- **FR4.1:** Secure profile management.
+- **FR4.2:** Displays profile picture (from identity provider).
+- **FR4.3:** Displays chat history (max 100 interactions).
+- **FR4.4:** Option to delete individual chat items or bulk delete history.
 
-  - **FR4.1:** The user profile shall allow each users to manage their profile securely.
-  - **FR4.2:** The user profile portal shall support to manage a profile picture similar to github profile picture.
-  - **FR4.3:** The user profile portal shall support to manage th
-  - **FR4.4:** The user profile shall display a minimalist history of their chat of 100 interaction maximum.
-  - **FR4.5:** The user shall have the capacity to delete individual history chat or delete his chat history in bulk.
+### FR5: Admin Portal (Separate App)
 
-- **FR5: Admin Portal**
+- **FR5.1:** Web-based portal for management, consistent design.
+- **FR5.2:** **Auth:** Azure Entra ID (Admins only).
+- **FR5.3:** **User Management:** View list of authenticated users.
+- **FR5.4:** **Data Sources:** Manage (Add/Edit/Delete) API endpoints for ingestion.
+- **FR5.5:** **Ingestion:** Manually trigger pipeline, view status.
+- **FR5.6:** **LLM Ops:** Manage system prompts, temperature, behavior.
+- **FR5.7:** **Analytics:** Real-time metrics (active users, response times, errors), feedback stats (votes, good/bad %).
 
-  - **FR5.1:** The system shall provide a web-based admin portal for managing the application, with a design consistent with the main application.
-  - **FR5.2:** The admin portal shall require administrators to authenticate.
-  - **FR5.3:** The admin portal shall allow administrators to view a list of all users.
-  - **FR5.4:** The admin portal shall allow administrators to manage data sources.
-  - **FR5.5:** The admin portal shall allow administrators to trigger the data ingestion pipeline manually.
-  - **FR5.6:** The admin portal shall display the status of the data ingestion pipeline.
-  - **FR5.7:** The admin portal shall display real-time performance metrics for the application.
-  - **FR5.8:** The admin portal shall allow administrators to manage the LLM's instructions and behavior.
-  - **FR5.9:** The admin portal shall display user feedback data, including the total number of votes and the percentage of good vs. bad responses.
-  - **FR5.10:** The admin portal will be a separate web application with its own authentication system. Only authorized administrators will be able to access the admin portal. The design will be consistent with the main application's minimalist aesthetic.
-  - **FR5.11:** Administrators will be able to view a list of all users who have authenticated with the chatbot application.
-  - **FR5.12:** Administrators will be able to manage security settings for the application, such as configuring allowed IP addresses and setting up alerts for suspicious activity.
-  - **FR5.13:** The admin portal will display real-time performance metrics for the application, including: Number of active users; Chatbot response times; API usage; error rates.
-  - **FR5.14:** Administrators will be able to add, edit, and delete data sources.
-  - **FR5.15.1:** A data source is defined by a name, a description, and an API endpoint.
-  - **FR5.15.2:** Administrators will be able to trigger the data ingestion pipeline for a specific data source manually.
-  - **FR5.15.3:** The admin portal will display the status of the data ingestion pipeline for each data source.
+### FR6: Data Ingestion
 
-- **FR6: Data Ingestion**
-
-  - **FR6.1:** The system shall be able to ingest data from public data sources via API.
-  - **FR6.2:** The data ingestion process shall be automated and run on a schedule.
-  - **FR6.3:** The ingested data shall be stored in a PostgreSQL database.
-  - **FR6.4:** The data ingestion pipeline will be implemented as an Azure Function that is triggered on a schedule (e.g., once a day).
-  - **FR6.4.1:** The Azure Function will fetch data from the API endpoint of a data source.
-  - **FR6.4.2:** The data may need to be transformed before it is stored. The transformation logic will be implemented in the Azure Function.
-  - **FR6.5:** The ingested data will be stored in a dedicated PostgreSQL database. Each document in the collection will represent a single data record and will include a timestamp indicating when the data was ingested.
-
-- **FR7: LLM Management:**
-  - **FR7.1:**The admin portal will provide a page to manage the LLM's instructions and behavior.
-  - **FR7.2:** Administrators will be able to update the LLM's system prompt, temperature, and other parameters.
-
-- **FR8: User Feedback Analysis:**
-  - **FR8.1:** The admin portal will display a page with user feedback data.
-  - **FR8.2:** The page will show the total number of thumb up and thumb down votes.
-  - **FR8.3:** The page will show the percentage of good vs. bad responses.
-
-- **FR9: Additional Wesite pages:**
-  - **FR9.1:** A *guidelines" page containing generice guidelines. The page will be accessible with link available on the login page between "Privacy" and "About".
-  - **FR9.2:** A *data" page containing information about how data is used. The page will be accessible with link available on the login page between "Privacy" and "About".
+- **FR6.1:** Automated scheduled Azure Function (e.g., daily).
+- **FR6.2:** Ingests data from public APIs into PostgreSQL.
+- **FR6.3:** Handles data transformation during ingestion.
 
 ## 3. Non-Functional Requirements
 
-- **NFR1: Performance**
-  - **NFR1.1:** The chatbot shall respond to user queries within 3 seconds.
-  - **NFR1.2:** The admin portal shall load within 5 seconds.
-- **NFR2: Scalability**
-  - **NFR2.1:** The system shall be able to handle up to 1,000 concurrent users.
-- **NFR3: Availability**
-  - **NFR3.1:** The system shall have an uptime of 99.9%.
-- **NFR4: Security**
-  - **NFR4.1:** All user data shall be encrypted at rest and in transit.
-  - **NFR4.2:** The system shall be protected against common web vulnerabilities, such as SQL injection and cross-site scripting (XSS).
-- **NFR5: Usability & Design**
-  - **NFR5.1:** The chatbot interface shall be simple, intuitive, and have a minimalist and elegant design. This includes a light color palette and a clean, simple layout.
-  - **NFR5.2:** The admin portal shall be easy to navigate and understand, and its design shall be consistent with the main application.
+- **NFR1: Performance:** Chat response < 3s, Admin load < 5s.
+- **NFR2: Scalability:** Support 1,000 concurrent users.
+- **NFR3: Availability:** 99.9% uptime.
+- **NFR4: Security:** Encryption at rest/transit. Protection against OWASP Top 10 (SQLi, XSS).
+- **NFR5: Usability:** Minimalist, intuitive, accessible.
 
-## 4. Technical Design/Interface: Details of the interface.
+## 4. Technical Design
 
-- **Public frontend:** React SPA in `frontend/app`, deployed to Azure App Service with Google Easy Auth; implementation notes and local-development steps live in `frontend/app/README.md`.
-- **Font:** The only font allowed for the website is Space Grotesk font.
-- **Authentication:** Google OAuth via Easy Auth for end users, Azure Entra ID for the admin portal.
-- **Chatbot backend:** Azure Functions expose APIs that call Azure OpenAI, returning responses plus metadata for persistence and feedback tracking.
-- **Data layer:** PostgreSQL stores user profiles, chat history (max 100 entries per user), feedback votes, and data source definitions; a vector store will support Phase 3 RAG needs.
-- **Admin portal:** A separate React application (Phase 2) surfaces user lists, data-source management, ingestion status, metrics, and LLM configuration controls under Entra ID protection.
-- **CI/CD:** GitHub Actions handle deployments for the frontend; future workflows will cover the admin portal and Azure Functions to keep environments consistent.
+- **Frontend:** React SPA (`frontend/app`), Azure App Service, Google Easy Auth.
+- **Styling:** Vanilla CSS, **Space Grotesk** font.
+- **Backend:** Azure Functions (Python) for Chat API (`/api/chat`) and Ingestion.
+- **AI:** Azure OpenAI (GPT-4).
+- **Database:** PostgreSQL (User profiles, Chat History, Feedback, Data Sources).
+- **Infrastructure:** Terraform (IaC) managed via GitHub Actions.
+- **CI/CD:** GitHub Actions for all deployments.
 
-## 5. Acceptance Criteria: How successful implementation is defined.
+## 5. Plan
 
-## 6. Plan
+### Phase 1: Foundation (Landing, Chat, Auth)
 
-## Phase 1: Landing and chat pages, authentication flow
-
-- **Milestone 1.1: Authentication Backend**
-  - [x] **Task 1.1.1:** Define Terraform configuration for Azure App Service Authentication.
-  - [x] **Task 1.1.2:** Implement automated tests for the Terraform configuration (e.g., `terraform validate`, `terraform plan` checks within CI/CD). _(Completed by updating deploy.yaml)_
-  - [x] **Task 1.1.3:** Configure Google as an identity provider within the Terraform configuration. (Completed as part of 1.1.1)
-  - [x] **Task 1.1.4:** _(Deprecated)_ Microsoft identity provider support removed in favor of a Google-only experience.
-  - [x] **Task 1.1.5:** Verify authentication configuration deployment through CI/CD pipeline. _(Verification instructions provided in VERIFICATION.md, pending user action)_
-- **Milestone 1.2: Frontend Authentication UI**
-  - [x] **Task 1.2.1:** Create a basic React application with a login page, inspired by a minimalist design.
-  - [ ] **Task 1.2.2:** Write unit tests for the login page components.
-  - [x] **Task 1.2.3:** Implement the UI for the Google login button and CTA.
-  - [ ] **Task 1.2.4:** Write end-to-end tests for the login flow.
-- **Milestone 1.3: Basic Chatbot Interface**
-  - [x] **Task 1.3.1:** Create a basic chatbot interface using React, following the established design principles.
-  - [ ] **Task 1.3.2:** Write unit tests for the chatbot interface components.
-  - [ ] **Task 1.3.3:** Implement a mock chatbot service for testing.
-  - [ ] **Task 1.3.4:** Write integration tests for the chatbot interface and the mock service.
+- **Milestone 1.1: Authentication & Infra**
+  - [x] Terraform for App Service Auth (Google).
+  - [x] CI/CD Pipeline verification.
+- **Milestone 1.2: Frontend UI**
+  - [x] Minimalist React App (Login, Home, About, Privacy, Guidelines).
+  - [x] Google Login UI.
+  - [ ] Unit/E2E tests for Login.
+- **Milestone 1.3: Chatbot Interface**
+  - [x] Basic Chat Interface (React).
+  - [x] Feedback UI (Thumbs up/down, Copy, Refresh) - _UI only_.
+  - [ ] Unit/Integration tests.
 - **Milestone 1.4: Chatbot Backend**
-  - [ ] **Task 1.4.1:** Create an Azure Function for the chatbot backend.
-  - [ ] **Task 1.4.2:** Write unit tests for the Azure Function.
-  - [ ] **Task 1.4.3:** Integrate the Azure Function with the Azure OpenAI service.
-  - [ ] **Task 1.4.4:** Implement a simple "echo" chatbot to test the connection.
-  - [ ] **Task 1.4.5:** Write integration tests for the Azure Function and the OpenAI service.
-- **Milestone 1.5: User Feedback**
-  - [ ] **Task 1.5.1:** Implement the thumb up/thumb down user feedback mechanism on the chatbot responses.
-  - [ ] **Task 1.5.2:** Write unit tests for the feedback components.
-  - [ ] **Task 1.5.3:** Implement the backend logic to store feedback in PostgreSQL.
-  - [ ] **Task 1.5.4:** Write integration tests for the feedback mechanism.
+  - [x] Azure Function setup (`function_app.py`).
+  - [x] Azure OpenAI integration.
+  - [ ] **Task:** Implement DB persistence (User Profile, History, Feedback).
+  - [ ] Unit/Integration tests.
 
-## Phase 2: Admin Portal and Data Ingestion
+### Phase 2: Admin & Data (Next Steps)
 
-- **Milestone 2.1: Admin Portal Scaffolding**
-  - [ ] Create a separate React application for the admin portal.
-  - [ ] Implement authentication for the admin portal (e.g., using Azure AD B2C).
-  - [ ] Create a basic layout for the admin portal with navigation, following the same minimalist design principles.
-- **Milestone 2.2: Data Ingestion Pipeline**
-  - [ ] Design a data ingestion pipeline using Azure Functions.
-  - [ ] Implement a function to fetch data from a sample public API.
-  - [ ] Store the ingested data in PostgreSQL.
-- **Milestone 2.3: Data Source Management**
-  - [ ] Create a UI in the admin portal for managing data sources.
-  - [ ] Implement functionality to add, edit, and delete data sources.
-  - [ ] Implement functionality to trigger the data ingestion pipeline manually.
-- **Milestone 2.4: LLM Management**
-  - [ ] Create a UI in the admin portal for managing the LLM's instructions and behavior.
-  - [ ] Implement functionality to update the LLM's system prompt and other parameters.
-- **Milestone 2.5: User Feedback Analysis**
-  - [ ] Create a UI in the admin portal to display user feedback data.
-  - [ ] Display the total number of votes (thumb up/thumb down).
-  - [ ] Display the percentage of good vs. bad responses.
+- **Milestone 2.1: Admin Portal**
+  - [ ] Create separate React App.
+  - [ ] Azure Entra ID Auth.
+- **Milestone 2.2: Data Ingestion**
+  - [ ] Azure Function for scheduled ingestion.
+  - [ ] PostgreSQL schema & storage logic.
+- **Milestone 2.3: Management Features**
+  - [ ] Data Source management UI.
+  - [ ] LLM Configuration UI.
+  - [ ] Analytics Dashboard.
 
-## Phase 3: Advanced Features and Deployment
+### Phase 3: Advanced (Future)
 
-- **Milestone 3.1: Advanced Chatbot Features**
-  - [ ] Implement the RAG workflow with a vector database.
-  - [ ] Implement multilingual support (English, German, French).
-- **Milestone 3.2: Performance and Security**
-  - [ ] Implement performance monitoring in the admin portal.
-  - [ ] Implement security best practices for the entire application.
-  - [ ] Conduct a security review of the application.
-- **Milestone 3.3: Deployment and Go-Live**
-  - [ ] Deploy the application to the production environment.
-  - [ ] Conduct user acceptance testing (UAT).
-  - [ ] Go live!
+- **Milestone 3.1: RAG & Multilingual**
+  - [ ] Vector Database implementation.
+  - [ ] Full RAG workflow.
+- **Milestone 3.2: Hardening**
+  - [ ] Security Audit.
+  - [ ] Performance Optimization.
+  - [ ] Production Go-Live.
