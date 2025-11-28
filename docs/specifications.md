@@ -88,6 +88,14 @@ This document provides detailed specifications for the AlpineBot application.
 - **Infrastructure:** Terraform (IaC) managed via GitHub Actions.
 - **Secrets Management:** Dynamic secrets creation and storage. The dynamic creation and storage of secrets are handled entirely by Terraform's resource dependency graph, running within the authorized context of GitHub Actions pipeline.
   - _Security Insight:_ At no point does the OpenAI key value get explicitly logged to the console or hardcoded. It is read from Azure's API into Terraform's memory and then written back to Azure Key Vault's API in the same execution run. The value is stored only in the encrypted Terraform state file and in the Key Vault.
+  - _Pipeline Access Control:_
+    - `azurerm_function_app.proxy_function` creates the Function App with System-Assigned Managed Identity.
+    - `azurerm_role_assignment.kv_access_for_function` grants the Function's Managed Identity the "Key Vault Secrets User" role.
+  - _Runtime Flow:_
+    - **Code Call:** Function code calls Key Vault via Azure SDK.
+    - **Authentication:** Managed Identity provides a token.
+    - **Retrieval:** Key Vault validates role and releases the `openai-api-key` to memory.
+    - **Usage:** Function uses the key to call Azure OpenAI.
 - **CI/CD:** GitHub Actions for all deployments.
 
 ## 5. Plan
