@@ -10,4 +10,9 @@ resource "azurerm_key_vault" "alpinebot_kv" {
   enable_rbac_authorization   = var.enable_rbac_authorization
 
   tags = var.tags
+
+  network_acls {
+    default_action = "Deny"
+    bypass         = "AzureServices"
+  }
 }
