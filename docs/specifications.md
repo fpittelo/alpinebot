@@ -86,6 +86,8 @@ This document provides detailed specifications for the AlpineBot application.
 - **AI:** Azure OpenAI (GPT-4).
 - **Database:** PostgreSQL (User profiles, Chat History, Feedback, Data Sources).
 - **Infrastructure:** Terraform (IaC) managed via GitHub Actions.
+- **Secrets Management:** Dynamic secrets creation and storage. The dynamic creation and storage of secrets are handled entirely by Terraform's resource dependency graph, running within the authorized context of GitHub Actions pipeline.
+  - _Security Insight:_ At no point does the OpenAI key value get explicitly logged to the console or hardcoded. It is read from Azure's API into Terraform's memory and then written back to Azure Key Vault's API in the same execution run. The value is stored only in the encrypted Terraform state file and in the Key Vault.
 - **CI/CD:** GitHub Actions for all deployments.
 
 ## 5. Plan
