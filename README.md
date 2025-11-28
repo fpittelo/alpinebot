@@ -47,11 +47,11 @@ AlpineBot is an AI-powered chatbot for everything Switzerland, presented with a 
 3. **Deploy**:
 
    Infrastructure deployment is managed exclusively through GitHub Actions. The deployment consists of three main components:
-   
+
    - **Infrastructure** (Terraform): Deploys all Azure resources including App Service Plan, Web App, OpenAI, Function App, databases, etc.
    - **Function App** (Backend): Deploys the Python Azure Functions backend that connects to Azure OpenAI
    - **Frontend** (React): Deploys the React web application
-   
+
    Use the orchestrator workflow (`Deploy Full Environment`) to deploy all components, or individual workflows for specific components. Pushing changes to the `dev` branch or merging pull requests into `qa` or `main` will trigger the automated deployment workflows.
 
 ## Project Structure 🗂️
@@ -98,14 +98,24 @@ graph TD
         Backend_User_Query -- final answer --> Frontend;
     end
 
-    subgraph "Data & Monitoring"
+    subgraph "Secure Data Services (Network Restricted)"
+        Backend_User_Query -- Managed Identity --> KeyVault[Azure Key Vault];
         Backend_User_Query -- session data --> Redis[Azure Cache for Redis];
-        Backend_User_Query --> PostgreSQL[Azure DB for PostgreSQL for Chat History & Feedback];
+        Backend_User_Query --> PostgreSQL[Azure DB for PostgreSQL];
         Backend_Admin_Actions --> PostgreSQL;
+    end
+
+    subgraph "Monitoring"
         Backend_User_Query --> AppInsights[Application Insights];
         Ingestion_Func --> AppInsights;
     end
 ```
+
+## Security 🔒
+
+- **Dynamic Secrets**: All sensitive credentials (e.g., OpenAI API Key) are stored in **Azure Key Vault** and accessed at runtime via **Managed Identities**. No secrets are hardcoded or exposed in configuration files.
+- **Network Isolation**: Backend data services (Key Vault, PostgreSQL) are protected by **Network ACLs/Firewalls**, denying all public internet access and allowing only trusted Azure Services.
+- **Authentication**: Strict OAuth 2.0 authentication via Google Identity for users and Azure AD B2C for admins.
 
 ## Development Process
 

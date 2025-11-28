@@ -53,3 +53,6 @@ __pycache__/
 .venv/
 venv/
 ENV/
+
+.gemini/
+gha-creds-*.json

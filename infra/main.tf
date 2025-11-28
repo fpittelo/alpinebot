@@ -30,6 +30,30 @@ module "key_vault" {
   tags = local.environment_vars.tags
 }
 
+# Get the current service principal/client object ID
+data "azurerm_client_config" "current" {}
+
+# Assign Key Vault Secrets Officer role to the current service principal
+resource "azurerm_role_assignment" "key_vault_secrets_officer" {
+  scope                = module.key_vault.key_vault_id
+  role_definition_name = "Key Vault Secrets Officer"
+  principal_id         = data.azurerm_client_config.current.object_id
+
+  depends_on = [module.key_vault]
+}
+
+resource "azurerm_key_vault_secret" "openai_key" {
+  name         = "openai-api-key"
+  value        = module.cognitive_account.openai_key
+  key_vault_id = module.key_vault.key_vault_id
+
+  depends_on = [
+    module.key_vault,
+    module.cognitive_account,
+    azurerm_role_assignment.key_vault_secrets_officer
+  ]
+}
+
 #### Deploy AlpineBot OpenAI Account ######
 module "cognitive_account" {
   source              = "../modules/cognitive_account"
@@ -148,7 +172,7 @@ module "function_app" {
   app_insights_connection_string = azurerm_application_insights.apbotinsights.connection_string
 
   app_settings = {
-    "AZURE_OPENAI_API_KEY"         = var.az_openai_key_value
+    "AZURE_OPENAI_API_KEY"         = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.openai_key.id})"
     "AZURE_OPENAI_ENDPOINT"        = module.cognitive_account.cognitive_account_endpoint
     "AZURE_OPENAI_DEPLOYMENT_NAME" = local.environment_vars.alpinebotaidepl
     "AZURE_OPENAI_API_VERSION"     = local.environment_vars.azure_openai_api_version
@@ -161,6 +185,14 @@ module "function_app" {
   tags = local.environment_vars.tags
 
   depends_on = [azurerm_resource_group.rg, module.app_service_plan, azurerm_application_insights.apbotinsights]
+}
+
+resource "azurerm_role_assignment" "kv_access_for_function" {
+  scope                = module.key_vault.key_vault_id
+  role_definition_name = "Key Vault Secrets User"
+  principal_id         = module.function_app.principal_id
+
+  depends_on = [module.key_vault, module.function_app]
 }
 
 output "instrumentation_key" {
