@@ -75,7 +75,10 @@ This document provides detailed specifications for the AlpineBot application.
 - **NFR1: Performance:** Chat response < 3s, Admin load < 5s.
 - **NFR2: Scalability:** Support 1,000 concurrent users.
 - **NFR3: Availability:** 99.9% uptime.
-- **NFR4: Security:** Encryption at rest/transit. Protection against OWASP Top 10 (SQLi, XSS).
+- **NFR4: Security:**
+  - **NFR4.1:** Encryption at rest and in transit.
+  - **NFR4.2:** Protection against OWASP Top 10 (SQLi, XSS).
+  - **NFR4.3:** **Limited Exposure:** Backend services (Database, Cache, Key Vault) shall not be accessible from the public internet.
 - **NFR5: Usability:** Minimalist, intuitive, accessible.
 
 ## 4. Technical Design
@@ -96,6 +99,10 @@ This document provides detailed specifications for the AlpineBot application.
     - **Authentication:** Managed Identity provides a token.
     - **Retrieval:** Key Vault validates role and releases the `openai-api-key` to memory.
     - **Usage:** Function uses the key to call Azure OpenAI.
+- **Network Security:**
+  - **Public Access:** Limited to Frontend Web App (HTTPS).
+  - **Backend API:** Restricted via CORS to Frontend origin.
+  - **Data Services:** (PostgreSQL, Redis, Key Vault) Public internet access disabled. Access restricted to Azure Services and Managed Identities.
 - **CI/CD:** GitHub Actions for all deployments.
 
 ## 5. Plan
