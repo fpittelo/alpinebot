@@ -41,3 +41,15 @@ variable "tags" {
   type        = map(string)
   default     = {} # Set default to empty map if appropriate
 }
+
+variable "key_vault_ip_rules" {
+  description = "List of IP addresses or CIDR blocks to allow access to the Key Vault"
+  type        = list(string)
+  default     = []
+}
+
+variable "key_vault_subnet_ids" {
+  description = "List of virtual network subnet IDs to allow access to the Key Vault"
+  type        = list(string)
+  default     = []
+}

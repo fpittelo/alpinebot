@@ -20,5 +20,5 @@ output "function_app_url" {
 
 output "principal_id" {
   description = "The Principal ID of the System Assigned Identity"
-  value       = azurerm_linux_function_app.function_app.identity[0].principal_id
+  value       = try(azurerm_linux_function_app.function_app.identity[0].principal_id, null)
 }

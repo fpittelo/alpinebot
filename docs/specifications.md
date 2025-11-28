@@ -78,7 +78,7 @@ This document provides detailed specifications for the AlpineBot application.
 - **NFR4: Security:**
   - **NFR4.1:** Encryption at rest and in transit.
   - **NFR4.2:** Protection against OWASP Top 10 (SQLi, XSS).
-  - **NFR4.3:** **Limited Exposure:** Backend services (Database, Cache, Key Vault) shall not be accessible from the public internet.
+  - **NFR4.3:** **Limited Exposure:** Backend services (Database, Cache, Key Vault) should not be accessible from the public internet.
 - **NFR5: Usability:** Minimalist, intuitive, accessible.
 
 ## 4. Technical Design
@@ -89,7 +89,7 @@ This document provides detailed specifications for the AlpineBot application.
 - **AI:** Azure OpenAI (GPT-4).
 - **Database:** PostgreSQL (User profiles, Chat History, Feedback, Data Sources).
 - **Infrastructure:** Terraform (IaC) managed via GitHub Actions.
-- **Secrets Management:** Dynamic secrets creation and storage. The dynamic creation and storage of secrets are handled entirely by Terraform's resource dependency graph, running within the authorized context of GitHub Actions pipeline.
+- **Secrets Management:** Dynamic secrets creation and storage. The dynamic creation and storage of secrets are handled entirely by Terraform's resource dependency graph, running within the authorized context of the GitHub Actions pipeline.
   - _Security Insight:_ At no point does the OpenAI key value get explicitly logged to the console or hardcoded. It is read from Azure's API into Terraform's memory and then written back to Azure Key Vault's API in the same execution run. The value is stored only in the encrypted Terraform state file and in the Key Vault.
   - _Pipeline Access Control:_
     - `azurerm_function_app.proxy_function` creates the Function App with System-Assigned Managed Identity.
