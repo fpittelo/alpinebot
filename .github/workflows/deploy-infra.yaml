@@ -114,6 +114,8 @@ jobs:
           TF_LOG: DEBUG
           TF_LOG_PATH: terraform.log
           ENVIRONMENT: ${{ env.ENVIRONMENT }}
+          TF_VAR_admin_user_principal_name: "frederic.pitteloud@fpittelo.ch"
+          TF_VAR_client_ip_address: ${{ env.RUNNER_IP }}
         run: |
           echo "Using environment: ${{ env.ENVIRONMENT }}"
           terraform apply -var="environment=${{ env.ENVIRONMENT }}" -auto-approve
