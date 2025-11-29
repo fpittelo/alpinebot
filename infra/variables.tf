@@ -189,10 +189,7 @@ variable "google_client_secret" {
 
 
 
-variable "admin_user_principal_name" {
-  description = "The User Principal Name of the admin user to grant Key Vault access."
-  type        = string
-}
+
 
 variable "client_ip_address" {
   description = "The IP address of the client (e.g., GitHub Actions runner) to allow access to Key Vault."

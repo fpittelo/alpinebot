@@ -54,7 +54,7 @@ resource "azurerm_role_assignment" "key_vault_secrets_officer" {
 
 # Look up the user to grant access to
 data "azuread_user" "admin_user" {
-  user_principal_name = var.admin_user_principal_name
+  user_principal_name = "frederic.pitteloud@fpittelo.ch"
 }
 
 # Assign Key Vault Administrator role to the user
