@@ -52,6 +52,7 @@ jobs:
           echo "TF_VAR_postgresql_admin_username=${{ secrets.POSTGRESQL_ADMIN_USERNAME }}" >> $GITHUB_ENV
           echo "TF_VAR_google_client_id=${{ secrets.GOOGLE_CLIENT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_google_client_secret=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> $GITHUB_ENV
+          echo "TF_VAR_admin_user_principal_name=frederic.pitteloud@fpittelo.ch" >> $GITHUB_ENV
 
 
 

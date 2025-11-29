@@ -188,3 +188,8 @@ variable "google_client_secret" {
 
 
 
+
+variable "admin_user_principal_name" {
+  description = "The User Principal Name of the admin user to grant Key Vault access."
+  type        = string
+}
