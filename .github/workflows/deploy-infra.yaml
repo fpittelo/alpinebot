@@ -59,6 +59,25 @@ jobs:
           ip=$(curl -s https://api.ipify.org)
           echo "Runner IP: $ip"
           echo "TF_VAR_client_ip_address=$ip" >> $GITHUB_ENV
+          echo "RUNNER_IP=$ip" >> $GITHUB_ENV
+
+      - name: Add Runner IP to Key Vault Firewall
+        run: |
+          # Construct Key Vault name based on environment convention
+          KV_NAME="${{ env.ENVIRONMENT }}-alpinebot-vault"
+          
+          echo "Attempting to add IP $RUNNER_IP to Key Vault $KV_NAME..."
+          
+          # Check if Key Vault exists
+          if az keyvault show --name "$KV_NAME" --resource-group "${{ env.ENVIRONMENT }}-alpinebot" >/dev/null 2>&1; then
+            echo "Key Vault exists. Adding network rule..."
+            az keyvault network-rule add --name "$KV_NAME" --ip-address "$RUNNER_IP"
+            # Wait for propagation
+            sleep 30
+          else
+            echo "Key Vault $KV_NAME does not exist (or is not accessible). Skipping network rule addition."
+          fi
+
 
       - name: Set Up Terraform
         uses: hashicorp/setup-terraform@v2
