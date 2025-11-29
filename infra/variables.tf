@@ -187,8 +187,4 @@ variable "google_client_secret" {
 
 
 
-variable "client_ip_address" {
-  description = "The IP address of the client (e.g., GitHub Actions runner) to allow access to Key Vault."
-  type        = string
-  default     = null
-}
+

@@ -14,6 +14,12 @@ resource "azurerm_resource_group" "rg" {
 }
 
 #### Create the Azure Key Vault #####
+
+# Retrieve the runner's public IP
+data "http" "ip" {
+  url = "https://api.ipify.org"
+}
+
 module "key_vault" {
   source = "../modules/key_vault"
 
@@ -29,7 +35,14 @@ module "key_vault" {
 
   tags = local.environment_vars.tags
 
-  key_vault_ip_rules = var.client_ip_address != null ? [var.client_ip_address] : []
+  key_vault_ip_rules = [data.http.ip.response_body]
+}
+
+# Wait for firewall rule propagation
+resource "time_sleep" "wait_for_firewall" {
+  create_duration = "60s"
+
+  depends_on = [module.key_vault]
 }
 
 # Get the current service principal/client object ID
@@ -66,7 +79,8 @@ resource "azurerm_key_vault_secret" "openai_key" {
   depends_on = [
     module.key_vault,
     module.cognitive_account,
-    azurerm_role_assignment.key_vault_secrets_officer
+    azurerm_role_assignment.key_vault_secrets_officer,
+    time_sleep.wait_for_firewall
   ]
 }
 
