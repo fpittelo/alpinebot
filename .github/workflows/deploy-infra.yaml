@@ -53,6 +53,13 @@ jobs:
           echo "TF_VAR_google_client_id=${{ secrets.GOOGLE_CLIENT_ID }}" >> $GITHUB_ENV
           echo "TF_VAR_google_client_secret=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> $GITHUB_ENV
 
+      - name: Get Runner IP
+        id: ip
+        run: |
+          ip=$(curl -s https://api.ipify.org)
+          echo "Runner IP: $ip"
+          echo "TF_VAR_client_ip_address=$ip" >> $GITHUB_ENV
+
       - name: Set Up Terraform
         uses: hashicorp/setup-terraform@v2
 

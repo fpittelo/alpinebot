@@ -28,6 +28,8 @@ module "key_vault" {
   depends_on = [azurerm_resource_group.rg]
 
   tags = local.environment_vars.tags
+
+  key_vault_ip_rules = var.client_ip_address != null ? [var.client_ip_address] : []
 }
 
 # Get the current service principal/client object ID
