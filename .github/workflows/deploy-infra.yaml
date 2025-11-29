@@ -65,15 +65,20 @@ jobs:
         run: |
           # Construct Key Vault name based on environment convention
           KV_NAME="${{ env.ENVIRONMENT }}-alpinebot-vault"
+          RG_NAME="${{ env.ENVIRONMENT }}-alpinebot"
           
-          echo "Attempting to add IP $RUNNER_IP to Key Vault $KV_NAME..."
+          echo "Attempting to add IP $RUNNER_IP to Key Vault $KV_NAME in Resource Group $RG_NAME..."
           
-          # Check if Key Vault exists
-          if az keyvault show --name "$KV_NAME" --resource-group "${{ env.ENVIRONMENT }}-alpinebot" >/dev/null 2>&1; then
+          # Check if Key Vault exists (verbose)
+          if az keyvault show --name "$KV_NAME" --resource-group "$RG_NAME"; then
             echo "Key Vault exists. Adding network rule..."
-            az keyvault network-rule add --name "$KV_NAME" --ip-address "$RUNNER_IP"
-            # Wait for propagation
-            sleep 30
+            az keyvault network-rule add --name "$KV_NAME" --resource-group "$RG_NAME" --ip-address "$RUNNER_IP"
+            
+            echo "Network rule added. Verifying..."
+            az keyvault network-rule list --name "$KV_NAME" --resource-group "$RG_NAME"
+            
+            echo "Waiting 60 seconds for propagation..."
+            sleep 60
           else
             echo "Key Vault $KV_NAME does not exist (or is not accessible). Skipping network rule addition."
           fi
