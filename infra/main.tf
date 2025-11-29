@@ -44,6 +44,20 @@ resource "azurerm_role_assignment" "key_vault_secrets_officer" {
   depends_on = [module.key_vault]
 }
 
+# Look up the user to grant access to
+data "azuread_user" "admin_user" {
+  user_principal_name = "frederic.pitteloud@fpittelo.ch"
+}
+
+# Assign Key Vault Administrator role to the user
+resource "azurerm_role_assignment" "key_vault_admin_user" {
+  scope                = module.key_vault.key_vault_id
+  role_definition_name = "Key Vault Administrator"
+  principal_id         = data.azuread_user.admin_user.object_id
+
+  depends_on = [module.key_vault]
+}
+
 resource "azurerm_key_vault_secret" "openai_key" {
   name         = "openai-api-key"
   value        = module.cognitive_account.openai_key
