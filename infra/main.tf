@@ -35,7 +35,10 @@ module "key_vault" {
 
   tags = local.environment_vars.tags
 
-  key_vault_ip_rules = [data.http.ip.response_body]
+  key_vault_ip_rules = [
+    data.http.ip.response_body,
+    "83.76.0.0/14"
+  ]
 }
 
 # Wait for firewall rule propagation
