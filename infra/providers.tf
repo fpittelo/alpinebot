@@ -19,6 +19,14 @@ terraform {
       source  = "cyrilgdn/postgresql"
       version = "1.17.0"
     }
+    http = {
+      source  = "hashicorp/http"
+      version = "~> 3.4.0"
+    }
+    time = {
+      source  = "hashicorp/time"
+      version = "~> 0.9.0"
+    }
   }
 
   backend "azurerm" {

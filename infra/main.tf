@@ -14,6 +14,12 @@ resource "azurerm_resource_group" "rg" {
 }
 
 #### Create the Azure Key Vault #####
+
+# Retrieve the runner's public IP
+data "http" "ip" {
+  url = "https://api.ipify.org"
+}
+
 module "key_vault" {
   source = "../modules/key_vault"
 
@@ -28,6 +34,15 @@ module "key_vault" {
   depends_on = [azurerm_resource_group.rg]
 
   tags = local.environment_vars.tags
+
+  key_vault_ip_rules = [data.http.ip.response_body]
+}
+
+# Wait for firewall rule propagation
+resource "time_sleep" "wait_for_firewall" {
+  create_duration = "60s"
+
+  depends_on = [module.key_vault]
 }
 
 # Get the current service principal/client object ID
@@ -42,6 +57,20 @@ resource "azurerm_role_assignment" "key_vault_secrets_officer" {
   depends_on = [module.key_vault]
 }
 
+# Look up the user to grant access to
+data "azuread_user" "admin_user" {
+  user_principal_name = "frederic.pitteloud@fpittelo.ch"
+}
+
+# Assign Key Vault Administrator role to the user
+resource "azurerm_role_assignment" "key_vault_admin_user" {
+  scope                = module.key_vault.key_vault_id
+  role_definition_name = "Key Vault Administrator"
+  principal_id         = data.azuread_user.admin_user.object_id
+
+  depends_on = [module.key_vault]
+}
+
 resource "azurerm_key_vault_secret" "openai_key" {
   name         = "openai-api-key"
   value        = module.cognitive_account.openai_key
@@ -50,7 +79,8 @@ resource "azurerm_key_vault_secret" "openai_key" {
   depends_on = [
     module.key_vault,
     module.cognitive_account,
-    azurerm_role_assignment.key_vault_secrets_officer
+    azurerm_role_assignment.key_vault_secrets_officer,
+    time_sleep.wait_for_firewall
   ]
 }
 
