@@ -75,8 +75,8 @@ variable "environments" {
       function_app_name               = "dev-alpinebot-func"
       function_storage_account_name   = "devalpinebotfuncsa"
       azure_openai_api_version        = "2024-02-15-preview"
-      model_name                      = "gpt-4"
-      model_version                   = "1106-Preview"
+      model_name                      = "gpt-4o"
+      model_version                   = "2024-05-13"
       vnet_name                       = "dev-alpinebot-vnet"
       vnet_address_space              = ["10.0.0.0/16"]
       subnet_name                     = "dev-alpinebot-subnet"
@@ -115,8 +115,8 @@ variable "environments" {
       function_app_name               = "qa-alpinebot-func"
       function_storage_account_name   = "qaalpinebotfuncsa"
       azure_openai_api_version        = "2024-08-01-preview"
-      model_name                      = "gpt-4"
-      model_version                   = "1106-Preview"
+      model_name                      = "gpt-4o"
+      model_version                   = "2024-05-13"
       vnet_name                       = "qa-alpinebot-vnet"
       vnet_address_space              = ["10.1.0.0/16"]
       subnet_name                     = "qa-alpinebot-subnet"
@@ -155,8 +155,8 @@ variable "environments" {
       function_app_name               = "main-alpinebot-func"
       function_storage_account_name   = "mainalpinebotfuncsa"
       azure_openai_api_version        = "2024-08-01-preview"
-      model_name                      = "gpt-4"
-      model_version                   = "1106-Preview"
+      model_name                      = "gpt-4o"
+      model_version                   = "2024-05-13"
       vnet_name                       = "main-alpinebot-vnet"
       vnet_address_space              = ["10.2.0.0/16"]
       subnet_name                     = "main-alpinebot-subnet"
