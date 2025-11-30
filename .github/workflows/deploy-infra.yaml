@@ -64,7 +64,22 @@ jobs:
 
       - name: Set Key Vault Firewall to Allow
         run: |
-          KV_NAME="${{ env.ENVIRONMENT }}-alpinebot-vault"
+          # Dynamic Key Vault Name Lookup
+          KV_NAME_PREFIX="${{ env.ENVIRONMENT }}-alpinebot-vault-"
+          echo "Looking for Key Vault starting with: $KV_NAME_PREFIX"
+          
+          # Find the Key Vault name that matches the pattern
+          KV_NAME=$(az keyvault list --resource-group "$RG_NAME" --query "[?starts_with(name, '$KV_NAME_PREFIX')].name | [0]" -o tsv)
+          
+          if [ -z "$KV_NAME" ]; then
+            echo "Key Vault not found. It might not be created yet."
+            # Fallback or exit gracefully depending on logic. 
+            # Here we assume it's a fresh deploy and we can skip setting firewall rules for now.
+            echo "Skipping firewall update."
+            exit 0
+          fi
+          
+          echo "Found Key Vault: $KV_NAME"
           RG_NAME="${{ env.ENVIRONMENT }}-alpinebot"
           
           echo "Listing Key Vaults in $RG_NAME for debugging..."

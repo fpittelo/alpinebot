@@ -31,11 +31,17 @@ module "virtual_network" {
 
 
 
+
+resource "random_integer" "kv_suffix" {
+  min = 1000
+  max = 9999
+}
+
 module "key_vault" {
   source = "../modules/key_vault"
 
   az_rg_name                  = local.environment_vars.az_rg_name
-  az_kv_name                  = local.environment_vars.az_kv_name
+  az_kv_name                  = "${local.environment_vars.az_kv_name}-${random_integer.kv_suffix.result}"
   az_location                 = local.environment_vars.az_location
   tenant_id                   = var.az_tenant_id
   enabled_for_disk_encryption = false
