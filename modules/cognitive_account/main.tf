@@ -19,7 +19,7 @@ resource "azurerm_cognitive_deployment" "openai_deployment" {
   }
 
   sku {
-    name     = "Standard"
+    name     = var.deployment_sku_name
     capacity = 10
   }
 }

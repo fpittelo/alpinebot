@@ -103,16 +103,17 @@ resource "azurerm_key_vault_secret" "openai_key" {
 
 #### Deploy AlpineBot OpenAI Account ######
 module "cognitive_account" {
-  source              = "../modules/cognitive_account"
-  alpinebotaiact_name = "${local.environment_vars.alpinebotaiact_name}-${random_integer.kv_suffix.result}"
-  az_location         = local.environment_vars.az_location
-  az_rg_name          = local.environment_vars.az_rg_name
-  kind                = local.environment_vars.kind
+  source                = "../modules/cognitive_account"
+  alpinebotaiact_name   = "${local.environment_vars.alpinebotaiact_name}-${random_integer.kv_suffix.result}"
+  az_location           = local.environment_vars.az_location
+  az_rg_name            = local.environment_vars.az_rg_name
+  kind                  = local.environment_vars.kind
   sku_name_cog_acct     = local.environment_vars.sku_name_cog_acct
   tags                  = local.environment_vars.tags
   model_deployment_name = local.environment_vars.alpinebotaidepl
   model_name            = local.environment_vars.model_name
   model_version         = local.environment_vars.model_version
+  deployment_sku_name   = local.environment_vars.deployment_sku_name
 
   depends_on = [azurerm_resource_group.rg]
 }
