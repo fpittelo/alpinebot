@@ -214,7 +214,6 @@ module "function_app" {
   az_location                    = local.environment_vars.az_location
   az_rg_name                     = local.environment_vars.az_rg_name
   service_plan_id                = module.app_service_plan.service_plan_id
-  service_plan_id                = module.app_service_plan.service_plan_id
   app_insights_connection_string = azurerm_application_insights.apbotinsights.connection_string
   virtual_network_subnet_id      = module.virtual_network.subnet_id
 
