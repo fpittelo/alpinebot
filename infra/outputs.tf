@@ -12,3 +12,13 @@ output "function_app_default_hostname" {
   description = "The default hostname of the Function App"
   value       = module.function_app.function_app_default_hostname
 }
+
+output "key_vault_name" {
+  description = "The name of the Key Vault"
+  value       = module.key_vault.key_vault_name
+}
+
+output "openai_account_name" {
+  description = "The name of the OpenAI Account"
+  value       = module.cognitive_account.openai_account_name
+}

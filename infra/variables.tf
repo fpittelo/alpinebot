@@ -25,6 +25,7 @@ variable "environments" {
     rbac_enabled                    = bool
     kind                            = string
     sku_name_cog_acct               = string
+    deployment_sku_name             = string
     auth_enabled                    = bool
     redis_cache_name                = string
     postgresql_server_name          = string
@@ -34,6 +35,12 @@ variable "environments" {
     function_app_name               = string
     function_storage_account_name   = string
     azure_openai_api_version        = string
+    model_name                      = string
+    model_version                   = string
+    vnet_name                       = string
+    vnet_address_space              = list(string)
+    subnet_name                     = string
+    subnet_prefix                   = list(string)
   }))
   default = {
     "dev" = {
@@ -60,6 +67,7 @@ variable "environments" {
       rbac_enabled                    = true
       kind                            = "OpenAI"
       sku_name_cog_acct               = "S0"
+      deployment_sku_name             = "GlobalStandard"
       auth_enabled                    = true
       redis_cache_name                = "dev-alpinebot-redis"
       postgresql_server_name          = "dev-alpinebot-psql"
@@ -69,6 +77,12 @@ variable "environments" {
       function_app_name               = "dev-alpinebot-func"
       function_storage_account_name   = "devalpinebotfuncsa"
       azure_openai_api_version        = "2024-02-15-preview"
+      model_name                      = "gpt-4o"
+      model_version                   = "2024-05-13"
+      vnet_name                       = "dev-alpinebot-vnet"
+      vnet_address_space              = ["10.0.0.0/16"]
+      subnet_name                     = "dev-alpinebot-subnet"
+      subnet_prefix                   = ["10.0.1.0/24"]
     },
     "qa" = {
       tags = {
@@ -94,6 +108,7 @@ variable "environments" {
       rbac_enabled                    = true
       kind                            = "OpenAI"
       sku_name_cog_acct               = "S0"
+      deployment_sku_name             = "GlobalStandard"
       auth_enabled                    = false
       redis_cache_name                = "qa-alpinebot-redis"
       postgresql_server_name          = "qa-alpinebot-psql"
@@ -103,6 +118,12 @@ variable "environments" {
       function_app_name               = "qa-alpinebot-func"
       function_storage_account_name   = "qaalpinebotfuncsa"
       azure_openai_api_version        = "2024-08-01-preview"
+      model_name                      = "gpt-4o"
+      model_version                   = "2024-05-13"
+      vnet_name                       = "qa-alpinebot-vnet"
+      vnet_address_space              = ["10.1.0.0/16"]
+      subnet_name                     = "qa-alpinebot-subnet"
+      subnet_prefix                   = ["10.1.1.0/24"]
     },
     "main" = {
       tags = {
@@ -128,6 +149,7 @@ variable "environments" {
       rbac_enabled                    = true
       kind                            = "OpenAI"
       sku_name_cog_acct               = "S0"
+      deployment_sku_name             = "GlobalStandard"
       auth_enabled                    = false
       redis_cache_name                = "main-alpinebot-redis"
       postgresql_server_name          = "main-alpinebot-psql"
@@ -137,6 +159,12 @@ variable "environments" {
       function_app_name               = "main-alpinebot-func"
       function_storage_account_name   = "mainalpinebotfuncsa"
       azure_openai_api_version        = "2024-08-01-preview"
+      model_name                      = "gpt-4o"
+      model_version                   = "2024-05-13"
+      vnet_name                       = "main-alpinebot-vnet"
+      vnet_address_space              = ["10.2.0.0/16"]
+      subnet_name                     = "main-alpinebot-subnet"
+      subnet_prefix                   = ["10.2.1.0/24"]
     }
   }
 }
@@ -184,9 +212,15 @@ variable "google_client_secret" {
   sensitive   = true
 }
 
-variable "az_openai_key_value" {
-  description = "The API key for Azure OpenAI service."
-  type        = string
-  sensitive   = true
-}
 
+
+
+
+
+
+
+variable "client_ip_address" {
+  description = "The IP address of the client (e.g., GitHub Actions runner) to allow access to Key Vault."
+  type        = string
+  default     = null
+}

@@ -49,3 +49,9 @@ variable "tags" {
   description = "Tags to apply to Function App resources"
   type        = map(string)
 }
+
+variable "virtual_network_subnet_id" {
+  description = "ID of the subnet to integrate with the Function App"
+  type        = string
+  default     = null
+}
