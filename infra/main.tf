@@ -85,8 +85,11 @@ module "cognitive_account" {
   az_location         = local.environment_vars.az_location
   az_rg_name          = local.environment_vars.az_rg_name
   kind                = local.environment_vars.kind
-  sku_name_cog_acct   = local.environment_vars.sku_name_cog_acct
-  tags                = local.environment_vars.tags
+  sku_name_cog_acct     = local.environment_vars.sku_name_cog_acct
+  tags                  = local.environment_vars.tags
+  model_deployment_name = local.environment_vars.alpinebotaidepl
+  model_name            = local.environment_vars.model_name
+  model_version         = local.environment_vars.model_version
 
   depends_on = [azurerm_resource_group.rg]
 }

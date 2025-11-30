@@ -34,6 +34,8 @@ variable "environments" {
     function_app_name               = string
     function_storage_account_name   = string
     azure_openai_api_version        = string
+    model_name                      = string
+    model_version                   = string
   }))
   default = {
     "dev" = {
@@ -69,6 +71,8 @@ variable "environments" {
       function_app_name               = "dev-alpinebot-func"
       function_storage_account_name   = "devalpinebotfuncsa"
       azure_openai_api_version        = "2024-02-15-preview"
+      model_name                      = "gpt-4"
+      model_version                   = "1106-Preview"
     },
     "qa" = {
       tags = {
@@ -103,6 +107,8 @@ variable "environments" {
       function_app_name               = "qa-alpinebot-func"
       function_storage_account_name   = "qaalpinebotfuncsa"
       azure_openai_api_version        = "2024-08-01-preview"
+      model_name                      = "gpt-4"
+      model_version                   = "1106-Preview"
     },
     "main" = {
       tags = {
@@ -137,6 +143,8 @@ variable "environments" {
       function_app_name               = "main-alpinebot-func"
       function_storage_account_name   = "mainalpinebotfuncsa"
       azure_openai_api_version        = "2024-08-01-preview"
+      model_name                      = "gpt-4"
+      model_version                   = "1106-Preview"
     }
   }
 }

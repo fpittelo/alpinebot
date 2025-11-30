@@ -28,3 +28,18 @@ variable "tags" {
   description = "value of tags"
   type        = map(string)
 }
+
+variable "model_deployment_name" {
+  description = "Name of the OpenAI model deployment"
+  type        = string
+}
+
+variable "model_name" {
+  description = "Name of the OpenAI model (e.g., gpt-4)"
+  type        = string
+}
+
+variable "model_version" {
+  description = "Version of the OpenAI model"
+  type        = string
+}
