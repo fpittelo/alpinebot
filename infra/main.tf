@@ -104,7 +104,7 @@ resource "azurerm_key_vault_secret" "openai_key" {
 #### Deploy AlpineBot OpenAI Account ######
 module "cognitive_account" {
   source              = "../modules/cognitive_account"
-  alpinebotaiact_name = local.environment_vars.alpinebotaiact_name
+  alpinebotaiact_name = "${local.environment_vars.alpinebotaiact_name}-${random_integer.kv_suffix.result}"
   az_location         = local.environment_vars.az_location
   az_rg_name          = local.environment_vars.az_rg_name
   kind                = local.environment_vars.kind

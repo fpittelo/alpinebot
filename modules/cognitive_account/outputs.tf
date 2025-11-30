@@ -10,3 +10,7 @@ output "openai_key" {
 output "cognitive_account_endpoint" {
   value = azurerm_cognitive_account.alpinebot_openai.endpoint
 }
+
+output "openai_account_name" {
+  value = azurerm_cognitive_account.alpinebot_openai.name
+}

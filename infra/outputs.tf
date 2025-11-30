@@ -17,3 +17,8 @@ output "key_vault_name" {
   description = "The name of the Key Vault"
   value       = module.key_vault.key_vault_name
 }
+
+output "openai_account_name" {
+  description = "The name of the OpenAI Account"
+  value       = module.cognitive_account.openai_account_name
+}

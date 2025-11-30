@@ -36,6 +36,10 @@ provider "azurerm" {
       purge_soft_delete_on_destroy    = true
       recover_soft_deleted_key_vaults = false
     }
+    cognitive_account {
+      purge_soft_delete_on_destroy = true
+    }
+
   }
 }
 
