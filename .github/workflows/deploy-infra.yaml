@@ -67,24 +67,15 @@ jobs:
           KV_NAME="${{ env.ENVIRONMENT }}-alpinebot-vault"
           RG_NAME="${{ env.ENVIRONMENT }}-alpinebot"
           
-          echo "Checking if Key Vault $KV_NAME exists..."
-          if az keyvault show --name "$KV_NAME" --resource-group "$RG_NAME" > /dev/null 2>&1; then
-            echo "Key Vault found."
-            
-            echo "Current Firewall Action:"
-            az keyvault show --name "$KV_NAME" --resource-group "$RG_NAME" --query properties.networkAcls.defaultAction -o tsv
-            
-            echo "Setting default-action to Allow..."
-            az keyvault update --name "$KV_NAME" --resource-group "$RG_NAME" --default-action Allow
-            
-            echo "New Firewall Action:"
-            az keyvault show --name "$KV_NAME" --resource-group "$RG_NAME" --query properties.networkAcls.defaultAction -o tsv
-            
-            echo "Waiting 60 seconds for propagation..."
-            sleep 60
-          else
-            echo "Key Vault $KV_NAME not found. Skipping firewall update (first run?)."
-          fi
+          echo "Listing Key Vaults in $RG_NAME for debugging..."
+          az keyvault list --resource-group "$RG_NAME" --query "[].name" -o tsv || echo "Failed to list KVs"
+
+          echo "Attempting to force Key Vault $KV_NAME firewall to Allow..."
+          # Try to update, ignore failure if KV doesn't exist (e.g. fresh deploy)
+          az keyvault update --name "$KV_NAME" --resource-group "$RG_NAME" --default-action Allow --public-network-access Enabled || echo "Key Vault update failed (it might not exist yet)."
+          
+          echo "Waiting 60 seconds for propagation..."
+          sleep 60
 
 
 
