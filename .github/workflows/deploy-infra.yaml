@@ -62,26 +62,21 @@ jobs:
           echo "TF_VAR_client_ip_address=$ip" >> $GITHUB_ENV
           echo "RUNNER_IP=$ip" >> $GITHUB_ENV
 
-      - name: Add Runner IP to Key Vault Firewall
+      - name: Set Key Vault Firewall to Allow
         run: |
           # Construct Key Vault name based on environment convention
           KV_NAME="${{ env.ENVIRONMENT }}-alpinebot-vault"
           RG_NAME="${{ env.ENVIRONMENT }}-alpinebot"
           
-          echo "Attempting to add IP $RUNNER_IP to Key Vault $KV_NAME in Resource Group $RG_NAME..."
+          echo "Forcing Key Vault $KV_NAME firewall to Allow..."
           
-          # Check if Key Vault exists (verbose)
+          # Check if Key Vault exists
           if az keyvault show --name "$KV_NAME" --resource-group "$RG_NAME"; then
-            echo "Key Vault exists. Adding network rule..."
-            az keyvault network-rule add --name "$KV_NAME" --resource-group "$RG_NAME" --ip-address "$RUNNER_IP"
-            
-            echo "Network rule added. Verifying..."
-            az keyvault network-rule list --name "$KV_NAME" --resource-group "$RG_NAME"
-            
-            echo "Waiting 60 seconds for propagation..."
-            sleep 60
+            az keyvault update --name "$KV_NAME" --resource-group "$RG_NAME" --default-action Allow
+            echo "Key Vault firewall set to Allow. Waiting 30 seconds for propagation..."
+            sleep 30
           else
-            echo "Key Vault $KV_NAME does not exist (or is not accessible). Skipping network rule addition."
+            echo "Key Vault $KV_NAME does not exist. Skipping firewall update."
           fi
 
 
