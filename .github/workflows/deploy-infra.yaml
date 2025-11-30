@@ -64,19 +64,26 @@ jobs:
 
       - name: Set Key Vault Firewall to Allow
         run: |
-          # Construct Key Vault name based on environment convention
           KV_NAME="${{ env.ENVIRONMENT }}-alpinebot-vault"
           RG_NAME="${{ env.ENVIRONMENT }}-alpinebot"
           
-          echo "Forcing Key Vault $KV_NAME firewall to Allow..."
-          
-          # Check if Key Vault exists
-          if az keyvault show --name "$KV_NAME" --resource-group "$RG_NAME"; then
+          echo "Checking if Key Vault $KV_NAME exists..."
+          if az keyvault show --name "$KV_NAME" --resource-group "$RG_NAME" > /dev/null 2>&1; then
+            echo "Key Vault found."
+            
+            echo "Current Firewall Action:"
+            az keyvault show --name "$KV_NAME" --resource-group "$RG_NAME" --query properties.networkAcls.defaultAction -o tsv
+            
+            echo "Setting default-action to Allow..."
             az keyvault update --name "$KV_NAME" --resource-group "$RG_NAME" --default-action Allow
-            echo "Key Vault firewall set to Allow. Waiting 30 seconds for propagation..."
-            sleep 30
+            
+            echo "New Firewall Action:"
+            az keyvault show --name "$KV_NAME" --resource-group "$RG_NAME" --query properties.networkAcls.defaultAction -o tsv
+            
+            echo "Waiting 60 seconds for propagation..."
+            sleep 60
           else
-            echo "Key Vault $KV_NAME does not exist. Skipping firewall update."
+            echo "Key Vault $KV_NAME not found. Skipping firewall update (first run?)."
           fi
 
 
