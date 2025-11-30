@@ -19,14 +19,6 @@ terraform {
       source  = "cyrilgdn/postgresql"
       version = "1.17.0"
     }
-    http = {
-      source  = "hashicorp/http"
-      version = "~> 3.4.0"
-    }
-    time = {
-      source  = "hashicorp/time"
-      version = "~> 0.9.0"
-    }
   }
 
   backend "azurerm" {
@@ -44,6 +36,10 @@ provider "azurerm" {
       purge_soft_delete_on_destroy    = true
       recover_soft_deleted_key_vaults = false
     }
+    cognitive_account {
+      purge_soft_delete_on_destroy = true
+    }
+
   }
 }
 

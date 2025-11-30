@@ -17,6 +17,7 @@ resource "azurerm_linux_function_app" "function_app" {
   service_plan_id            = var.service_plan_id
   storage_account_name       = azurerm_storage_account.function_storage.name
   storage_account_access_key = azurerm_storage_account.function_storage.primary_access_key
+  virtual_network_subnet_id  = var.virtual_network_subnet_id
 
   identity {
     type = "SystemAssigned"
