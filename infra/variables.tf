@@ -36,6 +36,10 @@ variable "environments" {
     azure_openai_api_version        = string
     model_name                      = string
     model_version                   = string
+    vnet_name                       = string
+    vnet_address_space              = list(string)
+    subnet_name                     = string
+    subnet_prefix                   = list(string)
   }))
   default = {
     "dev" = {
@@ -73,6 +77,10 @@ variable "environments" {
       azure_openai_api_version        = "2024-02-15-preview"
       model_name                      = "gpt-4"
       model_version                   = "1106-Preview"
+      vnet_name                       = "dev-alpinebot-vnet"
+      vnet_address_space              = ["10.0.0.0/16"]
+      subnet_name                     = "dev-alpinebot-subnet"
+      subnet_prefix                   = ["10.0.1.0/24"]
     },
     "qa" = {
       tags = {
@@ -109,6 +117,10 @@ variable "environments" {
       azure_openai_api_version        = "2024-08-01-preview"
       model_name                      = "gpt-4"
       model_version                   = "1106-Preview"
+      vnet_name                       = "qa-alpinebot-vnet"
+      vnet_address_space              = ["10.1.0.0/16"]
+      subnet_name                     = "qa-alpinebot-subnet"
+      subnet_prefix                   = ["10.1.1.0/24"]
     },
     "main" = {
       tags = {
@@ -145,6 +157,10 @@ variable "environments" {
       azure_openai_api_version        = "2024-08-01-preview"
       model_name                      = "gpt-4"
       model_version                   = "1106-Preview"
+      vnet_name                       = "main-alpinebot-vnet"
+      vnet_address_space              = ["10.2.0.0/16"]
+      subnet_name                     = "main-alpinebot-subnet"
+      subnet_prefix                   = ["10.2.1.0/24"]
     }
   }
 }

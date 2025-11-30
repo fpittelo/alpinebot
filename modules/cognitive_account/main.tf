@@ -18,8 +18,8 @@ resource "azurerm_cognitive_deployment" "openai_deployment" {
     version = var.model_version
   }
 
-  scale {
-    type     = "Standard"
+  sku {
+    name     = "Standard"
     capacity = 10
   }
 }

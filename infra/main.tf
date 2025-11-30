@@ -13,6 +13,20 @@ resource "azurerm_resource_group" "rg" {
   tags     = local.environment_vars.tags
 }
 
+#### Create Virtual Network and Subnet ######
+module "virtual_network" {
+  source             = "../modules/virtual_network"
+  vnet_name          = local.environment_vars.vnet_name
+  az_location        = local.environment_vars.az_location
+  az_rg_name         = local.environment_vars.az_rg_name
+  vnet_address_space = local.environment_vars.vnet_address_space
+  subnet_name        = local.environment_vars.subnet_name
+  subnet_prefix      = local.environment_vars.subnet_prefix
+  tags               = local.environment_vars.tags
+
+  depends_on = [azurerm_resource_group.rg]
+}
+
 #### Create the Azure Key Vault #####
 
 
@@ -35,6 +49,10 @@ module "key_vault" {
   key_vault_ip_rules = [
     var.client_ip_address,
     "83.76.0.0/14"
+  ]
+
+  key_vault_subnet_ids = [
+    module.virtual_network.subnet_id
   ]
 }
 
@@ -196,7 +214,9 @@ module "function_app" {
   az_location                    = local.environment_vars.az_location
   az_rg_name                     = local.environment_vars.az_rg_name
   service_plan_id                = module.app_service_plan.service_plan_id
+  service_plan_id                = module.app_service_plan.service_plan_id
   app_insights_connection_string = azurerm_application_insights.apbotinsights.connection_string
+  virtual_network_subnet_id      = module.virtual_network.subnet_id
 
   app_settings = {
     "AZURE_OPENAI_API_KEY"         = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.openai_key.id})"
