@@ -43,3 +43,9 @@ variable "model_version" {
   description = "Version of the OpenAI model"
   type        = string
 }
+
+variable "deployment_sku_name" {
+  description = "SKU name for the OpenAI deployment (e.g., Standard, GlobalStandard)"
+  type        = string
+  default     = "GlobalStandard"
+}

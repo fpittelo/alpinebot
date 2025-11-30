@@ -25,6 +25,7 @@ variable "environments" {
     rbac_enabled                    = bool
     kind                            = string
     sku_name_cog_acct               = string
+    deployment_sku_name             = string
     auth_enabled                    = bool
     redis_cache_name                = string
     postgresql_server_name          = string
@@ -66,6 +67,7 @@ variable "environments" {
       rbac_enabled                    = true
       kind                            = "OpenAI"
       sku_name_cog_acct               = "S0"
+      deployment_sku_name             = "GlobalStandard"
       auth_enabled                    = true
       redis_cache_name                = "dev-alpinebot-redis"
       postgresql_server_name          = "dev-alpinebot-psql"
@@ -106,6 +108,7 @@ variable "environments" {
       rbac_enabled                    = true
       kind                            = "OpenAI"
       sku_name_cog_acct               = "S0"
+      deployment_sku_name             = "GlobalStandard"
       auth_enabled                    = false
       redis_cache_name                = "qa-alpinebot-redis"
       postgresql_server_name          = "qa-alpinebot-psql"
@@ -146,6 +149,7 @@ variable "environments" {
       rbac_enabled                    = true
       kind                            = "OpenAI"
       sku_name_cog_acct               = "S0"
+      deployment_sku_name             = "GlobalStandard"
       auth_enabled                    = false
       redis_cache_name                = "main-alpinebot-redis"
       postgresql_server_name          = "main-alpinebot-psql"
