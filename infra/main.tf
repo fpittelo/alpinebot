@@ -47,8 +47,7 @@ module "key_vault" {
   tags = local.environment_vars.tags
 
   key_vault_ip_rules = [
-    var.client_ip_address,
-    "83.76.0.0/14"
+    for ip in [var.client_ip_address, "83.76.0.0/14"] : ip if ip != null
   ]
 
   key_vault_subnet_ids = [
