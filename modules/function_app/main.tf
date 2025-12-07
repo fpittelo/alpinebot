@@ -42,6 +42,8 @@ resource "azurerm_linux_function_app" "function_app" {
       "APPLICATIONINSIGHTS_CONNECTION_STRING" = var.app_insights_connection_string
       "SCM_DO_BUILD_DURING_DEPLOYMENT"        = "true"
       "ENABLE_ORYX_BUILD"                     = "true"
+      "AzureWebJobsStorage"                   = azurerm_storage_account.function_storage.primary_connection_string
+      "FUNCTIONS_EXTENSION_VERSION"           = "~4"
     },
     var.app_settings
   )
