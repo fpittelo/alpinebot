@@ -32,3 +32,8 @@ variable "tags" {
   description = "Tags to apply to resources"
   type        = map(string)
 }
+
+variable "service_endpoints" {
+  description = "List of Service Endpoints to associate with the subnet"
+  type        = list(string)
+}
