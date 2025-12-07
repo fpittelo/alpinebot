@@ -2,6 +2,8 @@ import azure.functions as func
 import json
 import logging
 import os
+
+app = func.FunctionApp()
 @app.route(route="health", methods=["GET"], auth_level=func.AuthLevel.ANONYMOUS)
 def health(req: func.HttpRequest) -> func.HttpResponse:
     """
