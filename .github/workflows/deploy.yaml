@@ -217,21 +217,21 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Install Dependencies
         run: |
           cd backend
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-        
+
       - name: Deploy to Azure Function App
         uses: Azure/functions-action@v1
         with:
           app-name: ${{ env.ENVIRONMENT }}-alpinebot-func
           package: ./backend
-          scm-do-build-during-deployment: 'true'
-          enable-oryx-build: 'true'
+          scm-do-build-during-deployment: "true"
+          enable-oryx-build: "true"
 
       - name: Output deployment information
         run: |
@@ -277,6 +277,8 @@ jobs:
       - name: Build Frontend Application
         run: npm run build
         working-directory: ./frontend/app
+        env:
+          REACT_APP_FUNCTION_APP_URL: https://${{ env.ENVIRONMENT }}-alpinebot-func.azurewebsites.net
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
