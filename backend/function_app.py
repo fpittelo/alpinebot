@@ -2,38 +2,6 @@ import azure.functions as func
 import json
 import logging
 import os
-from openai import AzureOpenAI
-
-app = func.FunctionApp()
-
-# Initialize Azure OpenAI client
-def get_openai_client():
-    """Initialize and return Azure OpenAI client with secure configuration."""
-    api_key = os.environ.get("AZURE_OPENAI_API_KEY")
-    api_base = os.environ.get("AZURE_OPENAI_ENDPOINT")
-    api_version = os.environ.get("AZURE_OPENAI_API_VERSION", "2024-02-15-preview")
-    
-    if not api_key or not api_base:
-        raise ValueError("Azure OpenAI credentials not configured. Set AZURE_OPENAI_API_KEY and AZURE_OPENAI_ENDPOINT.")
-    
-    return AzureOpenAI(
-        api_key=api_key,
-        api_version=api_version,
-        azure_endpoint=api_base
-    )
-
-@app.route(route="health", methods=["GET"], auth_level=func.AuthLevel.ANONYMOUS)
-def health(req: func.HttpRequest) -> func.HttpResponse:
-    """
-    Simple health check endpoint.
-    """
-    logging.info('Health check triggered.')
-    return func.HttpResponse(
-        json.dumps({"status": "healthy"}),
-        mimetype="application/json",
-        status_code=200
-    )
-
 @app.route(route="chat", methods=["POST"], auth_level=func.AuthLevel.ANONYMOUS)
 def chat(req: func.HttpRequest) -> func.HttpResponse:
     """
@@ -49,6 +17,8 @@ def chat(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Chatbot function processing a request.')
     
     try:
+        from openai import AzureOpenAI  # Import inside function to avoid top-level failures
+        
         # Parse request body
         try:
             req_body = req.get_json()
@@ -84,9 +54,27 @@ def chat(req: func.HttpRequest) -> func.HttpResponse:
                     mimetype="application/json",
                     status_code=400
                 )
+
+        # Initialize Azure OpenAI Client inside the request
+        api_key = os.environ.get("AZURE_OPENAI_API_KEY")
+        api_base = os.environ.get("AZURE_OPENAI_ENDPOINT")
+        api_version = os.environ.get("AZURE_OPENAI_API_VERSION", "2024-02-15-preview")
         
-        # Initialize OpenAI client
-        client = get_openai_client()
+        if not api_key or not api_base:
+             # Log error but return 500
+             logging.error("Azure OpenAI credentials not configured.")
+             return func.HttpResponse(
+                json.dumps({"error": "Configuration error: Missing Azure OpenAI credentials."}),
+                mimetype="application/json",
+                status_code=500
+            )
+
+        client = AzureOpenAI(
+            api_key=api_key,
+            api_version=api_version,
+            azure_endpoint=api_base
+        )
+        
         deployment_name = os.environ.get("AZURE_OPENAI_DEPLOYMENT_NAME", "gpt-4")
         
         # Build messages for OpenAI
@@ -140,6 +128,13 @@ def chat(req: func.HttpRequest) -> func.HttpResponse:
             status_code=200
         )
         
+    except ImportError as ie:
+        logging.error(f"Import Error: {str(ie)}")
+        return func.HttpResponse(
+             json.dumps({"error": "Server Configuration Error: Missing dependencies."}),
+             mimetype="application/json",
+             status_code=500
+        )
     except ValueError as ve:
         logging.error(f"Configuration error: {str(ve)}")
         return func.HttpResponse(
