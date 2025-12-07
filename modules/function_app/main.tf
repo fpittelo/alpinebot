@@ -25,8 +25,10 @@ resource "azurerm_linux_function_app" "function_app" {
 
   site_config {
     application_stack {
-      python_version = "3.12"
+      python_version = "3.11"
     }
+    
+    always_on = true
 
     cors {
       allowed_origins = var.cors_allowed_origins
