@@ -41,6 +41,7 @@ variable "environments" {
     vnet_address_space              = list(string)
     subnet_name                     = string
     subnet_prefix                   = list(string)
+    network_watcher_name            = string
   }))
   default = {
     "dev" = {
@@ -83,6 +84,7 @@ variable "environments" {
       vnet_address_space              = ["10.0.0.0/16"]
       subnet_name                     = "dev-alpinebot-subnet"
       subnet_prefix                   = ["10.0.1.0/24"]
+      network_watcher_name            = "dev-alpinebot-nw"
     },
     "qa" = {
       tags = {
@@ -124,6 +126,7 @@ variable "environments" {
       vnet_address_space              = ["10.1.0.0/16"]
       subnet_name                     = "qa-alpinebot-subnet"
       subnet_prefix                   = ["10.1.1.0/24"]
+      network_watcher_name            = "qa-alpinebot-nw"
     },
     "main" = {
       tags = {
@@ -165,6 +168,7 @@ variable "environments" {
       vnet_address_space              = ["10.2.0.0/16"]
       subnet_name                     = "main-alpinebot-subnet"
       subnet_prefix                   = ["10.2.1.0/24"]
+      network_watcher_name            = "main-alpinebot-nw"
     }
   }
 }

@@ -13,6 +13,16 @@ resource "azurerm_resource_group" "rg" {
   tags     = local.environment_vars.tags
 }
 
+#### Create Network Watcher ###########
+resource "azurerm_network_watcher" "nw" {
+  name                = local.environment_vars.network_watcher_name
+  location            = local.environment_vars.az_location
+  resource_group_name = local.environment_vars.az_rg_name
+  tags                = local.environment_vars.tags
+
+  depends_on = [azurerm_resource_group.rg]
+}
+
 #### Create Virtual Network and Subnet ######
 module "virtual_network" {
   source             = "../modules/virtual_network"
@@ -30,7 +40,7 @@ module "virtual_network" {
     "Microsoft.CognitiveServices"
   ]
 
-  depends_on = [azurerm_resource_group.rg]
+  depends_on = [azurerm_resource_group.rg, azurerm_network_watcher.nw]
 }
 
 #### Create the Azure Key Vault #####
