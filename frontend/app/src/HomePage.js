@@ -50,6 +50,7 @@ const HomePage = ({ user, onLogout }) => {
     try {
       // Get Function App URL from environment variable
       const functionAppUrl = process.env.REACT_APP_FUNCTION_APP_URL || "";
+      console.log("Debug: functionAppUrl is:", functionAppUrl); // DEBUG LOG
       
       if (!functionAppUrl) {
         throw new Error("Function App URL not configured");
@@ -88,7 +89,7 @@ const HomePage = ({ user, onLogout }) => {
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
       // Log error without sensitive details
-      console.error("Error calling chat API");
+      console.error("Error calling chat API", error); // DEBUG LOG: Log full error
       const errorMessage = {
         id: Date.now() + 1,
         type: "bot",
