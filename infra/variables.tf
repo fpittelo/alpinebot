@@ -76,7 +76,7 @@ variable "environments" {
       storage_mb                      = 32768
       function_app_name               = "dev-alpinebot-func"
       function_storage_account_name   = "devalpinebotfuncsa"
-      azure_openai_api_version        = "2024-02-15-preview"
+      azure_openai_api_version        = "2024-08-01-preview"
       model_name                      = "gpt-4o"
       model_version                   = "2024-05-13"
       vnet_name                       = "dev-alpinebot-vnet"

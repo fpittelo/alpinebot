@@ -24,6 +24,12 @@ module "virtual_network" {
   subnet_prefix      = local.environment_vars.subnet_prefix
   tags               = local.environment_vars.tags
 
+  service_endpoints = [
+    "Microsoft.KeyVault",
+    "Microsoft.Web",
+    "Microsoft.CognitiveServices"
+  ]
+
   depends_on = [azurerm_resource_group.rg]
 }
 

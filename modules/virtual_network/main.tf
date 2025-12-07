@@ -12,10 +12,7 @@ resource "azurerm_subnet" "subnet" {
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = var.subnet_prefix
 
-  service_endpoints = [
-    "Microsoft.KeyVault",
-    "Microsoft.Web"
-  ]
+  service_endpoints = var.service_endpoints
 
   delegation {
     name = "delegation"
