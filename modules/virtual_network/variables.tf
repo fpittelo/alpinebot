@@ -36,5 +36,5 @@ variable "tags" {
 variable "service_endpoints" {
   description = "List of Service Endpoints to associate with the subnet"
   type        = list(string)
-  default     = ["Microsoft.KeyVault", "Microsoft.Web"]
+  default     = ["Microsoft.KeyVault", "Microsoft.Web", "Microsoft.CognitiveServices"]
 }
