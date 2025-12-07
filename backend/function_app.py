@@ -22,6 +22,18 @@ def get_openai_client():
         azure_endpoint=api_base
     )
 
+@app.route(route="health", methods=["GET"], auth_level=func.AuthLevel.ANONYMOUS)
+def health(req: func.HttpRequest) -> func.HttpResponse:
+    """
+    Simple health check endpoint.
+    """
+    logging.info('Health check triggered.')
+    return func.HttpResponse(
+        json.dumps({"status": "healthy"}),
+        mimetype="application/json",
+        status_code=200
+    )
+
 @app.route(route="chat", methods=["POST"], auth_level=func.AuthLevel.ANONYMOUS)
 def chat(req: func.HttpRequest) -> func.HttpResponse:
     """
